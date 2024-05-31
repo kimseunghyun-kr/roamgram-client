@@ -1,38 +1,70 @@
-.App {
+/*Scheduler Map CSS*/
+
+.l-header{
+  height: 60px;
+  width: 100%;
+  display: flex;
+  position: relative;
+  box-shadow: 0px 3px 10px 0.5px rgba(0, 0, 0, 0.09);
+  padding-left: 3em;
+  justify-content: flex-start;
+  min-width: max-content;
+  align-items: center;
+}
+
+.l-header-menu{
+  display: block;
+  height: auto;
+  width: 1300px;
+}
+
+.l-header-menu-list{
+  display: flex;
+  list-style: none;
+  justify-content: space-evenly;
+  padding: 0px;
+  margin: 0px;
+}
+
+
+.l-header-menu-list-child a{
   text-align: center;
+  text-decoration: none;
+  color: rgba(23, 23, 23, 0.837);
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.l-header-right{
+  width: 300px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+.header-language{
+  display: flex;
+  justify-content: flex-end;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.header-language-select{
+  width: 75px;
+  border: none;
+  font-family: Verdana;
+  font-size: 0.85em;
+  scroll-behavior: smooth;
+}
+
+
+.main-map{
+  display: flex;
+  margin-top: 25px;
+}
+
+.scheduler-schedule{
+  width: 500px;
+  height: auto;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.scheduler-edit{
+  background-color: steelblue;
 }
