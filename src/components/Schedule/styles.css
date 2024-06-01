@@ -1,0 +1,30 @@
+.main-map{
+    display: flex;
+    margin-top: 25px;
+  }
+  
+.form-location{
+    width: 500px;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 15px;
+  }
+
+.f{
+  height: 2em;
+  margin-left: 0.5em;
+}
+
+.scheduler-edit > *{
+  margin-bottom: 20px;
+}
+
+.form-for::placeholder{
+}
+
+.btn-location{
+  color: white;
+  font-weight:  bolder;
+  background-color: purple;
+}
