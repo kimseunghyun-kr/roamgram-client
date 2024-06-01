@@ -37,7 +37,7 @@ function Schedule() {
           <GoogleMapWrapper></GoogleMapWrapper>
           <h1>Map</h1>
         </div>
-        <div id="output">testing here</div>
+        <div id="output">.</div>
       </div>
     </div>
   );
