@@ -6,6 +6,7 @@ import { Route } from './Route';
 export interface Schedule {
   id: string;
   travelPlanId: string;
+  name: string
   place: Place;
   review: Review;
   isActuallyVisited: boolean;

@@ -1,6 +1,6 @@
 import {Schedule} from './Schedule'
 
-export interface TravelDiary {
+export interface TravelPlan {
     id: string;
     name: string;
     travelStartDate: string;
