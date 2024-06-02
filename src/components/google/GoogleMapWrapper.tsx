@@ -30,7 +30,11 @@ function GoogleMapWrapper(props) {
         fullscreenControl={false} //turns off fullscreen mode
         mapId={import.meta.env.VITE_NEXT_PUBLIC_MAP_ID} //this is just for styles for mapID
       >
-        <Directions origin={origin} destination={destination}></Directions>
+        <Directions
+          origin={origin}
+          destination={destination}
+          key={origin}
+        ></Directions>
       </Map>
       <AdvancedMarker
         position={defaultPosition}
