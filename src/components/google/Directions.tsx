@@ -1,57 +1,7 @@
-import {
-  APIProvider,
-  Map,
-  AdvancedMarker,
-  Pin,
-  InfoWindow,
-  useMap,
-  useMapsLibrary,
-} from "@vis.gl/react-google-maps";
-
 import { useState, useEffect } from "react";
-import Directions from "./Directions";
-//Google Map Viewer using the API Key from .env
+import { useMap, useMapsLibrary } from "@vis.gl/react-google-maps";
 
-function GoogleMapWrapper(props) {
-  const defaultPosition = { lat: 22.54992, lng: 0 };
-  const [open, setOpen] = useState(false);
-  const origin = props.origins;
-  const destination = props.destinations;
-  const mapKey = {};
-
-  return (
-    <APIProvider apiKey={import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY}>
-      <Map
-        style={{ width: "80vw", height: "80vh" }}
-        defaultCenter={defaultPosition}
-        defaultZoom={8}
-        gestureHandling={"greedy"}
-        disableDefaultUI={true}
-        fullscreenControl={false} //turns off fullscreen mode
-        mapId={import.meta.env.VITE_NEXT_PUBLIC_MAP_ID} //this is just for styles for mapID
-      >
-        <Directions origin={origin} destination={destination}></Directions>
-      </Map>
-      <AdvancedMarker
-        position={defaultPosition}
-        onClick={() => setOpen(!open)}
-      ></AdvancedMarker>
-      {open && (
-        <InfoWindow
-          position={defaultPosition}
-          onCloseClick={() => {
-            setOpen(false);
-          }}
-        >
-          <p>Change accordingly</p>
-        </InfoWindow>
-      )}
-    </APIProvider>
-  );
-}
-
-/*
-function Directions() {
+function Directions(props) {
   const map = useMap();
   const routesLibrary = useMapsLibrary("routes");
   const [directionsService, setDirectionsService] =
@@ -65,6 +15,8 @@ function Directions() {
   const leg = selectedRoute?.legs[0]; //chooses the leg property(check console routes)
   const [originLocation, setOriginLocation] = useState();
   const [destLocation, setDestLocation] = useState();
+
+  console.log(props.destination);
 
   useEffect(() => {
     if (!routesLibrary || !map) return; //returns nothing if no map instance or routeslibrary
@@ -82,8 +34,8 @@ function Directions() {
 
     directionsService
       .route({
-        origin: "placeholder1",
-        destination: "placeholder2",
+        origin: props.origin,
+        destination: props.destination,
         travelMode: google.maps.TravelMode.DRIVING,
         provideRouteAlternatives: true,
       })
@@ -95,7 +47,7 @@ function Directions() {
 
   console.log(directionsService);
   console.log(routes);
-  console.log(document.getElementById("from"));
+  console.log(document.getElementById("to"));
 
   if (!leg) return null;
   return (
@@ -118,6 +70,5 @@ function Directions() {
     </div>
   );
 }
-*/
 
-export default GoogleMapWrapper;
+export default Directions;
