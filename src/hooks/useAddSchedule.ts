@@ -1,15 +1,14 @@
-import { Schedule } from '../types/Schedule';
+import { ScheduleInsertRequest } from "../types/request/ScheduleInsertRequest";
 
-// Custom hook for adding a schedule
 const useAddSchedule = () => {
-  const addSchedule = async (planId: string, newSchedule: Schedule) => {
+  const addSchedule = async (travelPlanId:string, scheduleInsertRequest: ScheduleInsertRequest) => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/add_schedule`, {
-        method: 'POST',
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/${travelPlanId}/schedule/create_schedule`, {
+        method: 'PUT',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ planId, schedule: newSchedule }),
+        body: JSON.stringify(scheduleInsertRequest)
       });
       const addedSchedule = await response.json();
       return addedSchedule;
@@ -22,4 +21,4 @@ const useAddSchedule = () => {
   return addSchedule;
 };
 
-export default useAddSchedule
+export default useAddSchedule;
