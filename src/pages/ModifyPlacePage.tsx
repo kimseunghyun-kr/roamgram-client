@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import MapComponent from '../components/map/MapComponent';
 import { useUpdateSchedule } from '../hooks';
 import { Schedule } from '../types/Schedule';
+import { Place } from '../types/Place';
 
 const ModifyPlacePage: React.FC<{ schedule: Schedule }> = ({ schedule }) => {
   const { id } = useParams<{ id: string }>();
-  const [place, setPlace] = useState(schedule.place);
+  const [place, setPlace] = useState<Place | null>(schedule.place);
   const updateSchedule = useUpdateSchedule();
 
-  const handlePlaceChange = (place) => {
+  const handlePlaceChange = (place: Place) => {
     setPlace(place);
   };
 
@@ -22,12 +23,10 @@ const ModifyPlacePage: React.FC<{ schedule: Schedule }> = ({ schedule }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <GooglePlacesAutocomplete
-        selectProps={{
-          value: place
-          onChange: handlePlaceChange,
-        }}
-      />
+      <div>
+        <h1>Map Page</h1>
+        <MapComponent />
+      </div>
       <button type="submit" className="btn btn-primary">Update Place</button>
     </form>
   );

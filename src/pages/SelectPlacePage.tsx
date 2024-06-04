@@ -1,8 +1,8 @@
 // src/pages/MapPage.tsx
 import React from 'react';
-import MapComponent from '../components/MapComponent';
+import MapComponent from '../components/map/MapComponent';
 
-const MapPage: React.FC = () => {
+const SelectPlacePage: React.FC = () => {
     console.log(process.env.REACT_APP_GOOGLE_KEY)
   return (
     <div>
@@ -12,4 +12,4 @@ const MapPage: React.FC = () => {
   );
 };
 
-export default MapPage;
+export default SelectPlacePage;

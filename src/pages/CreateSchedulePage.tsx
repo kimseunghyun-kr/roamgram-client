@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { ScheduleInsertRequest } from '../types/request/ScheduleInsertRequest';
 import { useAddSchedule } from '../hooks';
-import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
 import { Place } from '../types/Place';
 
 const CreateSchedulePage: React.FC = () => {
@@ -26,7 +25,7 @@ const CreateSchedulePage: React.FC = () => {
 
   const handlePlaceChange = (place: Place) => { //this needs to be the google maps place -> connect to API here
     setPlace(place);
-    setNewSchedule(prevState => ({ ...prevState, place: place.value}));
+    setNewSchedule(prevState => ({ ...prevState, place: place}));
   };
 
   const calculateTimes = async () => {
@@ -46,12 +45,6 @@ const CreateSchedulePage: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <GooglePlacesAutocomplete
-        selectProps={{
-          place,
-          onChange: handlePlaceChange,
-        }}
-      />
       <input type="date" name="travelDate" value={newSchedule.travelDate.toISOString().split('T')[0]} onChange={handleInputChange} />
       <input type="time" name="travelStartTimeEstimate" value={newSchedule.travelStartTimeEstimate.toISOString().split('T')[1]} onChange={handleInputChange} />
       <input type="time" name="travelDepartTimeEstimate" value={newSchedule.travelDepartTimeEstimate.toISOString().split('T')[1]} onChange={handleInputChange} />

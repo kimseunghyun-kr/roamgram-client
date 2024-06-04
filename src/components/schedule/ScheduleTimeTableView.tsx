@@ -6,7 +6,7 @@ import { useUpdateSchedule } from '../../hooks';
 const TimetableView: React.FC<{ schedules: Schedule[], onDragEnd: (result: any) => void }> = ({ schedules, onDragEnd }) => {
   const updateSchedule = useUpdateSchedule();
 
-  const handleDragEnd = async (result) => {
+  const handleDragEnd = async (result: { destination: { index: number; }; source: { index: number; }; }) => {
     if (!result.destination) return;
 
     const newScheduleList = Array.from(schedules);
