@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ScheduleInsertRequest } from '../types/request/ScheduleInsertRequest';
 import { useAddSchedule } from '../hooks';
 import GooglePlacesAutocomplete from 'react-google-places-autocomplete';
+import { Place } from '../types/Place';
 
 const CreateSchedulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -14,7 +15,7 @@ const CreateSchedulePage: React.FC = () => {
     travelStartTimeEstimate: new Date(),
     travelDepartTimeEstimate: new Date(),
   });
-  const [place, setPlace] = useState(null);
+  const [place, setPlace] = useState<Place | null>(null);
   const addSchedule = useAddSchedule();
   const navigate = useNavigate();
 
@@ -23,9 +24,9 @@ const CreateSchedulePage: React.FC = () => {
     setNewSchedule(prevState => ({ ...prevState, [name]: value }));
   };
 
-  const handlePlaceChange = (place) => {
+  const handlePlaceChange = (place: Place) => { //this needs to be the google maps place -> connect to API here
     setPlace(place);
-    setNewSchedule(prevState => ({ ...prevState, place: place.value }));
+    setNewSchedule(prevState => ({ ...prevState, place: place.value}));
   };
 
   const calculateTimes = async () => {

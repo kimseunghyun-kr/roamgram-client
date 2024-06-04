@@ -24,7 +24,7 @@ const ModifyPlacePage: React.FC<{ schedule: Schedule }> = ({ schedule }) => {
     <form onSubmit={handleSubmit}>
       <GooglePlacesAutocomplete
         selectProps={{
-          value: place,
+          value: place
           onChange: handlePlaceChange,
         }}
       />
