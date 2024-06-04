@@ -12,7 +12,6 @@ import { DragDropContext } from 'react-beautiful-dnd';
 const App: React.FC = () => {
   return (
     <APIProvider apiKey={process.env.REACT_APP_GOOGLE_KEY} onLoad={() => console.log('Maps API has loaded.')}>
-      <DragDropContext>
       <Router>
         <Routes>
           <Route path="/" Component={HomePage} />
@@ -23,7 +22,6 @@ const App: React.FC = () => {
           <Route path="/places-map" Component={SelectPlacePage} /> {/* Add the new route */}
         </Routes>
       </Router>
-      </DragDropContext>
     </APIProvider>
   );
 };

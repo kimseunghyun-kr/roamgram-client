@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { TravelPlanUpsertRequest } from '../types/request/TravelPlanUpsertRequest';
-import { TravelPlan } from '../types/TravelPlan';
+import { TravelPlanUpsertRequest } from '../../types/request/TravelPlanUpsertRequest';
+import { TravelPlan } from '../../types/TravelPlan';
 
 interface ModalProps {
   travelPlan: TravelPlan;

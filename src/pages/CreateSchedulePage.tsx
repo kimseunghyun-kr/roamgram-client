@@ -6,11 +6,14 @@ import { Place } from '../types/Place';
 
 const CreateSchedulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const [travelDate, setTravelDate] = useState<string>('');
+  const [travelStart, setTravelStart] = useState<string>('');
+  const [travelEnd, setTravelEnd] = useState<string>('');
+
   const [newSchedule, setNewSchedule] = useState<ScheduleInsertRequest>({
     place: null,
     previousScheduleId: '',
     isActuallyVisited: false,
-    travelDate: new Date(),
     travelStartTimeEstimate: new Date(),
     travelDepartTimeEstimate: new Date(),
   });
@@ -20,12 +23,32 @@ const CreateSchedulePage: React.FC = () => {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setNewSchedule(prevState => ({ ...prevState, [name]: value }));
+
+    if (name === 'travelDate') {
+      setTravelDate(value);
+      setNewSchedule(prevState => ({
+        ...prevState,
+        travelStartTimeEstimate: new Date(`${value}T${travelStart}`),
+        travelDepartTimeEstimate: new Date(`${value}T${travelEnd}`),
+      }));
+    } else if (name === 'travelStartTimeEstimate') {
+      setTravelStart(value);
+      setNewSchedule(prevState => ({
+        ...prevState,
+        travelStartTimeEstimate: new Date(`${travelDate}T${value}`),
+      }));
+    } else if (name === 'travelDepartTimeEstimate') {
+      setTravelEnd(value);
+      setNewSchedule(prevState => ({
+        ...prevState,
+        travelDepartTimeEstimate: new Date(`${travelDate}T${value}`),
+      }));
+    }
   };
 
-  const handlePlaceChange = (place: Place) => { //this needs to be the google maps place -> connect to API here
+  const handlePlaceChange = (place: Place) => {
     setPlace(place);
-    setNewSchedule(prevState => ({ ...prevState, place: place}));
+    setNewSchedule(prevState => ({ ...prevState, place: place }));
   };
 
   const calculateTimes = async () => {
@@ -34,6 +57,7 @@ const CreateSchedulePage: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     await calculateTimes();
     try {
       await addSchedule(id!, newSchedule);
@@ -45,9 +69,9 @@ const CreateSchedulePage: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <input type="date" name="travelDate" value={newSchedule.travelDate.toISOString().split('T')[0]} onChange={handleInputChange} />
-      <input type="time" name="travelStartTimeEstimate" value={newSchedule.travelStartTimeEstimate.toISOString().split('T')[1]} onChange={handleInputChange} />
-      <input type="time" name="travelDepartTimeEstimate" value={newSchedule.travelDepartTimeEstimate.toISOString().split('T')[1]} onChange={handleInputChange} />
+      <input type="date" name="travelDate" value={travelDate} onChange={handleInputChange} />
+      <input type="time" name="travelStartTimeEstimate" value={travelStart} onChange={handleInputChange} />
+      <input type="time" name="travelDepartTimeEstimate" value={travelEnd} onChange={handleInputChange} />
       <button type="submit" className="btn btn-primary">Add Schedule</button>
     </form>
   );

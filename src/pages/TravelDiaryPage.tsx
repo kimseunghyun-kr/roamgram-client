@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import ModalForm from '../components/UpdateTravelPlanModal';
+import ModalForm from '../components/travelPlan/UpdateTravelPlanModal';
 import { useFetchTravelPlan, useUpdateTravelPlan, useDeleteSchedule } from '../hooks';
 import { TravelPlanUpsertRequest } from '../types/request/TravelPlanUpsertRequest';
 import { Link } from 'react-router-dom';
@@ -8,6 +8,7 @@ import { Schedule } from '../types/Schedule';
 import TimelineView from '../components/schedule/ScheduleTimeLineView';
 import TimetableView from '../components/schedule/ScheduleTimeTableView';
 import ScheduleList from '../components/schedule/ScheduleList';
+import { DropResult } from 'react-beautiful-dnd';
 
 const TravelDiaryPage: React.FC = () => {
   const { id = '' } = useParams<{ id: string }>();
@@ -16,8 +17,14 @@ const TravelDiaryPage: React.FC = () => {
   const deleteSchedule = useDeleteSchedule(); 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
-  const [schedules, setSchedules] = useState(travelPlan ? travelPlan.scheduleList : []);
+  const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [viewMode, setViewMode] = useState<'timeline' | 'timetable' | 'list'>('timeline'); // New state for view mode
+
+  useEffect(() => {
+    if (travelPlan) {
+      setSchedules(travelPlan.scheduleList);
+    }
+  }, [travelPlan]);
 
   const handleDeleteSchedule = async (scheduleId: string) => {
     try {
@@ -67,12 +74,14 @@ const TravelDiaryPage: React.FC = () => {
     for (let i = 1; i < schedules.length; i++) {
       const prevSchedule = schedules[i - 1];
       const currentSchedule = schedules[i];
+      const prevEnd = convertToDate(prevSchedule.travelDepartTimeEstimate);
+      const currentStart = convertToDate(currentSchedule.travelStartTimeEstimate);
   
       // Calculate estimated start time of current schedule
-      const estimatedStartTime = new Date(prevSchedule.travelDepartTimeEstimate.getTime() + prevSchedule.inwardRoute.durationOfTravel * 60000); // Assuming durationOfTravel is in minutes
+      const estimatedStartTime = new Date(prevEnd.getTime() + prevSchedule.inwardRoute.durationOfTravel * 60000); // Assuming durationOfTravel is in minutes
   
       // If the estimated start time is after the current start time, there's a conflict
-      if (estimatedStartTime > currentSchedule.travelStartTimeEstimate) {
+      if (estimatedStartTime > currentStart) {
         currentSchedule.conflict = true;
         hasConflict = true;
       } else {
@@ -83,8 +92,14 @@ const TravelDiaryPage: React.FC = () => {
     return hasConflict;
   };
   
-  
-  const onDragEnd = (result: any) => {
+  const convertToDate = (dateInput: Date | [number, number, number, number, number]) => {
+    if (Array.isArray(dateInput)) {
+      return new Date(dateInput[0], dateInput[1] - 1, dateInput[2], dateInput[3], dateInput[4]);
+    }
+    return new Date(dateInput);
+  };
+
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
   
     const newScheduleList = Array.from(schedules);
@@ -105,13 +120,13 @@ const TravelDiaryPage: React.FC = () => {
           <button onClick={() => setViewMode('timetable')} className="btn btn-secondary">Timetable View</button>
           <button onClick={() => setViewMode('list')} className="btn btn-secondary">List View</button>
           <h1 className="text-2xl font-bold my-4">{travelPlan.name}</h1>
-          <p><strong>Start Date:</strong> {travelPlan.travelStartDate}</p>
-          <p><strong>End Date:</strong> {travelPlan.travelEndDate}</p>
+          <p><strong>Start Date:</strong> {new Date(travelPlan.travelStartDate).toLocaleDateString()}</p>
+          <p><strong>End Date:</strong> {new Date(travelPlan.travelEndDate).toLocaleDateString()}</p>
           <Link to={`/travel-diary/${id}/new-schedule`} className="btn btn-primary">Add Schedule</Link>
           <h2 className="text-xl font-semibold my-4">Schedules</h2>
-          {viewMode === 'timetable' && <TimetableView schedules={travelPlan.scheduleList} onDragEnd={onDragEnd} />}
-          {viewMode === 'timeline' && <TimelineView schedules={travelPlan.scheduleList} />}
-          {viewMode === 'list' && <ScheduleList schedules={travelPlan.scheduleList} onDeleteSchedule={handleDeleteSchedule} onDragEnd={onDragEnd}/>}
+          {viewMode === 'timetable' && <TimetableView schedules={schedules} onDragEnd={onDragEnd} />}
+          {viewMode === 'timeline' && <TimelineView schedules={schedules} />}
+          {viewMode === 'list' && <ScheduleList schedules={schedules} onDeleteSchedule={handleDeleteSchedule} onDragEnd={onDragEnd}/>}
         </div>
       )}
       {isModalOpen && (

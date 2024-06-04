@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { TravelPlan } from '../types/TravelPlan';
+import { TravelPlan } from '../../types/TravelPlan';
 
 interface TravelPlanItemProps {
   travelPlan: TravelPlan;

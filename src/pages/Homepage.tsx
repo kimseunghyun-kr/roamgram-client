@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import TravelPlanList from '../components/TravelPlanList';
+import TravelPlanList from '../components/travelPlan/TravelPlanList';
 import { TravelPlan } from '../types/TravelPlan';
 
 const HomePage: React.FC = () => {

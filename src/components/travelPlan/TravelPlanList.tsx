@@ -1,5 +1,5 @@
 import React from 'react';
-import { TravelPlan } from '../types/TravelPlan';
+import { TravelPlan } from '../../types/TravelPlan';
 import TravelPlanItem from './TravelPlanItem';
 
 interface TravelPlanListProps {
