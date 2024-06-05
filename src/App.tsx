@@ -1,19 +1,15 @@
+import { useJsApiLoader } from "@react-google-maps/api";
 import "./App.css";
-import "bootstrap/dist/css/bootstrap.min.css";
-
-import GoogleMapWrapper from "./components/google/GoogleMapWrapper.tsx";
-import Header from "./components/Header/Header.tsx";
-import Home from "./components/Home/Home.tsx";
-import Schedule from "./components/Schedule/Schedule.tsx";
-import Place from "./components/Place/Place.tsx";
+import GoogleMaps from "./components/GoogleMaps/GoogleMaps.tsx";
+import { Loader } from "@googlemaps/js-api-loader";
 
 function App() {
-  return (
-    <>
-      <Header></Header>
-      <Schedule></Schedule>
-    </>
-  );
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, //rmb to remove
+    libraries: ["places", "maps", "core", "marker", "routes"],
+    version: "weekly",
+  });
+  return isLoaded ? <GoogleMaps></GoogleMaps> : <></>;
 }
 
 export default App;
