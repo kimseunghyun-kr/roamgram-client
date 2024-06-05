@@ -1,0 +1,2 @@
+Just use <GoogleMaps> Component
+make sure isLoaded in App.tsx remains there before running <GoogleMaps>
