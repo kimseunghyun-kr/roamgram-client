@@ -24,6 +24,7 @@ const ScheduleItem: React.FC<ScheduleItemProps> = ({ schedule }) => {
     <div className="p-4 border rounded shadow">
       <h2 className="text-xl font-bold">{schedule.place?.name ?? 'No place specified'}</h2>
       <div className="timeline-item">
+        <h2>{schedule.place?.name ?? "someDefaultTravel"}</h2>
         <h3>Travel Date</h3>
         <p>{travelStart.toLocaleDateString()}</p>
         <h3>Travel Start Time</h3>

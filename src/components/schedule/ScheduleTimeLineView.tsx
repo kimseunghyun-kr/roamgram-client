@@ -1,5 +1,6 @@
 import React from 'react';
 import { Schedule } from '../../types/Schedule';
+import ScheduleItem from './ScheduleItem';
 
 const TimelineView: React.FC<{ schedules: Schedule[] }> = ({ schedules }) => {
   const convertToDate = (dateInput: Date | [number, number, number, number, number]) => {
@@ -18,18 +19,9 @@ const TimelineView: React.FC<{ schedules: Schedule[] }> = ({ schedules }) => {
   return (
     <div className="timeline-container">
       {sortedSchedules.map(schedule => {
-        const travelStart = convertToDate(schedule.travelStartTimeEstimate);
-        const travelEnd = convertToDate(schedule.travelDepartTimeEstimate);
-
         return (
           <div key={schedule.id} className="timeline-item">
-            <h2>{schedule.place?.name ?? "someDefaultTravel"}</h2>
-            <h3>Travel Date</h3>
-            <p>{travelStart.toLocaleDateString()}</p>
-            <h3>Travel Start Time</h3>
-            <p>{travelStart.toLocaleTimeString()}</p>
-            <h3>Travel Depart Time</h3>
-            <p>{travelEnd.toLocaleTimeString()}</p>
+            <ScheduleItem schedule={schedule} />
           </div>
         );
       })}

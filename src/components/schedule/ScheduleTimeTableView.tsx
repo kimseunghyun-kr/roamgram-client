@@ -1,14 +1,18 @@
 import React from 'react';
 import { Schedule } from '../../types/Schedule';
-import { Droppable, Draggable, DragDropContext, DropResult } from 'react-beautiful-dnd';
+import { Draggable, DragDropContext, DropResult } from 'react-beautiful-dnd';
 import StrictModeDroppable from '../dragAndDrop/StrictModeDroppable';
+import ScheduleItem from './ScheduleItem';
 
-const TimetableView: React.FC<{ schedules: Schedule[], onDragEnd: (result: DropResult) => void }> = ({ schedules, onDragEnd }) => {
-  const convertToDate = (dateInput: Date | [number, number, number, number, number]) => {
-    if (Array.isArray(dateInput)) {
-      return new Date(dateInput[0], dateInput[1] - 1, dateInput[2], dateInput[3], dateInput[4]);
-    }
-    return new Date(dateInput);
+interface ScheduleListProps {
+  schedules: Schedule[];
+  onDeleteSchedule: (scheduleId: string) => void;
+  onDragEnd: (result: DropResult) => void;
+}
+
+const TimetableView: React.FC<ScheduleListProps> = ({ schedules, onDeleteSchedule, onDragEnd }) => {
+  const handleDeleteSchedule = (scheduleId: string) => {
+    onDeleteSchedule(scheduleId);
   };
 
   return (
@@ -17,8 +21,6 @@ const TimetableView: React.FC<{ schedules: Schedule[], onDragEnd: (result: DropR
         {(provided) => (
           <div className="timetable-container" ref={provided.innerRef} {...provided.droppableProps}>
             {schedules.map((schedule, index) => {
-              const travelStart = convertToDate(schedule.travelStartTimeEstimate);
-              const travelEnd = convertToDate(schedule.travelDepartTimeEstimate);
 
               return (
                 <Draggable key={schedule.id} draggableId={schedule.id} index={index}>
@@ -29,10 +31,12 @@ const TimetableView: React.FC<{ schedules: Schedule[], onDragEnd: (result: DropR
                       {...provided.dragHandleProps}
                       className={`timetable-item ${schedule.conflict ? 'conflict' : ''}`}
                     >
-                      <h2>{schedule.place?.name ?? "someDefaultTravel"}</h2>
-                      <p>{travelStart.toLocaleDateString()}</p>
-                      <p>{travelStart.toLocaleTimeString()}</p>
-                      <p>{travelEnd.toLocaleTimeString()}</p>
+                      <ScheduleItem schedule={schedule} />
+                      <button
+                        onClick={() => handleDeleteSchedule(schedule.id)}
+                        className="btn btn-danger mt-2"
+                      > Delete 
+                      </button>
                     </div>
                   )}
                 </Draggable>
