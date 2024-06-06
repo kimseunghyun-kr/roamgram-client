@@ -38,13 +38,6 @@ function App() {
               <Button variant="link" component={Link} to="/create-travel-plan">
                 Create Plan
               </Button>
-              <Button
-                variant="link"
-                component={Link}
-                to="/travel-diary/schedules"
-              >
-                Schedules
-              </Button>
               <Button variant="link" component={Link} to="/places-map">
                 Select Place
               </Button>

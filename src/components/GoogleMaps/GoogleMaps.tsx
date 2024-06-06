@@ -1,6 +1,15 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Grid } from "@mantine/core";
 
+
+
+interface RequestType {
+  origin: { placeId: string | undefined };
+  destination: { placeId: string | undefined };
+  travelMode: google.maps.TravelMode;
+  provideRouteAlternatives: boolean;
+}
+
 function GoogleMaps() {
   /*
   const { isLoaded, loadError } = useJsApiLoader({
@@ -48,8 +57,8 @@ function GoogleMaps() {
   //so can just directly reference to our component
   const mapRef = useRef<HTMLDivElement>(null);
   //
-  const placeAutoCompleteRef = useRef<HTMLInputElement>();
-  const placeAutoCompleteRefDest = useRef<HTMLInputElement>();
+  const placeAutoCompleteRef = useRef<HTMLInputElement>(null);
+  const placeAutoCompleteRefDest = useRef<HTMLInputElement>(null);
   //
 
   useEffect(() => {
@@ -124,7 +133,7 @@ function GoogleMaps() {
           setOriginPositionID(place.place_id);
         }
 
-        if (!searchedFilled) {
+        if (!searchedFilled && map && position) {
           map.setCenter(position); //location given to center
           map.setZoom(16);
           setSearchFilled(!searchedFilled);
@@ -179,18 +188,21 @@ function GoogleMaps() {
     const selectedMode = (document.getElementById("mode") as HTMLInputElement)
       .value;
     console.log(originID);
-    var request = {
+    const travelModetyped = (selectedMode in google.maps.TravelMode ? google.maps.TravelMode[selectedMode as keyof typeof google.maps.TravelMode] : undefined) as google.maps.TravelMode | undefined;
+
+    let request : RequestType = {
       origin: { placeId: originID },
       destination: { placeId: destID },
-      travelMode: google.maps.TravelMode[selectedMode],
+      travelMode: travelModetyped!,
       provideRouteAlternatives: true, //always set to TRUE
     };
+
     directionsService.route(request, function (result, status) {
       if (status == "OK") {
         directionsRenderer.setDirections(result);
         console.log("routes");
         console.log(result?.routes);
-        setRoutes(result?.routes);
+        setRoutes(result?.routes ?? []);
         console.log({ routes });
       }
     });
@@ -207,7 +219,7 @@ function GoogleMaps() {
     const travelMethodString = (
       document.getElementById("mode") as HTMLInputElement
     ).value;
-    if (originPositionID && destPositionID) {
+    if (originPositionID && destPositionID && directionsService && directionsRenderer) {
       console.log(travelMethodString);
       console.log("Complete locations");
       calculateRoute(directionsService, directionsRenderer);

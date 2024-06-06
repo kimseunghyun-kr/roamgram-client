@@ -4,6 +4,7 @@ import { ScheduleInsertRequest } from '../types/request/ScheduleInsertRequest';
 import { useAddSchedule } from '../hooks';
 import { Place } from '../types/Place';
 import { format } from 'date-fns';
+import { Link } from "react-router-dom";
 
 const CreateSchedulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -75,6 +76,7 @@ const CreateSchedulePage: React.FC = () => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Link to="/map" className = "placeSelect" > select place </Link>
       <input type="date" name="travelDate" value={travelDate} onChange={handleInputChange} />
       <input type="time" name="travelStartTimeEstimate" value={travelStart} onChange={handleInputChange} />
       <input type="time" name="travelDepartTimeEstimate" value={travelEnd} onChange={handleInputChange} />
