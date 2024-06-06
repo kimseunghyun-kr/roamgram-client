@@ -3,10 +3,12 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { ScheduleInsertRequest } from '../types/request/ScheduleInsertRequest';
 import { useAddSchedule } from '../hooks';
 import { Place } from '../types/Place';
+import { format } from 'date-fns';
 
 const CreateSchedulePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const [travelDate, setTravelDate] = useState<string>('');
+  const today = new Date()
+  const [travelDate, setTravelDate] = useState<string>(format(today, 'yyyy-MM-dd'));
   const [travelStart, setTravelStart] = useState<string>('');
   const [travelEnd, setTravelEnd] = useState<string>('');
 
@@ -33,15 +35,19 @@ const CreateSchedulePage: React.FC = () => {
       }));
     } else if (name === 'travelStartTimeEstimate') {
       setTravelStart(value);
+      const k = new Date(`${travelDate}T${value}`)
+      console.log("ISO string time at {}" ,new Date(k))
+      console.log("travel start estimated time at {}", value)
       setNewSchedule(prevState => ({
         ...prevState,
-        travelStartTimeEstimate: new Date(`${travelDate}T${value}`),
+        travelStartTimeEstimate: new Date(`${travelDate}T${value}Z`),
       }));
     } else if (name === 'travelDepartTimeEstimate') {
       setTravelEnd(value);
+      console.log("travel start estimated time at {}", value)
       setNewSchedule(prevState => ({
         ...prevState,
-        travelDepartTimeEstimate: new Date(`${travelDate}T${value}`),
+        travelDepartTimeEstimate: new Date(`${travelDate}T${value}Z`),
       }));
     }
   };

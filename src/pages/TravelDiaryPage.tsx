@@ -118,7 +118,7 @@ const TravelDiaryPage: React.FC = () => {
           <Link to={`/travel-diary/${id}/new-schedule`} className="btn btn-primary">Add Schedule</Link>
           <h2 className="text-xl font-semibold my-4">Schedules</h2>
           {viewMode === 'timetable' && <TimetableView schedules={schedules} onDragEnd={onDragEnd} onDeleteSchedule={handleDeleteSchedule} />}
-          {viewMode === 'calendar' && <CalendarView travelPlanId = {id} schedules={schedules} onDragEnd={onDragEnd} onDeleteSchedule={handleDeleteSchedule} />}
+          {viewMode === 'calendar' && <CalendarView initialTravelPlan = {travelPlan} initialSchedules={schedules} onDragEnd={onDragEnd} onDeleteSchedule={handleDeleteSchedule} />}
           {viewMode === 'list' && <ScheduleList schedules={filteredSchedules} onDeleteSchedule={handleDeleteSchedule} onDragEnd={onDragEnd} />}
         </div>
       )}

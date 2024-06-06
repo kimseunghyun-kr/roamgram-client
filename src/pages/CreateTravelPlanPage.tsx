@@ -9,10 +9,14 @@ const CreateTravelPlanPage: React.FC = () => {
     name: '',
     startDate: '',
     endDate: ''
-});
-  const navigate = useNavigate()
+  });
+  const navigate = useNavigate();
 
   const handleCreateTravelPlan = () => {
+    if (new Date(travelPlanUpsertRequest.endDate) < new Date(travelPlanUpsertRequest.startDate)) {
+      alert("End date cannot be before start date");
+      return;
+    }
 
     fetch(`${process.env.REACT_APP_API_URL}/travelPlan/create_travel_plan`, {
       method: 'POST',
@@ -27,7 +31,8 @@ const CreateTravelPlanPage: React.FC = () => {
         // Optionally, you can perform additional actions after creating the travel plan
       })
       .catch(error => console.error('Error creating travel plan:', error));
-      navigate("/");
+      
+    navigate("/");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,7 +45,7 @@ const CreateTravelPlanPage: React.FC = () => {
 
   return (
     <div className="container mx-auto">
-      <Link to="/" className ="text-blue-500 hover:underline"> back to Home </Link>
+      <Link to="/" className="text-blue-500 hover:underline"> back to Home </Link>
       <h1 className="text-2xl font-bold my-4">Create New Travel Plan</h1>
       <div className="flex flex-col space-y-4">
         <input
