@@ -6,7 +6,7 @@ const useDeleteTravelPlan = () => {
 
   const deleteTravelPlan = useCallback(async (id: string) => {
     try {
-      await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/delete_travel_plan`, {
+      await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

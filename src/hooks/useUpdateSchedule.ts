@@ -11,7 +11,7 @@ const useUpdateSchedule = () => {
     setError(null);
 
     try {
-      const response = await axios.put(`${process.env.REACT_APP_API_URL}/schedules/${schedule.id}`, schedule);
+      const response = await axios.put(`${import.meta.env.VITE_APP_API_URL}/schedules/${schedule.id}`, schedule);
       setLoading(false);
       return response.data;
     } catch (err : unknown) {

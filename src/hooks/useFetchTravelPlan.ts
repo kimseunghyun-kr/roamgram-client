@@ -10,7 +10,7 @@ const useFetchTravelPlan = (id: string) => {
     setLoading(true);
     setError(null);
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/get_by_id?planId=${id}`);
+      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_by_id?planId=${id}`);
       if (!response.ok) {
         throw new Error('Failed to fetch travel plan');
       }

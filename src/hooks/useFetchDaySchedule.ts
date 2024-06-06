@@ -10,7 +10,7 @@ const useFetchDaySchedule = (travelPlanId: string, date: string) => {
     const fetchSchedules = async () => {
       try {
         console.log("this has been reached")
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/${travelPlanId}/schedule/search_schedule_by_day?date=${date}&pageNumber=0&pageSize=10`);
+        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/${travelPlanId}/schedule/search_schedule_by_day?date=${date}&pageNumber=0&pageSize=10`);
         if (!response.ok) {
           throw new Error('Failed to fetch schedules');
         }
