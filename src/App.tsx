@@ -31,7 +31,7 @@ function App() {
     libraries: ["places", "maps", "core", "marker", "routes"],
     version: "weekly",
   });
-  return (
+  return isLoaded ? (
     <MantineProvider>
       <Flex>
         <Flex>
@@ -70,10 +70,10 @@ function App() {
       <Grid>
         <GoogleMaps></GoogleMaps>
       </Grid>
-      <APIProvider apiKey={import.meta.env.VITE_APP_GOOGLE_KEY} onLoad={() => console.log('Maps API has loaded.')}>
+      {/* <APIProvider apiKey={import.meta.env.VITE_APP_GOOGLE_KEY} onLoad={() => console.log('Maps API has loaded.')}> */}
       <Router>
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/travelPlans" element={<HomePage />} />
           <Route path="/travelPlans/:id" element={<TravelDiaryPage />} />
           <Route path="/create-travel-plan" element={<CreateTravelPlanPage />} />
           <Route path="/travel-diary/:id/new-schedule" element={<NewSchedulePage />} />
@@ -82,9 +82,11 @@ function App() {
           <Route path="/places-map" element={<SelectPlacePage />} />
         </Routes>
       </Router>
-      </APIProvider>
+      {/* </APIProvider> */}
     </MantineProvider>
-  );
+  ) : (
+  <></>
+  )
 }
 import "bootstrap/dist/css/bootstrap.min.css";
 
