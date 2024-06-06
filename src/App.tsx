@@ -3,9 +3,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 
 import GoogleMapWrapper from "./components/google/GoogleMapWrapper.tsx";
 import Header from "./components/Header/Header.tsx";
-import Home from "./components/Home/Home.tsx";
-import Schedule from "./components/Schedule/Schedule.tsx";
-import Place from "./components/Place/Place.tsx";
+import Schedule from "./components/schedule/Schedule.tsx";
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './pages/Homepage';
