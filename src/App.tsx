@@ -70,7 +70,7 @@ function App() {
       <Grid>
         <GoogleMaps></GoogleMaps>
       </Grid>
-      <APIProvider apiKey={process.env.REACT_APP_GOOGLE_KEY} onLoad={() => console.log('Maps API has loaded.')}>
+      <APIProvider apiKey={import.meta.env.VITE_APP_GOOGLE_KEY} onLoad={() => console.log('Maps API has loaded.')}>
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
