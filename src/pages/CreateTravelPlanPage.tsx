@@ -18,7 +18,7 @@ const CreateTravelPlanPage: React.FC = () => {
       return;
     }
 
-    fetch(`${process.env.REACT_APP_API_URL}/travelPlan/create_travel_plan`, {
+    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

@@ -9,7 +9,7 @@ const HomePage: React.FC = () => {
 
   const fetchTravelPlans = useCallback(async () => {
     try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/get_all`);
+      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`);
       const data = await response.json();
       setTravelPlans(data);
     } catch (error) {
@@ -28,7 +28,7 @@ const HomePage: React.FC = () => {
   const deleteTravelPlan = async (id: string) => {
     try {
       console.log("id for delete is {}", id)
-      await fetch(`${process.env.REACT_APP_API_URL}/travelPlan/delete_travel_plan`, {
+      await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
