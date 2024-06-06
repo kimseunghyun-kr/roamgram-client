@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Grid } from "@mantine/core";
+import { Loader } from "@googlemaps/js-api-loader";
+import { Autocomplete, useJsApiLoader } from "@react-google-maps/api";
 
 function GoogleMaps() {
   /*
@@ -286,53 +287,44 @@ function GoogleMaps() {
   }
   */
   return (
-    <>
-      <Grid.Col span="auto">
-        <div>
-          <label>From: </label>
-        </div>
-        <input ref={placeAutoCompleteRef} placeholder="From"></input>
-        <br></br>
-        <div>
-          <label>To:</label>
-        </div>
-        <input ref={placeAutoCompleteRefDest} placeholder="To" required></input>
-        <br></br>
-        <div id="floating-panel">
-          <b>Mode of Travel: </b>
-          <select id="mode" onChange={(e) => setTravelMethod(e.target.value)}>
-            <option value="DRIVING">Driving</option>
-            <option value="WALKING">Walking</option>
-            <option value="BICYCLING">Bicycling</option>
-            <option value="TRANSIT">Transit</option>
-          </select>
-        </div>
-        <label>Origin: {selectedPlace}</label>
-        <br></br>
-        <label>Destination: {selectedPlaceDest} </label>
-        {leg ? (
-          <>
-            <p>Distance: {leg.distance?.text}</p>
-            <p> Duration: {leg.duration?.text}</p>
-          </>
-        ) : (
-          ""
-        )}
-        <h3>Alternative Routes to Choose</h3>
-        <ul>
-          {routes.map((route, index) => (
-            <li key={route.summary}>
-              <button onClick={() => setRouteIndex(index)}>
-                {route.summary}
-              </button>
-            </li>
-          ))}
-        </ul>
-      </Grid.Col>
-      <Grid.Col span={7}>
-        <div style={{ height: "100vh" }} ref={mapRef}></div>
-      </Grid.Col>
-    </>
+    <div className="map-container">
+      <h1>Search Place Here</h1>
+      <input ref={placeAutoCompleteRef} placeholder="From"></input>
+      <br></br>
+      <input ref={placeAutoCompleteRefDest} placeholder="To"></input>
+      <br></br>
+      <div id="floating-panel">
+        <b>Mode of Travel: </b>
+        <select id="mode" onChange={(e) => setTravelMethod(e.target.value)}>
+          <option value="DRIVING">Driving</option>
+          <option value="WALKING">Walking</option>
+          <option value="BICYCLING">Bicycling</option>
+          <option value="TRANSIT">Transit</option>
+        </select>
+      </div>
+      <label>Origin: {selectedPlace}</label>
+      <br></br>
+      <label>Destination: {selectedPlaceDest} </label>
+      {leg ? (
+        <>
+          <h2>Distance: {leg.distance?.text}</h2>
+          <h2> Duration: {leg.duration?.text}</h2>
+        </>
+      ) : (
+        ""
+      )}
+      <h3>Alternative Routes to Choose</h3>
+      <ul>
+        {routes.map((route, index) => (
+          <li key={route.summary}>
+            <button onClick={() => setRouteIndex(index)}>
+              {route.summary}
+            </button>
+          </li>
+        ))}
+      </ul>
+      <div style={{ height: "400px" }} ref={mapRef}></div>
+    </div>
   );
 }
 
