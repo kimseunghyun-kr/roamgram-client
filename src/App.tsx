@@ -1,96 +1,59 @@
-import { useJsApiLoader } from "@react-google-maps/api";
-import "./App.css";
-import GoogleMaps from "./components/GoogleMaps/GoogleMaps.tsx";
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// src/App.tsx
+import React, { Suspense } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom';
+import { MantineProvider, Center, Loader, Flex, Container, Group, Button, Image, Switch, NativeSelect } from '@mantine/core';
 import HomePage from './pages/Homepage';
 import TravelDiaryPage from './pages/TravelDiaryPage';
 import SchedulePage from './pages/SchedulePage';
 import CreateTravelPlanPage from './pages/CreateTravelPlanPage';
 import NewSchedulePage from './pages/CreateSchedulePage';
 import SelectPlacePage from './pages/SelectPlacePage';
-import { APIProvider } from '@vis.gl/react-google-maps';
 import ScheduleListPage from './pages/ScheduleListPage';
-import {
-  MantineProvider,
-  AppShell,
-  Container,
-  Image,
-  Group,
-  Button,
-  Flex,
-  Switch,
-  NativeSelect,
-  Grid,
-  Center,
-} from "@mantine/core";
-import "@mantine/core/styles.css";
+import MapPage from './pages/MapPage';
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_KEY, //rmb to remove
-    libraries: ["places", "maps", "core", "marker", "routes"],
-    version: "weekly",
-  });
-  return isLoaded ? (
+  return (
     <MantineProvider>
-      <Flex>
-        <Flex>
-          <Image src="src\assets\RoamGram Logo.png" h={45} w="auto"></Image>
-        </Flex>
-        <Container>
-          <Group gap="xs" grow>
-            <div className="header-button">
-              <Button variant="transparent" size="xl">
-                Book
-              </Button>
-              <Button variant="transparent" size="xl">
-                Planner
-              </Button>
-              <Button variant="transparent" size="xl">
-                Route
-              </Button>
-            </div>
-          </Group>
-        </Container>
-        <Center>
+      <Router>
+        <Flex justify="space-between" align="center" p="md">
+          <Image src="src/assets/RoamGram Logo.png" h={45} w="auto" />
+          <Container>
+            <Group gap="xs">
+              <Button variant="link" component={Link} to="/travelPlans">Home</Button>
+              <Button variant="link" component={Link} to="/create-travel-plan">Create Plan</Button>
+              <Button variant="link" component={Link} to="/travel-diary/schedules">Schedules</Button>
+              <Button variant="link" component={Link} to="/places-map">Select Place</Button>
+              <Button variant="link" component={Link} to="/map">Map</Button>
+            </Group>
+          </Container>
           <Group gap="xs">
             <Button>Login</Button>
             <Button>Register</Button>
             <Switch>Mode</Switch>
             <NativeSelect
               radius={1}
-              data={["ENG", "CHI", "JPN", "KR"]}
-              styles={{
-                input: { color: "gray", border: "none", textAlign: "left" },
-              }}
-            ></NativeSelect>
+              data={['ENG', 'CHI', 'JPN', 'KR']}
+              styles={{ input: { color: 'gray', border: 'none', textAlign: 'left' } }}
+            />
           </Group>
-        </Center>
-      </Flex>
-      <Grid>
-        <GoogleMaps></GoogleMaps>
-      </Grid>
-      {/* <APIProvider apiKey={import.meta.env.VITE_APP_GOOGLE_KEY} onLoad={() => console.log('Maps API has loaded.')}> */}
-      <Router>
-        <Routes>
-          <Route path="/travelPlans" element={<HomePage />} />
-          <Route path="/travelPlans/:id" element={<TravelDiaryPage />} />
-          <Route path="/create-travel-plan" element={<CreateTravelPlanPage />} />
-          <Route path="/travel-diary/:id/new-schedule" element={<NewSchedulePage />} />
-          <Route path="/travel-diary/schedules/:id" element={<SchedulePage />} />
-          <Route path="/travel-diary/schedules" element={<ScheduleListPage />} /> {/* New route for schedule list */}
-          <Route path="/places-map" element={<SelectPlacePage />} />
-        </Routes>
+        </Flex>
+        <Suspense fallback={<Center><Loader /></Center>}>
+          <Routes>
+            <Route path="/travelPlans" element={<HomePage />} />
+            <Route path="/travelPlans/:id" element={<TravelDiaryPage />} />
+            <Route path="/create-travel-plan" element={<CreateTravelPlanPage />} />
+            <Route path="/travel-diary/:id/new-schedule" element={<NewSchedulePage />} />
+            <Route path="/travel-diary/schedules/:id" element={<SchedulePage />} />
+            <Route path="/travel-diary/schedules" element={<ScheduleListPage />} />
+            <Route path="/places-map" element={<SelectPlacePage />} />
+            <Route path="/map" element={<MapPage />} />
+          </Routes>
+        </Suspense>
       </Router>
-      {/* </APIProvider> */}
     </MantineProvider>
-  ) : (
-  <></>
-  )
+  );
 }
-import "bootstrap/dist/css/bootstrap.min.css";
-
-
-
 
 export default App;
