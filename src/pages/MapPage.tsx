@@ -13,6 +13,7 @@ import {
   Image,
   Switch,
   NativeSelect,
+  Grid,
 } from "@mantine/core";
 
 const MapPage = () => {
@@ -22,7 +23,13 @@ const MapPage = () => {
     version: "weekly",
   });
 
-  return isLoaded ? <GoogleMaps></GoogleMaps> : <></>;
+  return isLoaded ? (
+    <Grid>
+      <GoogleMaps></GoogleMaps>
+    </Grid>
+  ) : (
+    <></>
+  );
 };
 
 export default MapPage;
