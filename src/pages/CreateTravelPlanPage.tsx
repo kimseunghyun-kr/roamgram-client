@@ -32,7 +32,7 @@ const CreateTravelPlanPage: React.FC = () => {
       })
       .catch(error => console.error('Error creating travel plan:', error));
       
-    navigate("/");
+    navigate("/travelPlans");
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
