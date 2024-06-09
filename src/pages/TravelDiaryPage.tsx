@@ -20,7 +20,7 @@ const TravelDiaryPage: React.FC = () => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [viewMode, setViewMode] = useState<'calendar' | 'timetable' | 'list'>('calendar');
   const { convertToDate } = useConvertToDate();
-  const deleteTravelPlan = useDeleteTravelPlan();
+  const {deleteTravelPlan} = useDeleteTravelPlan();
 
   useEffect(() => {
     if (travelPlan) {
@@ -30,7 +30,7 @@ const TravelDiaryPage: React.FC = () => {
 
   useEffect(() => {
     refetch(); // Refetch data on location change
-  }, [location, refetch]);
+  }, [location.pathname, refetch]);
 
   if (!travelPlan) {
     return <div>Loading...</div>;

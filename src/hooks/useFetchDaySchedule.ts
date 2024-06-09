@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Schedule } from '../types/Schedule';
+import getRequestOptions from './fetchAuth';
 
 const useFetchDaySchedule = (travelPlanId: string, date: string) => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
@@ -10,7 +11,9 @@ const useFetchDaySchedule = (travelPlanId: string, date: string) => {
     const fetchSchedules = async () => {
       try {
         console.log("this has been reached")
-        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/${travelPlanId}/schedule/search_schedule_by_day?date=${date}&pageNumber=0&pageSize=10`);
+        const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/${travelPlanId}/schedule/search_schedule_by_day?date=${date}&pageNumber=0&pageSize=10`,
+        getRequestOptions()
+      );
         if (!response.ok) {
           throw new Error('Failed to fetch schedules');
         }

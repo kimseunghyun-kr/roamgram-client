@@ -1,13 +1,12 @@
 import { TravelPlanUpsertRequest } from '../types/request/TravelPlanUpsertRequest';
+import getRequestOptions from './fetchAuth';
 
 const useUpdateTravelPlan = () => {
   const updateTravelPlan = async (updatedTravelPlanData: TravelPlanUpsertRequest) => {
     try {
       const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/modify_travel_plan`, {
         method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        ...getRequestOptions(),
         body: JSON.stringify(updatedTravelPlanData),
       });
 

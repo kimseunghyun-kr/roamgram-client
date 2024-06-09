@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { TravelPlanUpsertRequest } from '../types/request/TravelPlanUpsertRequest';
+import getRequestOptions from '../hooks/fetchAuth';
 
 const CreateTravelPlanPage: React.FC = () => {
   const [travelPlanUpsertRequest, setTravelPlanUpsertRequest] = useState<TravelPlanUpsertRequest>({
@@ -20,9 +21,7 @@ const CreateTravelPlanPage: React.FC = () => {
 
     fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      ...getRequestOptions(),
       body: JSON.stringify(travelPlanUpsertRequest)
     })
       .then(response => response.json())

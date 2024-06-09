@@ -2,26 +2,25 @@ import { useState, useEffect, useCallback } from 'react';
 import { TravelPlan } from '../types/TravelPlan';
 import getRequestOptions from './fetchAuth';
 
-const useFetchTravelPlan = (planId: string) => {
-  const [travelPlan, setTravelPlan] = useState<TravelPlan | null>(null);
+const useFetchAllTravelPlan = () => {
+  const [travelPlans, setTravelPlans] = useState<TravelPlan[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  console.log("token fetchTravelPlan {},",localStorage.getItem('token'))
-  const fetchTravelPlan = useCallback(async () => {
+
+  const fetchAllTravelPlans = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
-      
-      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_by_id?planId=${planId}`, {
+      const response = await fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`, {
         method: 'GET',
         ...getRequestOptions(),
         credentials: 'include', // Include credentials
       });
       if (!response.ok) {
-        throw new Error('Failed to fetch travel plan');
+        throw new Error('Failed to fetch travel plans');
       }
-      const data: TravelPlan = await response.json();
-      setTravelPlan(data);
+      const data: TravelPlan[] = await response.json();
+      setTravelPlans(data);
     } catch (error: unknown) {
       if (error instanceof Error) {
         setError(error.message);
@@ -31,13 +30,13 @@ const useFetchTravelPlan = (planId: string) => {
     } finally {
       setLoading(false);
     }
-  }, [planId]);
+  }, []);
 
   useEffect(() => {
-    fetchTravelPlan();
-  }, [fetchTravelPlan]);
+    fetchAllTravelPlans();
+  }, [fetchAllTravelPlans]);
 
-  return { travelPlan, refetch: fetchTravelPlan, loading, error };
+  return { travelPlans, refetch: fetchAllTravelPlans , loading, error };
 };
 
-export default useFetchTravelPlan;
+export default useFetchAllTravelPlan;

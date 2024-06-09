@@ -23,6 +23,8 @@ import ScheduleListPage from "./pages/ScheduleListPage";
 import MapPage from "./pages/MapPage";
 import "./App.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import LoginPage from "./pages/LoginPage";
+import AuthSuccess from "./components/login/AuthSuccess";
 
 function App() {
   return (
@@ -47,7 +49,7 @@ function App() {
             </Group>
           </Container>
           <Group gap="xs">
-            <Button>Login</Button>
+            <Button variant="link" component={Link} to="/login">Login</Button>
             <Button>Register</Button>
             <Switch>Mode</Switch>
             <NativeSelect
@@ -87,6 +89,8 @@ function App() {
             />
             <Route path="/places-map" element={<SelectPlacePage />} />
             <Route path="/map" element={<MapPage />} />
+            <Route path="/authSuccess" element={<AuthSuccess />} />
+            <Route path="/login" element={<LoginPage />} />
           </Routes>
         </Suspense>
       </Router>
