@@ -1,26 +1,27 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuthContext } from '../../context/AuthContext';
 
 const AuthSuccess: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuthContext(); // Add setIsAuthenticated to context if not already present
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
-    const token = params.get('token');
-    console.log("token1, {}",token)
-    if (token) {
-        console.log("token2, {}",token)
-      localStorage.setItem('token', token); // or use cookies if preferred
-      // Redirect to the desired page after storing the token
-      console.log("token3 {},",localStorage.getItem('token'))
+    const accessToken = params.get('accessToken');
+    const refreshToken = params.get('refreshToken');
+
+    if (accessToken && refreshToken) {
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
+      setIsAuthenticated(true); // Update authentication state
       navigate('/travelPlans');
     } else {
-      console.error('Token not found in URL');
-      // Redirect to login page or show an error
+      console.error('Tokens not found in URL');
       navigate('/login');
     }
-  }, [location, navigate]);
+  }, [location, navigate, setIsAuthenticated]);
 
   return <div>Loading...</div>;
 };

@@ -9,5 +9,7 @@ export { default as useUpdateSchedule } from './useUpdateSchedule'
 export { default as useFetchDaySchedule } from './useFetchDaySchedule'
 export { default as useConvertToDate } from './useConvertToDate'
 export { default as useDeleteTravelPlan } from './useDeleteTravelPlan'
-export { default as fetchAuth } from './fetchAuth'
+export { getRequestOptions, refreshToken } from './fetchAuth'
+export { useRegister } from './useRegister'
+export { default as useAuth } from './login/useAuth'
 // Export other custom hooks here

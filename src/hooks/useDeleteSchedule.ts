@@ -1,4 +1,4 @@
-import getRequestOptions from "./fetchAuth";
+import {getRequestOptions} from "./fetchAuth";
 
 const useDeleteSchedule = () => {
   const deleteSchedule = async (planId: string, scheduleId: string) => {

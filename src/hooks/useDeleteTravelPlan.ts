@@ -1,8 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import getRequestOptions from './fetchAuth';
+import {getRequestOptions} from './fetchAuth';
 
-const useDeleteTravelPlan = () => {
+const useDeleteTravelPlan = (refetch: () => void) => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -23,13 +23,14 @@ const useDeleteTravelPlan = () => {
       }
 
       setLoading(false);
+      refetch(); // Call refetch after successful deletion
       // navigate('/travelPlans');
     } catch (error) {
       console.error('Error deleting travel plan:', error);
       setLoading(false);
       setError('Failed to delete travel plan');
     }
-  }, [navigate]);
+  }, [refetch, navigate]);
 
   return { deleteTravelPlan, loading, error };
 };

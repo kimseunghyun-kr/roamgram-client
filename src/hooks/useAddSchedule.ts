@@ -1,5 +1,5 @@
 import { ScheduleInsertRequest } from "../types/request/ScheduleInsertRequest";
-import getRequestOptions from "./fetchAuth";
+import {getRequestOptions} from "./fetchAuth";
 
 const useAddSchedule = () => {
   const addSchedule = async (travelPlanId:string, scheduleInsertRequest: ScheduleInsertRequest) => {

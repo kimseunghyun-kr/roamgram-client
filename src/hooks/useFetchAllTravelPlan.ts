@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { TravelPlan } from '../types/TravelPlan';
-import getRequestOptions from './fetchAuth';
+import {getRequestOptions} from './fetchAuth';
 
 const useFetchAllTravelPlan = () => {
   const [travelPlans, setTravelPlans] = useState<TravelPlan[]>([]);

@@ -7,7 +7,7 @@ const useUpdateSchedule = () => {
   const [error, setError] = useState<Error | null>(null);
 
   const getRequestOptions = () => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('accessToken');
     return {
       headers: {
         'Content-Type': 'application/json',

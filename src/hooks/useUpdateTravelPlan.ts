@@ -1,5 +1,5 @@
 import { TravelPlanUpsertRequest } from '../types/request/TravelPlanUpsertRequest';
-import getRequestOptions from './fetchAuth';
+import {getRequestOptions} from './fetchAuth';
 
 const useUpdateTravelPlan = () => {
   const updateTravelPlan = async (updatedTravelPlanData: TravelPlanUpsertRequest) => {

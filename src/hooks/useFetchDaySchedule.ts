@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Schedule } from '../types/Schedule';
-import getRequestOptions from './fetchAuth';
+import {getRequestOptions} from './fetchAuth';
 
 const useFetchDaySchedule = (travelPlanId: string, date: string) => {
   const [schedules, setSchedules] = useState<Schedule[]>([]);

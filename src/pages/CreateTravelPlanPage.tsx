@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { TravelPlanUpsertRequest } from '../types/request/TravelPlanUpsertRequest';
-import getRequestOptions from '../hooks/fetchAuth';
+import {getRequestOptions} from '../hooks/fetchAuth';
 
 const CreateTravelPlanPage: React.FC = () => {
   const [travelPlanUpsertRequest, setTravelPlanUpsertRequest] = useState<TravelPlanUpsertRequest>({

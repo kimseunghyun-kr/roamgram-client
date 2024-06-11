@@ -3,11 +3,11 @@ interface RequestOptions extends RequestInit {
   }
   
   const getRequestOptions = (): RequestOptions => {
-    console.log("token deleteTravelPlan {},",localStorage.getItem('token'))
-    const token = localStorage.getItem('token');
+    console.log("token taken from storage {},",localStorage.getItem('accessToken'))
+    const accessToken = localStorage.getItem('accessToken');
     const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${accessToken}`, // Include the access token in the Authorization header
     };
     const requestOptions: RequestOptions = {
       headers,
@@ -15,6 +15,22 @@ interface RequestOptions extends RequestInit {
     };
     return requestOptions;
   };
+
+
+  const refreshToken = async () => {
+    const response = await fetch('/api/refresh-token', {
+        method: 'POST',
+        credentials: 'include', // Send cookies
+    });
+
+    if (response.ok) {
+        const data = await response.json();
+        localStorage.setItem('accessToken', data.accessToken);
+    } else {
+        // Handle refresh token expiration or failure
+        window.location.href = '/login';
+    }
+};
+
   
-  export default getRequestOptions;
-  
+export { getRequestOptions, refreshToken };
