@@ -1,7 +1,7 @@
 // src/AuthContext.tsx
 import React, { createContext, useContext, ReactNode, useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks';
+import {useAuth} from '../hooks';
 
 interface AuthContextType {
   isAuthenticated: boolean;
