@@ -1,0 +1,10 @@
+*{
+    font-family: -apple-system
+}
+
+.rbc-header{
+    background-color:#91AAE2;
+    font-weight: 500;
+    font-size: 1em;
+    color: white;
+}
