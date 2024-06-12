@@ -5,6 +5,11 @@ function SchedulePageMap() {
   const mapRef = useRef<HTMLDivElement>(null);
   const [currentLocation, setCurrentLocation] = useState();
 
+  //marker
+  const [firstMarker, setFirstMarker] = useState<google.maps.Marker>(
+    new google.maps.Marker()
+  );
+
   //mounting of map
   useEffect(() => {
     const mapOptions = {
@@ -23,12 +28,16 @@ function SchedulePageMap() {
     setMap(mapContainer);
   }, []);
 
-  //creating of get location button
+  //creating of get location button with current location marker
   useEffect(() => {
     const locationButton = document.createElement("button");
     locationButton.textContent = "Go to Current Location";
     if (map !== null) {
       console.log("current location button");
+      const googleMarker = new google.maps.Marker({
+        map: map,
+        title: "Current Pinned Location",
+      });
       map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
       if (locationButton) {
         locationButton.addEventListener("click", () => {
@@ -41,6 +50,7 @@ function SchedulePageMap() {
               };
               map.setCenter(currentPos);
               map.setZoom(16);
+              googleMarker.setPosition(currentPos);
             });
           }
         });
