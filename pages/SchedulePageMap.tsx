@@ -1,5 +1,6 @@
+import React, { useEffect, useRef, useState } from "react";
+
 import { Input } from "@mantine/core";
-import { useEffect, useRef, useState } from "react";
 
 function SchedulePageMap() {
   const [map, setMap] = useState<google.maps.Map | null>(null);
