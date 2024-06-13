@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-
 import {
   ActionIcon,
   Button,
@@ -7,28 +6,22 @@ import {
   Grid,
   Input,
   NativeSelect,
-  Textarea,
+  rem,
 } from "@mantine/core";
-import { v4 as uuid } from "uuid";
-import { DatePicker, DateTimePicker, TimeInput } from "@mantine/dates";
-//testing purposese but make sure to store the travelPlanID somewhere
-const travelPlanID = "1bfb5d9c-dd40-4e9e-b0f2-0492fda38c37";
+import { DatePicker, TimeInput } from "@mantine/dates";
 
-function SchedulePageMap() {
-  /////////////////////////////
-  //Map
+export function SchedulePageMap() {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
 
-  /////////AutoComplete For Input
+  //AutoComplete For Input
   const [autoCompleteStart, setAutoCompleteStart] =
     useState<google.maps.places.Autocomplete | null>(null);
   const [autoCompleteEnd, setAutoCompleteEnd] =
     useState<google.maps.places.Autocomplete | null>(null);
   const autoCompleteStartRef = useRef<HTMLInputElement>();
   const autoCompleteEndRef = useRef<HTMLInputElement>();
-  ////////////
-
+  //
   const [scheduleDetails, setScheduleDetails] = useState({
     place: {
       id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
@@ -48,12 +41,6 @@ function SchedulePageMap() {
     nextScheduleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   });
 
-  const [startTime, setStartTime] = useState<string>();
-  const [endTime, setEndTime] = useState<string>();
-  const [travelDay, setTravelDay] = useState<Date>();
-  const [scheduleName, setScheduleName] = useState();
-  const [scheduleDescription, setScheduleDescription] = useState();
-  ///////////////////////////////////////////////////
   //mounting of map and autocomplete
   useEffect(() => {
     //////////////
@@ -138,12 +125,17 @@ function SchedulePageMap() {
     }
   });
 
-  //console test
-  //
-  console.log(startTime);
-  console.log(endTime);
-  console.log(travelDay);
-  //
+  //Browser Picker from Mantine TimeInput
+  const timeref = useRef<HTMLInputElement>(null);
+  const pickerControl = (
+    <ActionIcon
+      variant="subtle"
+      color="gray"
+      onClick={() => timeref.current?.showPicker()}
+    >
+      <IconClock style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+    </ActionIcon>
+  );
 
   return (
     <>
@@ -151,28 +143,12 @@ function SchedulePageMap() {
         <Grid grow overflow="hidden">
           <Grid.Col span={7}>
             <Input placeholder="Name of Activity"></Input>
-            <Textarea placeholder="add description of activity if needed" />
+            <Input placeholder="short description"></Input>
             <Input placeholder="start" ref={autoCompleteStartRef}></Input>
             <Input placeholder="End Location" ref={autoCompleteEndRef}></Input>
-            <DatePicker
-              onChange={(e) => {
-                setTravelDay(e);
-              }}
-            />
-            <TimeInput
-              description="start"
-              id="startTime"
-              onChange={(e) => {
-                setStartTime(e.currentTarget.value);
-              }}
-            />
-            <TimeInput
-              description="end"
-              id="endTime"
-              onChange={(e) => {
-                setEndTime(e.currentTarget.value);
-              }}
-            />
+            <DatePicker></DatePicker>
+            <TimeInput description="start"></TimeInput>
+            <TimeInput description="end"></TimeInput>
             <NativeSelect
               data={[
                 { value: "DRIVING", label: "Driving" },
@@ -188,5 +164,3 @@ function SchedulePageMap() {
     </>
   );
 }
-
-export default SchedulePageMap;

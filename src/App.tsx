@@ -28,7 +28,8 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        <TravelPage></TravelPage>
+        <SchedulePageMap></SchedulePageMap>
+        <SchedulePage></SchedulePage>
       </div>
     </>
   ) : (
