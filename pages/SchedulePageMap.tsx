@@ -91,12 +91,19 @@ function SchedulePageMap() {
         }
       });
     }
+    if (autoCompleteStart) {
+      autoCompleteStart.addListener("places_changed", () => {
+        const startPlace = autoCompleteStart.getPlace();
+        //add Stuff here
+      });
+    }
   });
 
   return (
     <>
       <div ref={mapRef} style={{ height: "50vh", width: "50vh" }}></div>
       <Input placeholder="End Location" ref={autoCompleteEndRef}></Input>
+      <Input placeholder="start" ref={autoCompleteStartRef}></Input>
     </>
   );
 }

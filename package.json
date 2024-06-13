@@ -15,6 +15,7 @@
     "@mantine/carousel": "^7.10.1",
     "@mantine/core": "^7.10.1",
     "@mantine/dates": "^7.10.1",
+    "@mantine/form": "^7.10.1",
     "@mantine/hooks": "^7.10.1",
     "@react-google-maps/api": "^2.19.3",
     "@tabler/icons-react": "^3.5.0",
@@ -24,7 +25,9 @@
     "planby": "^1.1.7",
     "react": "^18.2.0",
     "react-big-calendar": "^1.12.2",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "uuid": "^10.0.0",
+    "uuidv4": "^6.2.13"
   },
   "devDependencies": {
     "@event-calendar/core": "^3.0.2",

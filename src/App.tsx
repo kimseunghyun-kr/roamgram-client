@@ -13,6 +13,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import SchedulePageMap from "../pages/SchedulePageMap.tsx";
 import { useJsApiLoader } from "@react-google-maps/api";
 import CreateSchedule from "../pages/CreateSchedule.tsx";
+import TravelPage from "../pages/TravelPage.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -27,9 +28,7 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        <CreateSchedule></CreateSchedule>
-        <SchedulePageMap></SchedulePageMap>
-        <SchedulePage></SchedulePage>;
+        <TravelPage></TravelPage>
       </div>
     </>
   ) : (
