@@ -20,6 +20,22 @@ import moment from "moment";
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
 //];
+const events111 = [
+  {
+    id: "1",
+    start: moment("2024-06-11T10:00:00").toDate(),
+    end: moment("2024-06-11T11:00:00").toDate(),
+    title: "Alex-Testing",
+    description: "test1",
+  },
+  {
+    id: "2",
+    start: moment("2024-06-11T12:00:00").toDate(),
+    end: moment("2024-06-11T13:00:00").toDate(),
+    title: "Alex-Testing-2-check-overlap",
+    description: "test2",
+  },
+];
 
 function App() {
   //remember to change this!
@@ -32,7 +48,7 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        <SchedulePageMap></SchedulePageMap>
+        <SchedulePageMap eventsTest={events111}></SchedulePageMap>
       </div>
     </>
   ) : (

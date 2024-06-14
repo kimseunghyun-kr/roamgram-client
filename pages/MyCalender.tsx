@@ -26,6 +26,13 @@ function MyCalender(props) {
 
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
+  console.log("mycalender events are");
+  console.log(props.event);
+  console.log("myEvents are", myEvents);
+
+  useEffect(() => {
+    setMyEvents((p) => props.event);
+  }, [props.event]);
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {

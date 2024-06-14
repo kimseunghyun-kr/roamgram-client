@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   ActionIcon,
@@ -23,7 +23,7 @@ import MyCalender from "./MyCalender.tsx";
 //testing purposese but make sure to store the travelPlanID somewhere
 const travelPlanID = "1bfb5d9c-dd40-4e9e-b0f2-0492fda38c37";
 
-function SchedulePageMap() {
+function SchedulePageMap(props) {
   /////////////////////////////
   //Map
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -62,35 +62,15 @@ function SchedulePageMap() {
     nextScheduleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
   });
 
-  let events = [
-    {
-      id: "1",
-      start: moment("2024-06-11T10:00:00").toDate(),
-      end: moment("2024-06-11T11:00:00").toDate(),
-      title: "Alex-Testing",
-      description: "test1",
-    },
-    {
-      id: "2",
-      start: moment("2024-06-11T12:00:00").toDate(),
-      end: moment("2024-06-11T13:00:00").toDate(),
-      title: "Alex-Testing-2-check-overlap",
-      description: "test2",
-    },
-  ];
-  ///for testing to add new schedule using Create Schedule button
-  const [addSchedule, setAddSchedule] = useState({
-    id: uuid(),
-    start: null,
-    end: null,
-    title: null,
-    description: null,
-  });
-
   const [startTime, setStartTime] = useState<string>();
   const [endTime, setEndTime] = useState<string>();
   const [scheduleName, setScheduleName] = useState();
   const [scheduleDescription, setScheduleDescription] = useState();
+
+  /////////////
+  ///////////
+  const [event, setEvent] = useState(props.eventsTest);
+  console.log(props);
 
   ///////////////////////////////////////////////////
 
@@ -182,34 +162,45 @@ function SchedulePageMap() {
 
   //console test
   //
-  console.log(startTime);
+  //console.log(startTime);
   //console.log(endTime);
 
   //testing
   const [travelDay, setTravelDay] = useState<Date | null>(null);
   const [formattedTravelDay, setFormattedTravelDay] = useState<string>();
 
-  console.log(formattedTravelDay);
+  //console.log(formattedTravelDay);
+
   const setTravelDayFunc = (e: Date) => {
-    console.log("e is", { e });
+    //console.log("e is", { e });
     setTravelDay(e);
 
     const dateAsMoment = moment(e);
     const formattedDate = dateAsMoment.format("Y-MM-DD");
     setFormattedTravelDay(formattedDate);
   };
-  //console.log("travel day is", { travelDay });
-  //console.log("formatted date is", { formattedTravelDay });
+
+  ///for testing to add new schedule using Create Schedule button
+  const [addSchedule, setAddSchedule] = useState({
+    id: "3",
+    start: moment("2024-06-12T10:00:00").toDate(),
+    end: moment("2024-06-12T12:00:00").toDate(),
+    title: "testEventCreateSchedule",
+    description: "weeee",
+  });
   const handleSubmit = () => {
-    const startSchedule = moment(
-      (formattedTravelDay + " " + startTime) as string
-    ).toDate();
-    const endSchedule = moment(
-      (formattedTravelDay + " " + endTime) as string
-    ).toDate();
-    setAddSchedule((p) => ({ ...p, start: startSchedule, end: endSchedule }));
+    const newSchedule = addSchedule;
     console.log(addSchedule);
+    setEvent((p) => [...p, newSchedule]);
   };
+  console.log(event);
+
+  const handleSubmit2 = useCallback(() => {
+    const newSchedule = addSchedule;
+    console.log(addSchedule);
+    setEvent((p) => [...p, newSchedule]);
+  }, [setEvent]);
+
   return (
     <>
       <Container fluid p="0">
@@ -219,13 +210,20 @@ function SchedulePageMap() {
             <Textarea placeholder="add description of activity if needed" />
             <Input placeholder="start" ref={autoCompleteStartRef}></Input>
             <Input placeholder="End Location" ref={autoCompleteEndRef}></Input>
-            <DatePicker onChange={setTravelDayFunc} value={travelDay} />
+            <DatePicker
+              allowDeselect
+              onChange={setTravelDay}
+              value={travelDay}
+            />
             <TimeInput
               description="start"
               id="startTime"
               onChange={(e) => {
-                console.log(e.currentTarget.value);
-                const startTarget = e.currentTarget.value + ":00";
+                console.log(
+                  "Start using currentTargetValue",
+                  e.currentTarget.value
+                );
+                const startTarget = e.currentTarget.value;
                 setStartTime(startTarget);
               }}
             />
@@ -233,7 +231,7 @@ function SchedulePageMap() {
               description="end"
               id="endTime"
               onChange={(e) => {
-                const endTarget = e.currentTarget.value + ":00";
+                const endTarget = e.currentTarget.value;
                 setEndTime(endTarget);
               }}
             />
@@ -244,12 +242,12 @@ function SchedulePageMap() {
                 { value: "TRANSIT", label: "Train" },
               ]}
             ></NativeSelect>
-            <Button onClick={handleSubmit}>Create Schedule</Button>
+            <Button onClick={handleSubmit2}>Create Schedule</Button>
           </Grid.Col>
           <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
         </Grid>
       </Container>
-      <MyCalender event={events}></MyCalender>
+      <MyCalender event={event}></MyCalender>
     </>
   );
 }
