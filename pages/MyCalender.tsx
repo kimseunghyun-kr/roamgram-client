@@ -75,8 +75,8 @@ function MyCalender(props) {
   const [eventID, setEventID] = useState();
   const deleteEvent = useCallback(() => {
     setMyEvents((p) => {
-      console.log("p is ", p);
-      console.log(eventID);
+      //console.log("p is ", p);
+      // console.log(eventID);
       const filteredEvents = p.find((ev) => ev.id !== eventID);
       return [filteredEvents];
     });
@@ -97,7 +97,7 @@ function MyCalender(props) {
 
   return (
     <>
-      <Text>double click to delete</Text>
+      <Text>click to edit to delete button to dete</Text>
       <Text> Click on 9th Sunday etc to go on specific day</Text>
       <DnDCalendar
         selectable //
@@ -118,9 +118,9 @@ function MyCalender(props) {
         onSelectEvent={(e) => {
           setOpened(true);
           setEventID(e.id);
-          console.log("onSelectEventID");
-          console.log(eventID);
-          console.log("e id", e.id);
+          //console.log("onSelectEventID");
+          //console.log(eventID);
+          //console.log("e id", e.id);
         }}
         //onDoubleClickEvent={deleteEvent}
       />

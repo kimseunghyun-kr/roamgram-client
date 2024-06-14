@@ -28,27 +28,11 @@ function App() {
     libraries: ["places", "maps", "core", "marker", "routes"],
     version: "weekly",
   });
-  let events = [
-    {
-      id: "1",
-      start: moment("2024-06-11T10:00:00").toDate(),
-      end: moment("2024-06-11T11:00:00").toDate(),
-      title: "Alex-Testing",
-      description: "test1",
-    },
-    {
-      id: "2",
-      start: moment("2024-06-11T12:00:00").toDate(),
-      end: moment("2024-06-11T13:00:00").toDate(),
-      title: "Alex-Testing-2-check-overlap",
-      description: "test2",
-    },
-  ];
+
   return isLoaded ? (
     <>
       <div>
         <SchedulePageMap></SchedulePageMap>
-        <MyCalender event={events}></MyCalender>
       </div>
     </>
   ) : (
