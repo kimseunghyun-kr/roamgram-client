@@ -10,7 +10,13 @@ import {
   Textarea,
 } from "@mantine/core";
 import { v4 as uuid } from "uuid";
-import { DatePicker, DateTimePicker, TimeInput } from "@mantine/dates";
+import {
+  DatePicker,
+  DateTimePicker,
+  DateValue,
+  TimeInput,
+} from "@mantine/dates";
+import moment from "moment";
 //testing purposese but make sure to store the travelPlanID somewhere
 const travelPlanID = "1bfb5d9c-dd40-4e9e-b0f2-0492fda38c37";
 
@@ -28,6 +34,11 @@ function SchedulePageMap() {
   const autoCompleteStartRef = useRef<HTMLInputElement>();
   const autoCompleteEndRef = useRef<HTMLInputElement>();
   ////////////
+  //creating of get location button with current location marker
+  const googleMarker = new google.maps.Marker({
+    map: map,
+    title: "Current Pinned Location",
+  });
 
   const [scheduleDetails, setScheduleDetails] = useState({
     place: {
@@ -50,10 +61,19 @@ function SchedulePageMap() {
 
   const [startTime, setStartTime] = useState<string>();
   const [endTime, setEndTime] = useState<string>();
-  const [travelDay, setTravelDay] = useState<Date>();
   const [scheduleName, setScheduleName] = useState();
   const [scheduleDescription, setScheduleDescription] = useState();
+
   ///////////////////////////////////////////////////
+
+  /////////////////functions//////////////////
+
+  //setting Date format for start and endTime
+  ////
+
+  ///////////////////////////////////////
+
+  /////////////useEffects///////////////
   //mounting of map and autocomplete
   useEffect(() => {
     //////////////
@@ -84,12 +104,6 @@ function SchedulePageMap() {
     setAutoCompleteStart(_autoCompleteStart);
     setAutoCompleteEnd(_autoCompleteEnd);
   }, []);
-
-  //creating of get location button with current location marker
-  const googleMarker = new google.maps.Marker({
-    map: map,
-    title: "Current Pinned Location",
-  });
 
   useEffect(() => {
     const locationButton = document.createElement("button");
@@ -124,7 +138,7 @@ function SchedulePageMap() {
         const position = endPlace.geometry?.location;
         console.log("position", position);
         if (position) {
-          console.log("check");
+          console.log("check autocomplete");
           googleMarker.setPosition(position);
           map.setCenter(position);
         }
@@ -142,8 +156,21 @@ function SchedulePageMap() {
   //
   console.log(startTime);
   console.log(endTime);
-  console.log(travelDay);
-  //
+
+  //testing
+  const [travelDay, setTravelDay] = useState<Date | null>(null);
+  const [formattedTravelDay, setFormattedTravelDay] = useState<string>();
+
+  const setTravelDayFunc = (e: Date) => {
+    console.log("e is", { e });
+    setTravelDay(e);
+
+    const dateAsMoment = moment(e);
+    const formattedDate = dateAsMoment.format("Y-MM-DD");
+    setFormattedTravelDay(formattedDate);
+  };
+  //console.log("travel day is", { travelDay });
+  //console.log("formatted date is", { formattedTravelDay });
 
   return (
     <>
@@ -154,23 +181,28 @@ function SchedulePageMap() {
             <Textarea placeholder="add description of activity if needed" />
             <Input placeholder="start" ref={autoCompleteStartRef}></Input>
             <Input placeholder="End Location" ref={autoCompleteEndRef}></Input>
-            <DatePicker
-              onChange={(e) => {
-                setTravelDay(e);
-              }}
-            />
+            <DatePicker onChange={setTravelDayFunc} value={travelDay} />
             <TimeInput
               description="start"
               id="startTime"
               onChange={(e) => {
-                setStartTime(e.currentTarget.value);
+                console.log(e.currentTarget.value);
+                const startTarget = e.currentTarget.value + ":00";
+                setStartTime(startTarget);
               }}
             />
             <TimeInput
               description="end"
               id="endTime"
               onChange={(e) => {
-                setEndTime(e.currentTarget.value);
+                console.log(e.currentTarget.value);
+                const day = formattedTravelDay;
+                if (day) {
+                  const endTarget = day + "T" + e.currentTarget.value + ":00";
+                  setEndTime(endTarget);
+                } else {
+                  alert("Choose Day");
+                }
               }}
             />
             <NativeSelect

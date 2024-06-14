@@ -63,6 +63,7 @@ function TravelPage() {
       .then((data) => console.log(data))
       .catch((error) => console.log(error));
   };
+
   return (
     <div>
       <h1>Choose Name for Plan</h1>

@@ -1,35 +1,31 @@
-import React, { useCallback, useMemo, useState } from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./MyCalender.css";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
-import { Text } from "@mantine/core";
-
-const localizer = momentLocalizer(moment);
-
-//remember to change this!
-const events = [
-  {
-    id: "1",
-    start: moment("2024-06-11T10:00:00").toDate(),
-    end: moment("2024-06-11T11:00:00").toDate(),
-    title: "Alex-Testing",
-  },
-  {
-    id: "2",
-    start: moment("2024-06-11T12:00:00").toDate(),
-    end: moment("2024-06-11T13:00:00").toDate(),
-    title: "Alex-Testing-2-check-overlap",
-  },
-];
+import {
+  Button,
+  InputDescription,
+  Modal,
+  Tabs,
+  Text,
+  UnstyledButton,
+} from "@mantine/core";
+import SchedulePageMap from "./SchedulePageMap";
+import { useDisclosure } from "@mantine/hooks";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
 
-function MyCalender() {
-  const [myEvents, setMyEvents] = useState(events);
+function MyCalender(props) {
+  const localizer = momentLocalizer(moment);
+  const [myEvents, setMyEvents] = useState(props.event);
+  //console.log(props.event);
+
+  //for our modals when we selet an Event
+  const [opened, setOpened] = useState(false);
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {
@@ -60,7 +56,9 @@ function MyCalender() {
     },
     [setMyEvents]
   );
+  ///delete function for onClick
 
+  /*
   const deleteEvent = useCallback(
     (event) => {
       setMyEvents((p) => {
@@ -73,11 +71,36 @@ function MyCalender() {
     },
     [setMyEvents]
   );
+  */
+  const [eventID, setEventID] = useState();
+  const deleteEvent = useCallback(() => {
+    setMyEvents((p) => {
+      console.log("p is ", p);
+      console.log(eventID);
+      const filteredEvents = p.find((ev) => ev.id !== eventID);
+      return [filteredEvents];
+    });
+  }, [setMyEvents, eventID]);
+
+  //add function
+  //useCallback returns
+  const addEvent = useCallback(
+    (event) => {
+      setMyEvents((p) => [...p, event]);
+      return [myEvents];
+    },
+    [setMyEvents]
+  );
+
+  //update
+  var updateEvent;
 
   return (
     <>
-      <Text>Right Click to Delete ATM</Text>
+      <Text>double click to delete</Text>
+      <Text> Click on 9th Sunday etc to go on specific day</Text>
       <DnDCalendar
+        selectable //
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         localizer={localizer}
@@ -92,8 +115,41 @@ function MyCalender() {
             return moment(date).format("Do dddd");
           },
         }}
-        onSelectEvent={deleteEvent}
+        onSelectEvent={(e) => {
+          setOpened(true);
+          setEventID(e.id);
+          console.log("onSelectEventID");
+          console.log(eventID);
+          console.log("e id", e.id);
+        }}
+        //onDoubleClickEvent={deleteEvent}
       />
+      <Modal
+        opened={opened}
+        onClose={() => {
+          setOpened(false);
+        }}
+        withCloseButton={true}
+      >
+        <nav>
+          <Tabs defaultValue="scheduleModal">
+            <Tabs.List grow>
+              <Tabs.Tab value="reviews">Reviews</Tabs.Tab>
+              <Tabs.Tab value="directions">Directions</Tabs.Tab>
+              <Tabs.Tab value="edit">Edit</Tabs.Tab>
+            </Tabs.List>
+
+            <Tabs.Panel value="reviews">Reviews tab content</Tabs.Panel>
+
+            <Tabs.Panel value="directions">Directions tab content</Tabs.Panel>
+
+            <Tabs.Panel value="edit">
+              Edit
+              <Button onClick={deleteEvent}>Delete</Button>
+            </Tabs.Panel>
+          </Tabs>
+        </nav>
+      </Modal>
     </>
   );
 }

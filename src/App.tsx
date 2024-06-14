@@ -14,22 +14,41 @@ import SchedulePageMap from "../pages/SchedulePageMap.tsx";
 import { useJsApiLoader } from "@react-google-maps/api";
 import CreateSchedule from "../pages/CreateSchedule.tsx";
 import TravelPage from "../pages/TravelPage.tsx";
+import MyCalender from "../pages/MyCalender.tsx";
+import moment from "moment";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
 //];
 
 function App() {
+  //remember to change this!
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, //rmb to remove
     libraries: ["places", "maps", "core", "marker", "routes"],
     version: "weekly",
   });
+  let events = [
+    {
+      id: "1",
+      start: moment("2024-06-11T10:00:00").toDate(),
+      end: moment("2024-06-11T11:00:00").toDate(),
+      title: "Alex-Testing",
+      description: "test1",
+    },
+    {
+      id: "2",
+      start: moment("2024-06-11T12:00:00").toDate(),
+      end: moment("2024-06-11T13:00:00").toDate(),
+      title: "Alex-Testing-2-check-overlap",
+      description: "test2",
+    },
+  ];
   return isLoaded ? (
     <>
       <div>
         <SchedulePageMap></SchedulePageMap>
-        <SchedulePage></SchedulePage>
+        <MyCalender event={events}></MyCalender>
       </div>
     </>
   ) : (
