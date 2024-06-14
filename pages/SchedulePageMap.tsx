@@ -70,7 +70,7 @@ function SchedulePageMap(props) {
   /////////////
   ///////////
   const [event, setEvent] = useState(props.eventsTest);
-  console.log(props);
+  //console.log(props);
 
   ///////////////////////////////////////////////////
 
@@ -190,15 +190,17 @@ function SchedulePageMap(props) {
   });
   const handleSubmit = () => {
     const newSchedule = addSchedule;
-    console.log(addSchedule);
+    //console.log(addSchedule);
     setEvent((p) => [...p, newSchedule]);
   };
-  console.log(event);
+  //console.log(event);
 
   const handleSubmit2 = useCallback(() => {
     const newSchedule = addSchedule;
-    console.log(addSchedule);
-    setEvent((p) => [...p, newSchedule]);
+    //console.log(addSchedule);
+    setEvent((p) => {
+      return [...p, newSchedule];
+    });
   }, [setEvent]);
 
   return (
@@ -242,7 +244,14 @@ function SchedulePageMap(props) {
                 { value: "TRANSIT", label: "Train" },
               ]}
             ></NativeSelect>
-            <Button onClick={handleSubmit2}>Create Schedule</Button>
+            <Button
+              onClick={(e) => {
+                handleSubmit2(e);
+                console.log(e.currentTarget.value);
+              }}
+            >
+              Create Schedule
+            </Button>
           </Grid.Col>
           <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
         </Grid>

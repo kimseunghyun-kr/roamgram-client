@@ -21,31 +21,37 @@ const DnDCalendar = withDragAndDrop(Calendar);
 
 function MyCalender(props) {
   const localizer = momentLocalizer(moment);
+
+  ////
   const [myEvents, setMyEvents] = useState(props.event);
+  const [eventID, setEventID] = useState();
   //console.log(props.event);
 
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
-  console.log("mycalender events are");
-  console.log(props.event);
-  console.log("myEvents are", myEvents);
 
+  ///so that event props changes when parent component changes
   useEffect(() => {
     setMyEvents((p) => props.event);
+    //console.log("useEFfect events are", props.event);
   }, [props.event]);
+
+  //console.log("mycalender props events are", props.event);
+  //console.log("myEvents are", myEvents);
+
+  useEffect(() => {}, [eventID, setEventID]);
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {
-      //const nextEvent = event.id;
-      //console.log(nextEvent);
-      setMyEvents((p) => {
-        console.log("drag");
-        const existingEvent = p.find((ev) => event.id == ev.id);
-        const filteredEvents = p.find((ev) => ev.id !== event.id); //events without the same id
-        //console.log("existingEvent", existingEvent);
-        //console.log("filteredEvent", filteredEvents);
-        //console.log([filteredEvents, { ...existingEvent, start, end }]);
-        return [filteredEvents, { ...existingEvent, start, end }];
+      setMyEvents((prev) => {
+        console.log("prev is", prev);
+        const existing = prev.find((ev) => ev.id === event.id);
+        const filtered = prev.filter((ev) => ev.id !== event.id);
+        console.log("myEvents are", myEvents);
+        console.log("existing is", existing);
+        console.log("filtered is", filtered);
+        console.log("returned is", [filtered, { ...existing, start, end }]);
+        return [...filtered, { ...existing, start, end }];
       });
     },
     [setMyEvents]
@@ -53,33 +59,20 @@ function MyCalender(props) {
 
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
-      setMyEvents((p) => {
-        console.log("resize");
-        const existingEvent = p.find((ev) => event.id == ev.id);
-        const filteredEvents = p.find((ev) => ev.id !== event.id);
-
-        return [filteredEvents, { ...existingEvent, start, end }];
+      setMyEvents((prev) => {
+        console.log("prev is", prev);
+        const existing = prev.find((ev) => ev.id === event.id);
+        const filtered = prev.filter((ev) => ev.id !== event.id);
+        console.log("myEvents are", myEvents);
+        console.log("existing is", existing);
+        console.log("filtered is", filtered);
+        console.log("returned is", [filtered, { ...existing, start, end }]);
+        return [...filtered, { ...existing, start, end }];
       });
     },
     [setMyEvents]
   );
-  ///delete function for onClick
 
-  /*
-  const deleteEvent = useCallback(
-    (event) => {
-      setMyEvents((p) => {
-        console.log("deleteEvent");
-        console.log(event.id);
-        const filteredEvents = p.find((ev) => ev.id !== event.id);
-
-        return [filteredEvents];
-      });
-    },
-    [setMyEvents]
-  );
-  */
-  const [eventID, setEventID] = useState();
   const deleteEvent = useCallback(() => {
     setMyEvents((p) => {
       //console.log("p is ", p);
@@ -90,14 +83,6 @@ function MyCalender(props) {
   }, [setMyEvents, eventID]);
 
   //add function
-  //useCallback returns
-  const addEvent = useCallback(
-    (event) => {
-      setMyEvents((p) => [...p, event]);
-      return [myEvents];
-    },
-    [setMyEvents]
-  );
 
   //update
   var updateEvent;
