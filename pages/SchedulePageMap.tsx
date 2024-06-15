@@ -242,71 +242,79 @@ function SchedulePageMap(props) {
       <Container fluid p="0">
         <Grid grow overflow="hidden">
           <Grid.Col span={7}>
-            <Input
-              placeholder="Name of Activity"
-              value={scheduleName}
-              onChange={(e) => {
-                setScheduleName(e.currentTarget.value);
-                console.log(e.currentTarget.value);
-              }}
-            ></Input>
-            <Textarea
-              placeholder="add description of activity if needed"
-              value={scheduleDescription}
-              onChange={(e) => {
-                setScheduleDescription(e.currentTarget.value);
-                console.log(scheduleDescription);
-              }}
-            />
-            <Input placeholder="start" ref={autoCompleteStartRef}></Input>
-            <Input placeholder="End Location" ref={autoCompleteEndRef}></Input>
-            <DatePickerInput
-              disabled={!scheduleName}
-              allowDeselect
-              onChange={(e) => {
-                setTravelDay(e);
-              }}
-              value={travelDay}
-            />
-            <TimeInput
-              description="start"
-              id="startTime"
-              disabled={!travelDay}
-              onChange={(e) => {
-                console.log(
-                  "Start using currentTargetValue",
-                  e.currentTarget.value
-                );
-                const startTarget = e.currentTarget.value;
-                setStartTime(startTarget);
-              }}
-            />
+            <form onSubmit={handleSubmit}>
+              <Input
+                placeholder="Name of Activity"
+                value={scheduleName}
+                onChange={(e) => {
+                  setScheduleName(e.currentTarget.value);
+                  console.log(e.currentTarget.value);
+                }}
+              ></Input>
+              <Textarea
+                placeholder="add description of activity if needed"
+                value={scheduleDescription}
+                onChange={(e) => {
+                  setScheduleDescription(e.currentTarget.value);
+                  console.log(scheduleDescription);
+                }}
+              />
+              <Input placeholder="start" ref={autoCompleteStartRef}></Input>
+              <Input
+                placeholder="End Location"
+                ref={autoCompleteEndRef}
+              ></Input>
+              <DatePickerInput
+                disabled={!scheduleName}
+                allowDeselect
+                onChange={(e) => {
+                  setTravelDay(e);
+                }}
+                value={travelDay}
+              />
+              <TimeInput
+                description="start"
+                id="startTime"
+                disabled={!travelDay}
+                onChange={(e) => {
+                  console.log(
+                    "Start using currentTargetValue",
+                    e.currentTarget.value
+                  );
+                  const startTarget = e.currentTarget.value;
+                  setStartTime(startTarget);
+                }}
+              />
 
-            <TimeInput
-              disabled={!startTime}
-              description="end"
-              id="endTime"
-              error={
-                endTimePop ? "End Time Should be later than Start Time" : false
-              }
-              onChange={(e) => {
-                e.currentTarget.value < startTime
-                  ? (console.log("less than start"),
-                    setEndTimePop(true),
-                    setEndTime(e.currentTarget.value))
-                  : (setEndTime(e.currentTarget.value),
-                    console.log("okie"),
-                    setEndTimePop(false));
-              }}
-            />
-            <Button
-              disabled={endTime < startTime || endTime === undefined}
-              type="submit"
-              onClick={createScheduleButton}
-            >
-              Create Schedule
-            </Button>
+              <TimeInput
+                disabled={!startTime}
+                description="end"
+                id="endTime"
+                error={
+                  endTimePop
+                    ? "End Time Should be later than Start Time"
+                    : false
+                }
+                onChange={(e) => {
+                  e.currentTarget.value < startTime
+                    ? (console.log("less than start"),
+                      setEndTimePop(true),
+                      setEndTime(e.currentTarget.value))
+                    : (setEndTime(e.currentTarget.value),
+                      console.log("okie"),
+                      setEndTimePop(false));
+                }}
+              />
+              <Button
+                disabled={endTime < startTime || endTime === undefined}
+                type="submit"
+                onClick={createScheduleButton}
+              >
+                Create Schedule
+              </Button>
+            </form>
           </Grid.Col>
+
           <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
         </Grid>
       </Container>
