@@ -48,7 +48,7 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        <SchedulePageMap eventsTest={events111}></SchedulePageMap>
+        <SchedulePageMap eventsList={events111}></SchedulePageMap>
       </div>
     </>
   ) : (

@@ -22,16 +22,11 @@ const DnDCalendar = withDragAndDrop(Calendar);
 function MyCalender(props) {
   const localizer = momentLocalizer(moment);
 
-  ////
-  const [myEvents, setMyEvents] = useState(props.event);
+  ////EventID for modal to keep track
   const [eventID, setEventID] = useState();
-  //console.log(props.event);
-
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
-
-  //console.log("mycalender props events are", props.event);
-  //console.log("myEvents are", myEvents);
+  //console.log(props.event);
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {
@@ -106,8 +101,6 @@ function MyCalender(props) {
         onSelectEvent={(e) => {
           setOpened(true);
           setEventID(e.id);
-          console.log(e.id);
-          console.log(eventID);
           //console.log("onSelectEventID");
           //console.log(eventID);
           //console.log("e id", e.id);
@@ -134,7 +127,7 @@ function MyCalender(props) {
             <Tabs.Panel value="directions">Directions tab content</Tabs.Panel>
 
             <Tabs.Panel value="edit">
-              Edit
+              <Button>Update Content</Button>
               <Button onClick={deleteEvent}>Delete</Button>
             </Tabs.Panel>
           </Tabs>

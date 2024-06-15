@@ -22,9 +22,17 @@ import MyCalender from "./MyCalender.tsx";
 
 //testing purposese but make sure to store the travelPlanID somewhere
 const travelPlanID = "1bfb5d9c-dd40-4e9e-b0f2-0492fda38c37";
+////interface/////////
+interface Schedule {
+  id: string;
+  title: string;
+  description: string;
+  start: Date;
+  end: Date;
+}
 
 function SchedulePageMap(props) {
-  /////////////////////////////
+  /////////////////////////////MAP STUFF//////////////////////////////////////
   //Map
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const mapRef = useRef<HTMLDivElement>(null);
@@ -42,45 +50,6 @@ function SchedulePageMap(props) {
     map: map,
     title: "Current Pinned Location",
   });
-  //for backend
-  const [scheduleDetails, setScheduleDetails] = useState({
-    place: {
-      id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-      googleMapsKeyId: "string",
-      name: "string",
-      country: "string",
-      visitedCount: 0,
-      Latitude: 0,
-      Longitude: 0,
-      longitude: 0,
-      latitude: 0,
-    },
-    isActuallyVisited: false,
-    travelStartTimeEstimate: "2024-06-13T11:31:58.868Z",
-    travelDepartTimeEstimate: "2024-06-13T11:31:58.868Z",
-    previousScheduleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-    nextScheduleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
-  });
-
-  const [startTime, setStartTime] = useState<string>();
-  const [endTime, setEndTime] = useState<string>();
-  const [scheduleName, setScheduleName] = useState();
-  const [scheduleDescription, setScheduleDescription] = useState();
-
-  /////////////
-  ///////////
-  const [event, setEvent] = useState(props.eventsTest);
-  //console.log(props);
-
-  ///////////////////////////////////////////////////
-
-  /////////////////functions//////////////////
-
-  //setting Date format for start and endTime
-  ////
-
-  ///////////////////////////////////////
-
   /////////////useEffects///////////////
   //mounting of map and autocomplete
   useEffect(() => {
@@ -160,37 +129,48 @@ function SchedulePageMap(props) {
     }
   });
 
-  //console test
-  //
-  //console.log(startTime);
-  //console.log(endTime);
+  ////////////////////////////////////////////////////////////////////////////
+  //////////////for backend
+  const [scheduleDetails, setScheduleDetails] = useState({
+    place: {
+      id: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+      googleMapsKeyId: "string",
+      name: "string",
+      country: "string",
+      visitedCount: 0,
+      Latitude: 0,
+      Longitude: 0,
+      longitude: 0,
+      latitude: 0,
+    },
+    isActuallyVisited: false,
+    travelStartTimeEstimate: "2024-06-13T11:31:58.868Z",
+    travelDepartTimeEstimate: "2024-06-13T11:31:58.868Z",
+    previousScheduleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+    nextScheduleId: "3fa85f64-5717-4562-b3fc-2c963f66afa6",
+  });
 
-  //testing
+  ////////////////////////FOR CREATING SCHEDULES////////////////////////////////////
+  const [startTime, setStartTime] = useState<string>();
+  const [endTime, setEndTime] = useState<string>();
+  const [scheduleName, setScheduleName] = useState<string>();
+  const [scheduleDescription, setScheduleDescription] = useState<string>();
+  const [event, setEvent] = useState(props.eventsList);
   const [travelDay, setTravelDay] = useState<Date | null>(null);
-  const [formattedTravelDay, setFormattedTravelDay] = useState<string>();
-
-  //console.log(formattedTravelDay);
-
-  const setTravelDayFunc = (e: Date) => {
-    //console.log("e is", { e });
-    setTravelDay(e);
-
-    const dateAsMoment = moment(e);
-    const formattedDate = dateAsMoment.format("Y-MM-DD");
-    setFormattedTravelDay(formattedDate);
-  };
-
   ///for testing to add new schedule using Create Schedule button
-  const [addSchedule, setAddSchedule] = useState({
+  const [addSchedule, setAddSchedule] = useState<Schedule>({
     id: uuid(),
     start: new Date(),
     end: new Date(),
-    title: "testEventCreateSchedule",
-    description: "weeee",
+    title: "", ////////change to title input
+    description: "", ///////////change to text input
   });
 
   //create schedule button for form//
   const createScheduleButton = () => {
+    //title
+    //description
+
     //both are under the same day
     //String format
     const startDate = startTime;
@@ -216,6 +196,8 @@ function SchedulePageMap(props) {
       ...p,
       start: startDateFormatted.toDate(),
       end: endDateFormatted.toDate(),
+      title: scheduleName as string,
+      description: scheduleDescription as string,
     }));
   };
 
@@ -227,27 +209,10 @@ function SchedulePageMap(props) {
       id: uuid(),
       start: new Date(),
       end: new Date(),
-      title: "testEventCreateSchedule",
-      description: "weeee",
+      title: "",
+      description: "",
     }));
-
-    console.log("handleSubmit event is", event);
   };
-  //console.log(event);
-  console.log("event is", event);
-  console.log("add schedule", addSchedule);
-  //////////////
-
-  ///////////////////////////edit this////////////////
-  const handleSubmit2 = useCallback(() => {
-    const newSchedule = addSchedule;
-    //console.log(addSchedule);
-    setEvent((p) => {
-      console.log("p is", p);
-      return [...p, newSchedule];
-    });
-  }, [setEvent]);
-  /////////////////////////////////////////////////////
 
   return (
     <>
@@ -255,8 +220,22 @@ function SchedulePageMap(props) {
         <Container fluid p="0">
           <Grid grow overflow="hidden">
             <Grid.Col span={7}>
-              <Input placeholder="Name of Activity"></Input>
-              <Textarea placeholder="add description of activity if needed" />
+              <Input
+                placeholder="Name of Activity"
+                value={scheduleName}
+                onChange={(e) => {
+                  setScheduleName(e.currentTarget.value);
+                  console.log(e.currentTarget.value);
+                }}
+              ></Input>
+              <Textarea
+                placeholder="add description of activity if needed"
+                value={scheduleDescription}
+                onChange={(e) => {
+                  setScheduleDescription(e.currentTarget.value);
+                  console.log(scheduleDescription);
+                }}
+              />
               <Input placeholder="start" ref={autoCompleteStartRef}></Input>
               <Input
                 placeholder="End Location"
