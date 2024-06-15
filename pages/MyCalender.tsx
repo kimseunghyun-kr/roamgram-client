@@ -68,12 +68,12 @@ function MyCalender(props) {
     props.setEvents((p) => {
       //console.log("p is ", p);
       // console.log(eventID);
-      console.log(p);
+      //console.log(p);
 
       const filtered = p.filter((ev) => ev.id != eventID);
       setOpened(false); //turns off modal
-      console.log("deleteEvent ID is", eventID);
-      console.log("filtered events delete are", [...filtered]);
+      //console.log("deleteEvent ID is", eventID);
+      //console.log("filtered events delete are", [...filtered]);
       return [...filtered];
     });
   }, [props.setEvents, eventID]);

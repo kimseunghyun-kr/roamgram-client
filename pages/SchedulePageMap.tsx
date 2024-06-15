@@ -182,22 +182,62 @@ function SchedulePageMap(props) {
 
   ///for testing to add new schedule using Create Schedule button
   const [addSchedule, setAddSchedule] = useState({
-    id: "3",
-    start: moment("2024-06-12T10:00:00").toDate(),
-    end: moment("2024-06-12T12:00:00").toDate(),
+    id: uuid(),
+    start: new Date(),
+    end: new Date(),
     title: "testEventCreateSchedule",
     description: "weeee",
   });
-  const handleSubmit = () => {
+
+  //create schedule button for form//
+  const createScheduleButton = () => {
+    //both are under the same day
+    //String format
+    const startDate = startTime;
+    const endDate = endTime;
+    /////Date format
+    const chosenTravelday = moment(travelDay).format("YYYY-MM-DD");
+    console.log(chosenTravelday);
+    //Making startDate & endDate into format needed for event
+    const startDateFormatted = moment(
+      chosenTravelday + startDate,
+      "YYYY-MM-DD hh:mm"
+    );
+
+    const endDateFormatted = moment(
+      chosenTravelday + endDate,
+      "YYYY-MM-DD hh:mm"
+    );
+    console.log(startDateFormatted);
+    console.log(endDateFormatted);
+
+    /// making addSchedule
+    setAddSchedule((p) => ({
+      ...p,
+      start: startDateFormatted.toDate(),
+      end: endDateFormatted.toDate(),
+    }));
+  };
+
+  //submit button//
+  const handleSubmit = (e) => {
+    e.preventDefault();
     setEvent((p) => [...p, addSchedule]);
+    setAddSchedule((p) => ({
+      id: uuid(),
+      start: new Date(),
+      end: new Date(),
+      title: "testEventCreateSchedule",
+      description: "weeee",
+    }));
+
+    console.log("handleSubmit event is", event);
   };
   //console.log(event);
-
+  console.log("event is", event);
+  console.log("add schedule", addSchedule);
   //////////////
-  useEffect(() => {
-    console.log("event is useEffect", event);
-    //setEvent(event);
-  }, [props.eventsTest]);
+
   ///////////////////////////edit this////////////////
   const handleSubmit2 = useCallback(() => {
     const newSchedule = addSchedule;
@@ -211,54 +251,61 @@ function SchedulePageMap(props) {
 
   return (
     <>
-      <Container fluid p="0">
-        <Grid grow overflow="hidden">
-          <Grid.Col span={7}>
-            <Input placeholder="Name of Activity"></Input>
-            <Textarea placeholder="add description of activity if needed" />
-            <Input placeholder="start" ref={autoCompleteStartRef}></Input>
-            <Input placeholder="End Location" ref={autoCompleteEndRef}></Input>
-            <DatePicker
-              allowDeselect
-              onChange={setTravelDay}
-              value={travelDay}
-            />
-            <TimeInput
-              description="start"
-              id="startTime"
-              onChange={(e) => {
-                console.log(
-                  "Start using currentTargetValue",
-                  e.currentTarget.value
-                );
-                const startTarget = e.currentTarget.value;
-                setStartTime(startTarget);
-              }}
-            />
-            <TimeInput
-              description="end"
-              id="endTime"
-              onChange={(e) => {
-                console.log(
-                  "End using currentTargetValue",
-                  e.currentTarget.value
-                );
-                const endTarget = e.currentTarget.value;
-                setEndTime(endTarget);
-              }}
-            />
-            <NativeSelect
-              data={[
-                { value: "DRIVING", label: "Driving" },
-                { value: "WALKING", label: "Walk" },
-                { value: "TRANSIT", label: "Train" },
-              ]}
-            ></NativeSelect>
-            <Button onClick={handleSubmit}>Create Schedule</Button>
-          </Grid.Col>
-          <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
-        </Grid>
-      </Container>
+      <form onSubmit={handleSubmit}>
+        <Container fluid p="0">
+          <Grid grow overflow="hidden">
+            <Grid.Col span={7}>
+              <Input placeholder="Name of Activity"></Input>
+              <Textarea placeholder="add description of activity if needed" />
+              <Input placeholder="start" ref={autoCompleteStartRef}></Input>
+              <Input
+                placeholder="End Location"
+                ref={autoCompleteEndRef}
+              ></Input>
+              <DatePicker
+                allowDeselect
+                onChange={setTravelDay}
+                value={travelDay}
+              />
+              <TimeInput
+                description="start"
+                id="startTime"
+                onChange={(e) => {
+                  console.log(
+                    "Start using currentTargetValue",
+                    e.currentTarget.value
+                  );
+                  const startTarget = e.currentTarget.value;
+                  setStartTime(startTarget);
+                }}
+              />
+              <TimeInput
+                description="end"
+                id="endTime"
+                onChange={(e) => {
+                  console.log(
+                    "End using currentTargetValue",
+                    e.currentTarget.value
+                  );
+                  const endTarget = e.currentTarget.value;
+                  setEndTime(endTarget);
+                }}
+              />
+              <NativeSelect
+                data={[
+                  { value: "DRIVING", label: "Driving" },
+                  { value: "WALKING", label: "Walk" },
+                  { value: "TRANSIT", label: "Train" },
+                ]}
+              ></NativeSelect>
+              <Button type="submit" onClick={createScheduleButton}>
+                Create Schedule
+              </Button>
+            </Grid.Col>
+            <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
+          </Grid>
+        </Container>
+      </form>
       <MyCalender event={event} setEvents={setEvent}></MyCalender>
     </>
   );
