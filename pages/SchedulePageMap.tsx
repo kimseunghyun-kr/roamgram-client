@@ -195,13 +195,21 @@ function SchedulePageMap(props) {
   };
   //console.log(event);
 
+  //////////////
+  useEffect(() => {
+    console.log("event is useEffect", event);
+    //setEvent(event);
+  }, [props.eventsTest]);
+  ///////////////////////////edit this////////////////
   const handleSubmit2 = useCallback(() => {
     const newSchedule = addSchedule;
     //console.log(addSchedule);
     setEvent((p) => {
+      console.log("p is", p);
       return [...p, newSchedule];
     });
   }, [setEvent]);
+  /////////////////////////////////////////////////////
 
   return (
     <>
@@ -256,7 +264,7 @@ function SchedulePageMap(props) {
           <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
         </Grid>
       </Container>
-      <MyCalender event={event}></MyCalender>
+      <MyCalender event={event} setEvents={setEvent}></MyCalender>
     </>
   );
 }

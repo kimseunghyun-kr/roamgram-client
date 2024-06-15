@@ -30,43 +30,37 @@ function MyCalender(props) {
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
 
-  ///so that event props changes when parent component changes
-  useEffect(() => {
-    setMyEvents((p) => props.event);
-    //console.log("useEFfect events are", props.event);
-  }, [props.event]);
-
   //console.log("mycalender props events are", props.event);
   //console.log("myEvents are", myEvents);
 
-  useEffect(() => {}, [eventID, setEventID]);
+  // useEffect(() => {}, [eventID, setID]);
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {
-      setMyEvents((prev) => {
+      props.setEvents((prev) => {
         console.log("prev is", prev);
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
         console.log("myEvents are", myEvents);
         console.log("existing is", existing);
         console.log("filtered is", filtered);
-        console.log("returned is", [filtered, { ...existing, start, end }]);
+        console.log("returned is", [...filtered, { ...existing, start, end }]);
         return [...filtered, { ...existing, start, end }];
       });
     },
-    [setMyEvents]
+    [props.setEvents]
   );
 
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
-      setMyEvents((prev) => {
+      props.setEvents((prev) => {
         console.log("prev is", prev);
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
         console.log("myEvents are", myEvents);
         console.log("existing is", existing);
         console.log("filtered is", filtered);
-        console.log("returned is", [filtered, { ...existing, start, end }]);
+        console.log("returned is", [...filtered, { ...existing, start, end }]);
         return [...filtered, { ...existing, start, end }];
       });
     },
@@ -96,7 +90,7 @@ function MyCalender(props) {
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         localizer={localizer}
-        events={myEvents}
+        events={props.event}
         //startAccessor="start"
         //endAccessor="end"
         style={{ height: 500, width: "100vw" }}
