@@ -52,6 +52,8 @@ function SchedulePageMap(props) {
     map: map,
     title: "Current Pinned Location",
   });
+
+  const infowindow = new google.maps.InfoWindow({ content: "Test" });
   /////////////useEffects///////////////
   //mounting of map and autocomplete
   useEffect(() => {
@@ -108,6 +110,13 @@ function SchedulePageMap(props) {
       }
     }
   }, [map]);
+
+  googleMarker.addListener("click", () => {
+    infowindow.open({
+      anchor: googleMarker,
+      map,
+    });
+  });
 
   //autoComplete
   useEffect(() => {
@@ -235,7 +244,6 @@ function SchedulePageMap(props) {
           <Grid grow overflow="hidden">
             <Grid.Col span={7}>
               <Input
-                required
                 placeholder="Name of Activity"
                 value={scheduleName}
                 onChange={(e) => {
