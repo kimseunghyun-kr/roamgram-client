@@ -33,15 +33,12 @@ function MyCalender(props) {
   //console.log("mycalender props events are", props.event);
   //console.log("myEvents are", myEvents);
 
-  // useEffect(() => {}, [eventID, setID]);
-
   const moveEvent = useCallback(
     ({ event, start, end }) => {
       props.setEvents((prev) => {
         console.log("prev is", prev);
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
-        console.log("myEvents are", myEvents);
         console.log("existing is", existing);
         console.log("filtered is", filtered);
         console.log("returned is", [...filtered, { ...existing, start, end }]);
@@ -57,24 +54,29 @@ function MyCalender(props) {
         console.log("prev is", prev);
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
-        console.log("myEvents are", myEvents);
+
         console.log("existing is", existing);
         console.log("filtered is", filtered);
         console.log("returned is", [...filtered, { ...existing, start, end }]);
         return [...filtered, { ...existing, start, end }];
       });
     },
-    [setMyEvents]
+    [props.setEvents]
   );
 
   const deleteEvent = useCallback(() => {
-    setMyEvents((p) => {
+    props.setEvents((p) => {
       //console.log("p is ", p);
       // console.log(eventID);
-      const filteredEvents = p.find((ev) => ev.id !== eventID);
-      return [filteredEvents];
+      console.log(p);
+
+      const filtered = p.filter((ev) => ev.id != eventID);
+      setOpened(false); //turns off modal
+      console.log("deleteEvent ID is", eventID);
+      console.log("filtered events delete are", [...filtered]);
+      return [...filtered];
     });
-  }, [setMyEvents, eventID]);
+  }, [props.setEvents, eventID]);
 
   //add function
 
@@ -104,6 +106,8 @@ function MyCalender(props) {
         onSelectEvent={(e) => {
           setOpened(true);
           setEventID(e.id);
+          console.log(e.id);
+          console.log(eventID);
           //console.log("onSelectEventID");
           //console.log(eventID);
           //console.log("e id", e.id);

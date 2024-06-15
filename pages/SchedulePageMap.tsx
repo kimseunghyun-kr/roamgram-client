@@ -189,9 +189,7 @@ function SchedulePageMap(props) {
     description: "weeee",
   });
   const handleSubmit = () => {
-    const newSchedule = addSchedule;
-    //console.log(addSchedule);
-    setEvent((p) => [...p, newSchedule]);
+    setEvent((p) => [...p, addSchedule]);
   };
   //console.log(event);
 
@@ -241,6 +239,10 @@ function SchedulePageMap(props) {
               description="end"
               id="endTime"
               onChange={(e) => {
+                console.log(
+                  "End using currentTargetValue",
+                  e.currentTarget.value
+                );
                 const endTarget = e.currentTarget.value;
                 setEndTime(endTarget);
               }}
@@ -252,14 +254,7 @@ function SchedulePageMap(props) {
                 { value: "TRANSIT", label: "Train" },
               ]}
             ></NativeSelect>
-            <Button
-              onClick={(e) => {
-                handleSubmit2(e);
-                console.log(e.currentTarget.value);
-              }}
-            >
-              Create Schedule
-            </Button>
+            <Button onClick={handleSubmit}>Create Schedule</Button>
           </Grid.Col>
           <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
         </Grid>
