@@ -13,6 +13,7 @@ import {
 import { v4 as uuid } from "uuid";
 import {
   DatePicker,
+  DatePickerInput,
   DateTimePicker,
   DateValue,
   TimeInput,
@@ -159,7 +160,7 @@ function SchedulePageMap(props) {
   const [event, setEvent] = useState(props.eventsList);
   const [travelDay, setTravelDay] = useState<Date | null>(null);
   const [endTimePop, setEndTimePop] = useState(false);
-  const [validSchedule, setValidSchedule] = useState(false);
+
   ///for testing to add new schedule using Create Schedule button
   const [addSchedule, setAddSchedule] = useState<Schedule>({
     id: uuid(),
@@ -226,6 +227,9 @@ function SchedulePageMap(props) {
     }));
   };
 
+  console.log(endTime < startTime);
+  console.log(endTime);
+
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -233,6 +237,7 @@ function SchedulePageMap(props) {
           <Grid grow overflow="hidden">
             <Grid.Col span={7}>
               <Input
+                required
                 placeholder="Name of Activity"
                 value={scheduleName}
                 onChange={(e) => {
@@ -253,9 +258,12 @@ function SchedulePageMap(props) {
                 placeholder="End Location"
                 ref={autoCompleteEndRef}
               ></Input>
-              <DatePicker
+              <DatePickerInput
+                disabled={!scheduleName}
                 allowDeselect
-                onChange={setTravelDay}
+                onChange={(e) => {
+                  setTravelDay(e);
+                }}
                 value={travelDay}
               />
               <TimeInput
@@ -283,20 +291,19 @@ function SchedulePageMap(props) {
                 }
                 onChange={(e) => {
                   e.currentTarget.value < startTime
-                    ? (console.log("poo"), setEndTimePop(true))
+                    ? (console.log("less than start"),
+                      setEndTimePop(true),
+                      setEndTime(e.currentTarget.value))
                     : (setEndTime(e.currentTarget.value),
                       console.log("okie"),
                       setEndTimePop(false));
                 }}
               />
-              <NativeSelect
-                data={[
-                  { value: "DRIVING", label: "Driving" },
-                  { value: "WALKING", label: "Walk" },
-                  { value: "TRANSIT", label: "Train" },
-                ]}
-              ></NativeSelect>
-              <Button type="submit" onClick={createScheduleButton}>
+              <Button
+                disabled={endTime < startTime || endTime === undefined}
+                type="submit"
+                onClick={createScheduleButton}
+              >
                 Create Schedule
               </Button>
             </Grid.Col>
