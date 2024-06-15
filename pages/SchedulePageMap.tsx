@@ -169,6 +169,15 @@ function SchedulePageMap(props) {
     description: "", ///////////change to text input
   });
 
+  useEffect(() => {}, [
+    startTime,
+    endTime,
+    scheduleName,
+    scheduleDescription,
+    travelDay,
+    endTimePop,
+  ]);
+
   //create schedule button for form//
   const createScheduleButton = () => {
     //title

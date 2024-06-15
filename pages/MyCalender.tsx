@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import React, { act, useCallback, useEffect, useMemo, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -26,6 +26,8 @@ function MyCalender(props) {
 
   ////EventID for modal to keep track
   const [eventID, setEventID] = useState();
+
+  ///////////////modal////////////////////////
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
   //console.log(props.event);
@@ -75,7 +77,33 @@ function MyCalender(props) {
     });
   }, [props.setEvents, eventID]);
 
+  //console.log(eventID);
+
   //add function
+
+  //Event Activities const
+  //const activityDescription = props.event
+
+  //get Activity in modal functions
+  const [modalActivityDescription, setModalActivityDescription] = useState({
+    title: "",
+    description: "",
+    //destination: ''
+  });
+  //console.log("props events are");
+
+  const activityEvent = props.event.find((ev) => ev.id === eventID);
+  useEffect(() => {
+    console.log(activityEvent);
+    if (activityEvent) {
+      setModalActivityDescription({
+        title: activityEvent.title,
+        description: activityEvent.description,
+      });
+    }
+    //console.log("modal activity description is");
+    //console.log(modalActivityDescription);
+  }, [activityEvent]);
 
   //update
   var updateEvent;
@@ -129,10 +157,48 @@ function MyCalender(props) {
             <Tabs.Panel value="directions">Directions tab content</Tabs.Panel>
 
             <Tabs.Panel value="edit">
-              <Input placeholder="ACTIVITY nAME"></Input>
-              <Textarea placeholder="description"></Textarea>
+              <Input
+                value={modalActivityDescription.title}
+                placeholder="ACTIVITY nAME"
+                onChange={(e) => {
+                  setModalActivityDescription((p) => ({
+                    ...p,
+                    title: e.target.value,
+                  }));
+                }}
+              ></Input>
+              <Textarea
+                placeholder="description"
+                value={modalActivityDescription.description}
+                onChange={(e) => {
+                  setModalActivityDescription((p) => ({
+                    ...p,
+                    description: e.target.value,
+                  }));
+                  //console.log(e.currentTarget.value);
+                  //console.log("modal", modalActivityDescription);
+                }}
+              ></Textarea>
               <Textarea placeholder="destination"></Textarea>
-              <Button>Update Content</Button>
+              <Button
+                onClick={() => {
+                  setOpened(false);
+
+                  props.setEvents((p) => {
+                    const existing = p.find((ev) => ev.id == eventID);
+                    const filtered = p.filter((ev) => ev.id !== eventID);
+
+                    const updatedExisting = {
+                      ...existing,
+                      title: modalActivityDescription.title,
+                      description: modalActivityDescription.description,
+                    };
+                    return [...filtered, updatedExisting];
+                  });
+                }}
+              >
+                Update Content
+              </Button>
               <Button onClick={deleteEvent}>Delete</Button>
             </Tabs.Panel>
           </Tabs>
