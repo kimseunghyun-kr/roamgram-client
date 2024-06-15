@@ -7,10 +7,12 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import {
   Button,
+  Input,
   InputDescription,
   Modal,
   Tabs,
   Text,
+  Textarea,
   UnstyledButton,
 } from "@mantine/core";
 import SchedulePageMap from "./SchedulePageMap";
@@ -127,6 +129,9 @@ function MyCalender(props) {
             <Tabs.Panel value="directions">Directions tab content</Tabs.Panel>
 
             <Tabs.Panel value="edit">
+              <Input placeholder="ACTIVITY nAME"></Input>
+              <Textarea placeholder="description"></Textarea>
+              <Textarea placeholder="destination"></Textarea>
               <Button>Update Content</Button>
               <Button onClick={deleteEvent}>Delete</Button>
             </Tabs.Panel>

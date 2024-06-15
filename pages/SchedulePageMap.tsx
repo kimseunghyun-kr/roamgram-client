@@ -7,6 +7,7 @@ import {
   Grid,
   Input,
   NativeSelect,
+  Popover,
   Textarea,
 } from "@mantine/core";
 import { v4 as uuid } from "uuid";
@@ -157,6 +158,8 @@ function SchedulePageMap(props) {
   const [scheduleDescription, setScheduleDescription] = useState<string>();
   const [event, setEvent] = useState(props.eventsList);
   const [travelDay, setTravelDay] = useState<Date | null>(null);
+  const [endTimePop, setEndTimePop] = useState(false);
+  const [validSchedule, setValidSchedule] = useState(false);
   ///for testing to add new schedule using Create Schedule button
   const [addSchedule, setAddSchedule] = useState<Schedule>({
     id: uuid(),
@@ -249,6 +252,7 @@ function SchedulePageMap(props) {
               <TimeInput
                 description="start"
                 id="startTime"
+                disabled={!travelDay}
                 onChange={(e) => {
                   console.log(
                     "Start using currentTargetValue",
@@ -258,16 +262,22 @@ function SchedulePageMap(props) {
                   setStartTime(startTarget);
                 }}
               />
+
               <TimeInput
+                disabled={!startTime}
                 description="end"
                 id="endTime"
+                error={
+                  endTimePop
+                    ? "End Time Should be later than Start Time"
+                    : false
+                }
                 onChange={(e) => {
-                  console.log(
-                    "End using currentTargetValue",
-                    e.currentTarget.value
-                  );
-                  const endTarget = e.currentTarget.value;
-                  setEndTime(endTarget);
+                  e.currentTarget.value < startTime
+                    ? (console.log("poo"), setEndTimePop(true))
+                    : (setEndTime(e.currentTarget.value),
+                      console.log("okie"),
+                      setEndTimePop(false));
                 }}
               />
               <NativeSelect
