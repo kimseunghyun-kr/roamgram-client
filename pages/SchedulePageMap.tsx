@@ -170,6 +170,7 @@ function SchedulePageMap(props) {
     description: "", ///////////change to text input
   });
 
+  //check this lol it looks redundant
   useEffect(() => {}, [
     startTime,
     endTime,
@@ -226,9 +227,6 @@ function SchedulePageMap(props) {
       description: "",
     }));
   };
-
-  console.log(endTime < startTime);
-  console.log(endTime);
 
   return (
     <>

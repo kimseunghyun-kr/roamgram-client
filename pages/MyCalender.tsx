@@ -12,6 +12,7 @@ import {
   Modal,
   Tabs,
   Text,
+  TextInput,
   Textarea,
   UnstyledButton,
 } from "@mantine/core";
@@ -93,8 +94,8 @@ function MyCalender(props) {
   //console.log("props events are");
 
   const activityEvent = props.event.find((ev) => ev.id === eventID);
+  console.log("activityEvent", activityEvent);
   useEffect(() => {
-    console.log(activityEvent);
     if (activityEvent) {
       setModalActivityDescription({
         title: activityEvent.title,
@@ -145,13 +146,20 @@ function MyCalender(props) {
         withCloseButton={true}
       >
         <nav>
-          <Tabs defaultValue="scheduleModal">
+          <Tabs defaultValue="description">
             <Tabs.List grow>
+              <Tabs.Tab value="description">Description</Tabs.Tab>
               <Tabs.Tab value="reviews">Reviews</Tabs.Tab>
               <Tabs.Tab value="directions">Directions</Tabs.Tab>
               <Tabs.Tab value="edit">Edit</Tabs.Tab>
             </Tabs.List>
-
+            <Tabs.Panel value="description">
+              {modalActivityDescription.description ? (
+                <Text>{modalActivityDescription.description}</Text>
+              ) : (
+                <Text>Empty Description</Text>
+              )}
+            </Tabs.Panel>
             <Tabs.Panel value="reviews">Reviews tab content</Tabs.Panel>
 
             <Tabs.Panel value="directions">Directions tab content</Tabs.Panel>
