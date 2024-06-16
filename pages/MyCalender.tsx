@@ -137,7 +137,11 @@ function MyCalender(props) {
   //map for directions
   //const [map, setMap] = useState<google.maps.Map | null>(null);
   //const mapRef = useRef<HTMLDivElement>(null);
-  const [review, setReview] = useState();
+  const [review, setReview] = useState({
+    isOpen: false,
+    opening_period: [],
+    website: "",
+  });
 
   useEffect(() => {
     if (opened) {
@@ -149,14 +153,40 @@ function MyCalender(props) {
       };
 
       const service = new google.maps.places.PlacesService(props.map);
-      service.getDetails(request, (callback, status) => {
+      service.getDetails(request, (details, status) => {
         if (status === "OK") {
-          console.log({ callback });
+          console.log({ details });
+          setReview({
+            isOpen: details?.opening_hours?.open_now
+              ? "Currently Open"
+              : "Currently Closed",
+            opening_period: details?.opening_hours?.weekday_text,
+            website: details?.website,
+          });
+        } else {
+          console.log("Error getting google places of modal details");
         }
       });
     }
   }, [opened]);
+  console.log(review);
 
+  const showOpeningHours = () => {
+    const opening_period = review.opening_period;
+    return opening_period.map((items) => {
+      return <Text>{items}</Text>;
+    });
+  };
+
+  /*
+  const showReviews = () => {
+    const toShow = Object.values(review);
+    return toShow.map((items) => {
+      console.log("items", { items });
+      return <Text>{items}</Text>;
+    });
+  };
+  */
   {
     /* it was props.event*/
   }
@@ -213,7 +243,11 @@ function MyCalender(props) {
                 <Text>Empty Description</Text>
               )}
             </Tabs.Panel>
-            <Tabs.Panel value="reviews">Reviews tab content</Tabs.Panel>
+            <Tabs.Panel value="reviews">
+              <Text>{review.isOpen}</Text>
+              <Text>{review.website}</Text>
+              <Text>{showOpeningHours()}</Text>
+            </Tabs.Panel>
 
             <Tabs.Panel value="directions">
               <NativeSelect
