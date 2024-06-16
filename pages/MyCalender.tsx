@@ -111,13 +111,6 @@ function MyCalender(props) {
     });
   }, [props.setEvents, eventID]);
 
-  //console.log(eventID);
-
-  //add function
-
-  //Event Activities const
-  //const activityDescription = props.event
-
   //get Activity in modal functions
   const [modalActivityDescription, setModalActivityDescription] = useState({
     title: "",
@@ -125,10 +118,9 @@ function MyCalender(props) {
     googleMapsKeyId: "",
     //destination: ''
   });
-  //console.log("props events are");
 
   const activityEvent = props.event.find((ev) => ev.uuid === eventID);
-  console.log("activityEvent", activityEvent);
+  //console.log("activityEvent", activityEvent);
   useEffect(() => {
     if (activityEvent) {
       setModalActivityDescription({
@@ -140,31 +132,31 @@ function MyCalender(props) {
     //console.log("modal activity description is");
     //console.log(modalActivityDescription);
   }, [activityEvent]);
-  console.log("Modal", modalActivityDescription);
+  //console.log("Modal", modalActivityDescription);
 
   //map for directions
-  const [map, setMap] = useState<google.maps.Map | null>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
+  //const [map, setMap] = useState<google.maps.Map | null>(null);
+  //const mapRef = useRef<HTMLDivElement>(null);
+  const [review, setReview] = useState();
 
-  /*
   useEffect(() => {
     if (opened) {
-      const mapOptions = {
-        center: {
-          lat: 1,
-          lng: 100,
-        },
-        zoom: 6,
-        mapId: import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+      const googlePlaceID = modalActivityDescription.googleMapsKeyId;
+      console.log(googlePlaceID);
+      const request = {
+        placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+        fields: ["opening_hours", "website", "business_status"],
       };
-      const mapContainer = new google.maps.Map(
-        mapRef.current as HTMLDivElement,
-        mapOptions
-      );
-      setMap(mapContainer);
+
+      const service = new google.maps.places.PlacesService(props.map);
+      service.getDetails(request, (callback, status) => {
+        if (status === "OK") {
+          console.log({ callback });
+        }
+      });
     }
-  }, []);
-  */
+  }, [opened]);
+
   {
     /* it was props.event*/
   }
@@ -228,7 +220,7 @@ function MyCalender(props) {
                 data={["Driving", "Walking", "Cycling"]}
               ></NativeSelect>
               Directions tab content
-              <Container ref={mapRef} h="10em"></Container>
+              <Container h="10em"></Container>
             </Tabs.Panel>
 
             <Tabs.Panel value="edit">

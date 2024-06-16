@@ -132,15 +132,7 @@ function SchedulePageMap(props) {
     const _autoCompleteEnd = new google.maps.places.Autocomplete(
       autoCompleteEndRef.current as HTMLInputElement,
       {
-        fields: [
-          "place_id",
-          "name",
-          "formatted_address",
-          "geometry",
-          "opening_hours",
-          "website",
-          "business_status",
-        ],
+        fields: ["place_id", "name", "formatted_address", "geometry"],
       }
     );
 
@@ -436,7 +428,7 @@ function SchedulePageMap(props) {
           </Grid.Col>
         </Grid>
       </Container>
-      <MyCalender event={event} setEvents={setEvent}></MyCalender>
+      <MyCalender event={event} setEvents={setEvent} map={map}></MyCalender>
     </>
   );
 }
