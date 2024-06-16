@@ -1,4 +1,11 @@
-import React, { act, useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  act,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -7,9 +14,11 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import {
   Button,
+  Container,
   Input,
   InputDescription,
   Modal,
+  NativeSelect,
   Tabs,
   Text,
   TextInput,
@@ -18,6 +27,7 @@ import {
 } from "@mantine/core";
 import SchedulePageMap from "./SchedulePageMap";
 import { useDisclosure } from "@mantine/hooks";
+import { useJsApiLoader } from "@react-google-maps/api";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -112,15 +122,17 @@ function MyCalender(props) {
   const [modalActivityDescription, setModalActivityDescription] = useState({
     title: "",
     description: "",
+    googleMapsKeyId: "",
     //destination: ''
   });
   //console.log("props events are");
 
   const activityEvent = props.event.find((ev) => ev.uuid === eventID);
-  //console.log("activityEvent", activityEvent);
+  console.log("activityEvent", activityEvent);
   useEffect(() => {
     if (activityEvent) {
       setModalActivityDescription({
+        googleMapsKeyId: activityEvent.place.googleMapsKeyId,
         title: activityEvent.title,
         description: activityEvent.description,
       });
@@ -128,10 +140,31 @@ function MyCalender(props) {
     //console.log("modal activity description is");
     //console.log(modalActivityDescription);
   }, [activityEvent]);
+  console.log("Modal", modalActivityDescription);
 
-  //update
-  var updateEvent;
+  //map for directions
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
 
+  /*
+  useEffect(() => {
+    if (opened) {
+      const mapOptions = {
+        center: {
+          lat: 1,
+          lng: 100,
+        },
+        zoom: 6,
+        mapId: import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+      };
+      const mapContainer = new google.maps.Map(
+        mapRef.current as HTMLDivElement,
+        mapOptions
+      );
+      setMap(mapContainer);
+    }
+  }, []);
+  */
   {
     /* it was props.event*/
   }
@@ -190,7 +223,13 @@ function MyCalender(props) {
             </Tabs.Panel>
             <Tabs.Panel value="reviews">Reviews tab content</Tabs.Panel>
 
-            <Tabs.Panel value="directions">Directions tab content</Tabs.Panel>
+            <Tabs.Panel value="directions">
+              <NativeSelect
+                data={["Driving", "Walking", "Cycling"]}
+              ></NativeSelect>
+              Directions tab content
+              <Container ref={mapRef} h="10em"></Container>
+            </Tabs.Panel>
 
             <Tabs.Panel value="edit">
               <Input

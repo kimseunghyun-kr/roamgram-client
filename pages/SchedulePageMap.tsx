@@ -431,7 +431,9 @@ function SchedulePageMap(props) {
             </form>
           </Grid.Col>
 
-          <Grid.Col span={5} ref={mapRef} h={"50vh"}></Grid.Col>
+          <Grid.Col span={5} ref={mapRef} h={"50vh"}>
+            TEST
+          </Grid.Col>
         </Grid>
       </Container>
       <MyCalender event={event} setEvents={setEvent}></MyCalender>

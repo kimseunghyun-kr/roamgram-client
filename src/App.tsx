@@ -45,12 +45,12 @@ const events111 = [
 ];
 
 function App() {
-  //remember to change this!
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY, //rmb to remove
     libraries: ["places", "maps", "core", "marker", "routes"],
     version: "weekly",
   });
+  //remember to change this!
 
   return isLoaded ? (
     <>
