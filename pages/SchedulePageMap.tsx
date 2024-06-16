@@ -143,6 +143,10 @@ function SchedulePageMap(props) {
   useEffect(() => {
     const locationButton = document.createElement("button");
     locationButton.textContent = "Go to Current Location";
+    //Style
+    locationButton.style.fontSize = "1.5em";
+    locationButton.style.marginTop = "10px";
+    //
     if (map !== null) {
       //console.log("current location button");
       map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);

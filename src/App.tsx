@@ -23,7 +23,7 @@ import moment from "moment";
 const events111 = [
   {
     uuid: "33213",
-    title: "2222222",
+    name: "2222222",
     description: "",
     place: {
       id: "test",

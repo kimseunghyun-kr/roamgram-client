@@ -112,6 +112,7 @@ function MyCalender(props) {
     });
   }, [props.setEvents, eventID]);
 
+  const activityEvent = props.event.find((ev) => ev.uuid === eventID);
   //get Activity in modal functions
   const [modalActivityDescription, setModalActivityDescription] = useState({
     title: "",
@@ -120,13 +121,13 @@ function MyCalender(props) {
     //destination: ''
   });
 
-  const activityEvent = props.event.find((ev) => ev.uuid === eventID);
   //console.log("activityEvent", activityEvent);
+
   useEffect(() => {
     if (activityEvent) {
       setModalActivityDescription({
         googleMapsKeyId: activityEvent.place.googleMapsKeyId,
-        title: activityEvent.title,
+        title: activityEvent.name, //please check here and becareful
         description: activityEvent.description,
       });
     }
@@ -150,7 +151,7 @@ function MyCalender(props) {
   useEffect(() => {
     if (opened) {
       const googlePlaceID = modalActivityDescription.googleMapsKeyId;
-      console.log(googlePlaceID);
+      //console.log(googlePlaceID);
       const request = {
         placeId: modalActivityDescription.googleMapsKeyId,
         fields: ["opening_hours", "website", "business_status", "photo"],
@@ -171,6 +172,8 @@ function MyCalender(props) {
           console.log("Error getting google places of modal details");
         }
       });
+      console.log(activityEvent);
+      console.log(modalActivityDescription);
     }
   }, [
     opened,
