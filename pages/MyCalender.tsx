@@ -145,6 +145,8 @@ function MyCalender(props) {
     photo: "",
   });
 
+  const service = new google.maps.places.PlacesService(props.map);
+
   useEffect(() => {
     if (opened) {
       const googlePlaceID = modalActivityDescription.googleMapsKeyId;
@@ -154,7 +156,6 @@ function MyCalender(props) {
         fields: ["opening_hours", "website", "business_status", "photo"],
       };
 
-      const service = new google.maps.places.PlacesService(props.map);
       service.getDetails(request, (details, status) => {
         if (status === "OK") {
           console.log("Succesful Google Request");
@@ -171,7 +172,12 @@ function MyCalender(props) {
         }
       });
     }
-  }, [opened]);
+  }, [
+    opened,
+    modalActivityDescription,
+    setModalActivityDescription,
+    activityEvent,
+  ]);
   //console.log(review);
 
   const showOpeningHours = () => {
@@ -180,6 +186,9 @@ function MyCalender(props) {
       return <Text>{items}</Text>;
     });
   };
+
+  /////
+  const [activeTab, setActiveTab] = useState<string | null>("description");
 
   /*
   const showReviews = () => {
@@ -232,7 +241,12 @@ function MyCalender(props) {
         withCloseButton={true}
       >
         <nav>
-          <Tabs defaultValue="description">
+          <Tabs
+            value={activeTab}
+            onChange={setActiveTab}
+            defaultValue="description"
+            keepMounted={false}
+          >
             <Tabs.List grow>
               <Tabs.Tab value="description">Description</Tabs.Tab>
               <Tabs.Tab value="reviews">Reviews</Tabs.Tab>

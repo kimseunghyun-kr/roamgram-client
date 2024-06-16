@@ -27,7 +27,7 @@ const events111 = [
     description: "",
     place: {
       id: "test",
-      googleMapsKeyId: "string",
+      googleMapsKeyId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
       name: "string",
       country: "string",
       visitedCount: 0,
