@@ -94,7 +94,7 @@ function MyCalender(props) {
   //console.log("props events are");
 
   const activityEvent = props.event.find((ev) => ev.id === eventID);
-  console.log("activityEvent", activityEvent);
+  //console.log("activityEvent", activityEvent);
   useEffect(() => {
     if (activityEvent) {
       setModalActivityDescription({
@@ -108,7 +108,33 @@ function MyCalender(props) {
 
   //update
   var updateEvent;
+  const testEvent = [
+    {
+      uuid: "3",
+      title: "2222222",
+      description: "",
+      place: {
+        id: "test",
+        googleMapsKeyId: "string",
+        name: "string",
+        country: "string",
+        visitedCount: 0,
+        Latitude: 0,
+        Longitude: 0,
+        longitude: 0,
+        latitude: 0,
+      },
+      isActuallyVisited: false,
+      travelStartTimeEstimate: moment("2024-06-16T10:00:00").toDate(),
+      travelDepartTimeEstimate: moment("2024-06-16T11:00:00").toDate(),
+      previousScheduleId: null,
+      nextScheduleId: null,
+    },
+  ];
 
+  {
+    /* it was props.event*/
+  }
   return (
     <>
       <Text>click to edit to delete button to dete</Text>
@@ -118,9 +144,11 @@ function MyCalender(props) {
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         localizer={localizer}
-        events={props.event}
-        //startAccessor="start"
-        //endAccessor="end"
+        events={testEvent}
+        startAccessor="travelStartTimeEstimate"
+        endAccessor="travelDepartTimeEstimate"
+        resourceTitleAccessor="title"
+        resourceIdAccessor="place: id"
         style={{ height: 500, width: "100vw" }}
         defaultView="week"
         views={["month", "week", "day", "agenda"]}
