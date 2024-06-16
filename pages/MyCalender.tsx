@@ -24,6 +24,7 @@ import {
   TextInput,
   Textarea,
   UnstyledButton,
+  Image,
 } from "@mantine/core";
 import SchedulePageMap from "./SchedulePageMap";
 import { useDisclosure } from "@mantine/hooks";
@@ -141,6 +142,7 @@ function MyCalender(props) {
     isOpen: false,
     opening_period: [],
     website: "",
+    photo: "",
   });
 
   useEffect(() => {
@@ -148,20 +150,21 @@ function MyCalender(props) {
       const googlePlaceID = modalActivityDescription.googleMapsKeyId;
       console.log(googlePlaceID);
       const request = {
-        placeId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-        fields: ["opening_hours", "website", "business_status"],
+        placeId: modalActivityDescription.googleMapsKeyId,
+        fields: ["opening_hours", "website", "business_status", "photo"],
       };
 
       const service = new google.maps.places.PlacesService(props.map);
       service.getDetails(request, (details, status) => {
         if (status === "OK") {
-          console.log({ details });
+          console.log("Succesful Google Request");
           setReview({
             isOpen: details?.opening_hours?.open_now
               ? "Currently Open"
               : "Currently Closed",
             opening_period: details?.opening_hours?.weekday_text,
             website: details?.website,
+            photo: details?.photos[0].getUrl(),
           });
         } else {
           console.log("Error getting google places of modal details");
@@ -169,7 +172,7 @@ function MyCalender(props) {
       });
     }
   }, [opened]);
-  console.log(review);
+  //console.log(review);
 
   const showOpeningHours = () => {
     const opening_period = review.opening_period;
@@ -244,6 +247,7 @@ function MyCalender(props) {
               )}
             </Tabs.Panel>
             <Tabs.Panel value="reviews">
+              <Image h={200} w="auto" src={review.photo} />
               <Text>{review.isOpen}</Text>
               <Text>{review.website}</Text>
               <Text>{showOpeningHours()}</Text>
