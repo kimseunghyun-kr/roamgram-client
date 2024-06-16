@@ -116,7 +116,7 @@ function MyCalender(props) {
   });
   //console.log("props events are");
 
-  const activityEvent = props.event.find((ev) => ev.id === eventID);
+  const activityEvent = props.event.find((ev) => ev.uuid === eventID);
   //console.log("activityEvent", activityEvent);
   useEffect(() => {
     if (activityEvent) {
@@ -221,12 +221,12 @@ function MyCalender(props) {
                   setOpened(false);
 
                   props.setEvents((p) => {
-                    const existing = p.find((ev) => ev.id == eventID);
-                    const filtered = p.filter((ev) => ev.id !== eventID);
+                    const existing = p.find((ev) => ev.uuid == eventID);
+                    const filtered = p.filter((ev) => ev.uuid !== eventID);
 
                     const updatedExisting = {
                       ...existing,
-                      title: modalActivityDescription.title,
+                      name: modalActivityDescription.title,
                       description: modalActivityDescription.description,
                     };
                     return [...filtered, updatedExisting];
