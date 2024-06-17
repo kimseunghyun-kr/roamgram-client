@@ -7,15 +7,16 @@ import "@mantine/carousel/styles.css";
 import "@mantine/dates/styles.css";
 import "./App.css";
 import "@bitnoi.se/react-scheduler/dist/style.css";
-import HomePage from "../pages/HomePage.tsx";
-import SchedulePage from "../pages/SchedulePage.tsx";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import SchedulePageMap from "../pages/SchedulePageMap.tsx";
 import { useJsApiLoader } from "@react-google-maps/api";
-import CreateSchedule from "../pages/CreateSchedule.tsx";
 import TravelPage from "../pages/TravelPage.tsx";
 import MyCalender from "../pages/MyCalender.tsx";
 import moment from "moment";
+import { Route, Routes } from "react-router-dom";
+import HomePage from "../pages/HomePage.tsx";
+import GoogleMaps from "./components/GoogleMaps/GoogleMaps.tsx";
+import MapPage from "./pages/MapPage.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -55,7 +56,13 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        <SchedulePageMap eventsList={events111}></SchedulePageMap>
+        <Routes>
+          <Route path="/schedulePage" element={<SchedulePageMap />}></Route>
+          <Route path="" element={<HomePage />}></Route>{" "}
+          {/* this is working! refer to this */}
+          <Route path="/travelPage" element={<TravelPage />}></Route>
+          <Route path="/maps" element={<MapPage />}></Route>
+        </Routes>
       </div>
     </>
   ) : (

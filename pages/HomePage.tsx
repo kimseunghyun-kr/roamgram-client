@@ -33,6 +33,7 @@ import "@mantine/dates/styles.css";
 import "./HomePage.css";
 import { Carousel, CarouselSlide } from "@mantine/carousel";
 import React from "react";
+import { Link } from "react-router-dom";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -80,10 +81,11 @@ function HomePage() {
             <Grid.Col span={4}>
               <Group justify="center" gap="5em">
                 <li className="l-header-menu-list-child">
-                  <a href="Explore">Explore</a>
+                  <Link to="/travelPage">Routes</Link>
                 </li>
                 <li className="l-header-menu-list-child">
-                  <a href="Travel Diary">Travel Diary</a>
+                  <Link to="maps">Map</Link>
+                  <Link to="/schedulePage">Schedule</Link>
                 </li>
                 <li className="l-header-menu-list-child">
                   <a href="Book">Booking</a>

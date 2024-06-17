@@ -112,7 +112,9 @@ function MyCalender(props) {
     });
   }, [props.setEvents, eventID]);
 
-  const activityEvent = props.event.find((ev) => ev.uuid === eventID);
+  const activityEvent = Array.isArray(props.event)
+    ? props.event.find((ev) => ev.uuid === eventID) || null
+    : null;
   //get Activity in modal functions
   const [modalActivityDescription, setModalActivityDescription] = useState({
     title: "",
@@ -244,12 +246,7 @@ function MyCalender(props) {
         withCloseButton={true}
       >
         <nav>
-          <Tabs
-            value={activeTab}
-            onChange={setActiveTab}
-            defaultValue="description"
-            keepMounted={false}
-          >
+          <Tabs defaultValue="description" keepMounted={false}>
             <Tabs.List grow>
               <Tabs.Tab value="description">Description</Tabs.Tab>
               <Tabs.Tab value="reviews">Reviews</Tabs.Tab>

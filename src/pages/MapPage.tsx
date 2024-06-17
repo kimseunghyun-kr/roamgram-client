@@ -17,18 +17,10 @@ import {
 } from "@mantine/core";
 
 const MapPage = () => {
-    const { isLoaded } = useJsApiLoader({
-        googleMapsApiKey: import.meta.env.VITE_APP_GOOGLE_KEY,
-        libraries: ["places", "maps", "core", "marker", "routes"],
-        version: "weekly",
-    });
-
-  return isLoaded ? (
+  return (
     <Grid>
       <GoogleMaps></GoogleMaps>
     </Grid>
-  ) : (
-    <></>
   );
 };
 

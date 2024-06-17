@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import {
   ActionIcon,
+  Anchor,
   Button,
   Checkbox,
   Container,
@@ -23,6 +24,9 @@ import {
 import moment from "moment";
 
 import MyCalender from "./MyCalender.tsx";
+
+import TravelPage from "./TravelPage.tsx";
+import { Link, Navigate } from "react-router-dom";
 
 //testing purposese but make sure to store the travelPlanID somewhere
 const travelPlanID = "1bfb5d9c-dd40-4e9e-b0f2-0492fda38c37";
@@ -328,9 +332,24 @@ function SchedulePageMap(props) {
 
   const [keepStart, setKeepStart] = useState(false);
   const [keepEnd, setKeepEnd] = useState(false);
+
+  const getSchedule = () => {
+    fetch("http://localhost:8080/travelPlan/get_all", {
+      method: "GET",
+      headers: {
+        Accept: "application/json", // Optional: Explicitly requests JSON responses
+        Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => console.log(data))
+      .catch((error) => console.log(error));
+  };
   return (
     <>
       <Container fluid p="0">
+        <Button onClick={getSchedule}>Test</Button>
+        <Link to="/">Click here to go back</Link>;
         <Grid grow overflow="hidden">
           <Grid.Col span={7}>
             <form onSubmit={handleSubmit}>
