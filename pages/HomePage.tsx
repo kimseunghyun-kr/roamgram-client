@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Container,
   Title,
@@ -53,6 +53,47 @@ function HomePage() {
     </Carousel.Slide>
   ));
   const autoplay = useRef(Autoplay({ delay: 6000 }));
+
+  ///Explore Nearby Locations///
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const mapRef = useRef<HTMLDivElement>(null);
+
+  const googleMarker = new google.maps.Marker({
+    map: map,
+    title: "Current Pinned Location",
+  });
+  //map initialization
+  useEffect(() => {
+    const mapOptions = {
+      center: { lat: 1, lng: 100 },
+      zoom: 15,
+      mapId: import.meta.env.VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+    };
+
+    const mapContainer = new google.maps.Map(
+      mapRef.current as HTMLDivElement,
+      mapOptions
+    );
+    setMap(mapContainer);
+  }, []);
+
+  useEffect(() => {
+    if (navigator.geolocation && map && googleMarker) {
+      console.log("successful geolocation");
+      navigator.geolocation.getCurrentPosition((success) => {
+        const currentLoc = {
+          lat: success.coords.latitude,
+          lng: success.coords.longitude,
+        };
+        googleMarker.setPosition(currentLoc);
+        map.setCenter(currentLoc);
+        console.log(currentLoc);
+      });
+    } else {
+      console.log("unsuccecsful");
+    }
+  }, [map]);
+
   /////
   return (
     <>
@@ -166,27 +207,41 @@ function HomePage() {
         <Image
           h={79}
           w="auto"
-          src="components\assets\Explore Nearby.png"
+          src="src\assets\Explore Nearby.png"
           ml={50}
           mb={20}
         ></Image>
         {/* Put Map Here*/}
-        <Center>
-          <AspectRatio ratio={16 / 5}>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3025.3063874233135!2d-74.04668908358428!3d40.68924937933441!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c25090129c363d%3A0x40c6a5770d25022b!2sStatue%20of%20Liberty%20National%20Monument!5e0!3m2!1sen!2sru!4v1644262070010!5m2!1sen!2sru"
-              title="Google map"
-              style={{ border: 0 }}
-              height={500}
-            />
-          </AspectRatio>
+        <Center ref={mapRef} h={500}>
+          <AspectRatio ratio={16 / 5}></AspectRatio>
         </Center>
       </Container>
       <Container h={300} fluid>
         <Image
           h={71}
           w="auto"
-          src="\components\assets\Guide.png"
+          src="src\assets\Guide.png"
+          ml={50}
+          mb={20}
+        ></Image>
+        <Carousel
+          withIndicators
+          height={200}
+          slideSize="20%"
+          slideGap="sm"
+          loop
+          align="start"
+          slidesToScroll={3}
+          plugins={[autoplay.current]}
+        >
+          {slides}
+        </Carousel>
+      </Container>
+      <Container h={300} fluid mt="50">
+        <Image
+          h={71}
+          w="auto"
+          src="src\assets\Itinerary.png"
           ml={50}
           mb={20}
         ></Image>
@@ -210,7 +265,7 @@ function HomePage() {
           mb={20}
           h={79}
           w="auto"
-          src="\components\assets\Booking.png"
+          src="src\assets\Booking.png"
         ></Image>
       </Container>
     </>
