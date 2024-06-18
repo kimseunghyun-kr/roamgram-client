@@ -354,9 +354,13 @@ function SchedulePageMap(props) {
         (data) => (
           //console.log(data),
           data.forEach((items) => {
+            items.travelStartTimeEstimate[1] =
+              items.travelStartTimeEstimate[1] - 1;
             items.travelStartTimeEstimate = moment(
               items.travelStartTimeEstimate.slice(0, 5)
             ).toDate();
+            items.travelDepartTimeEstimate[1] =
+              items.travelDepartTimeEstimate[1] - 1;
             items.travelDepartTimeEstimate = moment(
               items.travelDepartTimeEstimate.slice(0, 5)
             ).toDate();
