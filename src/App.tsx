@@ -63,8 +63,7 @@ function App() {
           <Route path="/travelPage" element={<TravelPage />}></Route>
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>*/}
-        <h1>Test</h1>
-        <HomePage></HomePage>
+        <SchedulePageMap></SchedulePageMap>
       </div>
     </>
   ) : (

@@ -90,7 +90,7 @@ function GoogleTesting() {
     deleteMarker();
     const request = {
       location: pyrmont,
-      radius: "900",
+      radius: "400",
       type: [type_to_find],
     };
     return serviceOn.nearbySearch(request, (results, status) => {

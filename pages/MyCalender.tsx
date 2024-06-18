@@ -36,6 +36,8 @@ const DnDCalendar = withDragAndDrop(Calendar);
 function MyCalender(props) {
   const localizer = momentLocalizer(moment);
 
+  console.log("prop events are", props.event);
+
   ////EventID for modal to keep track
   const [eventID, setEventID] = useState();
 
@@ -48,8 +50,8 @@ function MyCalender(props) {
     ({ event, start, end }) => {
       props.setEvents((prev) => {
         console.log("prev is", prev);
-        const existing = prev.find((ev) => ev.uuid === event.uuid);
-        const filtered = prev.filter((ev) => ev.uuid !== event.uuid);
+        const existing = prev.find((ev) => ev.id === event.id);
+        const filtered = prev.filter((ev) => ev.id !== event.id);
         console.log("existing is", existing);
         console.log("filtered is", filtered);
         console.log("returned is", [
@@ -77,8 +79,8 @@ function MyCalender(props) {
     ({ event, start, end }) => {
       props.setEvents((prev) => {
         console.log("prev is", prev);
-        const existing = prev.find((ev) => ev.uuid === event.uuid);
-        const filtered = prev.filter((ev) => ev.uuid !== event.uuid);
+        const existing = prev.find((ev) => ev.id === event.id);
+        const filtered = prev.filter((ev) => ev.id !== event.id);
 
         console.log("existing is", existing);
         console.log("filtered is", filtered);
@@ -102,7 +104,7 @@ function MyCalender(props) {
       // console.log(eventID);
       //console.log(p);
 
-      const filtered = p.filter((ev) => ev.uuid != eventID);
+      const filtered = p.filter((ev) => ev.id != eventID);
       setOpened(false); //turns off modal
       //console.log("deleteEvent ID is", eventID);
       //console.log("filtered events delete are", [...filtered]);
@@ -113,7 +115,7 @@ function MyCalender(props) {
   }, [props.setEvents, eventID]);
 
   const activityEvent = Array.isArray(props.event)
-    ? props.event.find((ev) => ev.uuid === eventID) || null
+    ? props.event.find((ev) => ev.id === eventID) || null
     : null;
   //get Activity in modal functions
   const [modalActivityDescription, setModalActivityDescription] = useState({
@@ -207,6 +209,11 @@ function MyCalender(props) {
   {
     /* it was props.event*/
   }
+
+  if (props.event) {
+    console.log("names of events", props.event.name);
+  }
+
   return (
     <>
       <Text>click to edit to delete button to dete</Text>
@@ -231,7 +238,7 @@ function MyCalender(props) {
         }}
         onSelectEvent={(e) => {
           setOpened(true);
-          setEventID(e.uuid);
+          setEventID(e.id);
           //console.log("onSelectEventID");
           //console.log(eventID);
           //console.log("e id", e.id);
@@ -304,8 +311,8 @@ function MyCalender(props) {
                   setOpened(false);
 
                   props.setEvents((p) => {
-                    const existing = p.find((ev) => ev.uuid == eventID);
-                    const filtered = p.filter((ev) => ev.uuid !== eventID);
+                    const existing = p.find((ev) => ev.id == eventID);
+                    const filtered = p.filter((ev) => ev.id !== eventID);
 
                     const updatedExisting = {
                       ...existing,

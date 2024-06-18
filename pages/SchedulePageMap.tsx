@@ -29,7 +29,7 @@ import TravelPage from "./TravelPage.tsx";
 import { Link, Navigate } from "react-router-dom";
 
 //testing purposese but make sure to store the travelPlanID somewhere
-const travelPlanID = "1bfb5d9c-dd40-4e9e-b0f2-0492fda38c37";
+
 ////interface/////////
 interface Schedule {
   id: string;
@@ -66,7 +66,7 @@ function SchedulePageMap(props) {
   /////////////////////////////MAP STUFF//////////////////////////////////////
   //Map
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const mapRef = useRef<HTMLDivElement>(null);
+  const mapRef = useRef<HTMLDivElement | null>(null);
 
   /////////AutoComplete For Input
   const [autoCompleteStart, setAutoCompleteStart] =
@@ -109,7 +109,8 @@ function SchedulePageMap(props) {
     title: "Current Pinned Location",
   });
 
-  const infowindow = new google.maps.InfoWindow({ content: "Test" });
+  const infowindow = new google.maps.InfoWindow();
+
   /////////////useEffects///////////////
   //mounting of map and autocomplete
   useEffect(() => {
@@ -128,7 +129,6 @@ function SchedulePageMap(props) {
       mapOptions
     );
     setMap(mapContainer);
-    //////////////
     const _autoCompleteStart = new google.maps.places.Autocomplete(
       autoCompleteStartRef.current as HTMLInputElement,
       { fields: ["place_id", "name", "formatted_address", "geometry"] }
@@ -142,10 +142,13 @@ function SchedulePageMap(props) {
 
     setAutoCompleteStart(_autoCompleteStart);
     setAutoCompleteEnd(_autoCompleteEnd);
+
+    //////////////
   }, []);
 
+  const locationButton = document.createElement("button");
+
   useEffect(() => {
-    const locationButton = document.createElement("button");
     locationButton.textContent = "Go to Current Location";
     //Style
     locationButton.style.fontSize = "1.5em";
@@ -170,15 +173,15 @@ function SchedulePageMap(props) {
           }
         });
       }
+      googleMarker.addListener("click", () => {
+        infowindow.setContent("Current Position");
+        infowindow.open({
+          anchor: googleMarker,
+          map,
+        });
+      });
     }
   }, [map]);
-
-  googleMarker.addListener("click", () => {
-    infowindow.open({
-      anchor: googleMarker,
-      map,
-    });
-  });
 
   //autoComplete
   //console.log(autoCompleteEnd); //this is the places in scheduleDetails that is Sent to our backend
@@ -246,11 +249,11 @@ function SchedulePageMap(props) {
   //console.log("schedule google palces is", scheduleGooglePlaces);
 
   ////////////////////////FOR CREATING SCHEDULES////////////////////////////////////
-  const [startTime, setStartTime] = useState<string>();
-  const [endTime, setEndTime] = useState<string>();
-  const [scheduleName, setScheduleName] = useState<string>();
-  const [scheduleDescription, setScheduleDescription] = useState<string>();
-  const [event, setEvent] = useState(props.eventsList);
+  const [startTime, setStartTime] = useState<string>("");
+  const [endTime, setEndTime] = useState<string>("");
+  const [scheduleName, setScheduleName] = useState<string>("");
+  const [scheduleDescription, setScheduleDescription] = useState<string>("");
+  const [event, setEvent] = useState();
   const [travelDay, setTravelDay] = useState<Date | null>(null);
   const [endTimePop, setEndTimePop] = useState(false);
 
@@ -333,22 +336,43 @@ function SchedulePageMap(props) {
   const [keepStart, setKeepStart] = useState(false);
   const [keepEnd, setKeepEnd] = useState(false);
 
-  const getSchedule = () => {
-    fetch("http://localhost:8080/travelPlan/get_all", {
-      method: "GET",
-      headers: {
-        Accept: "application/json", // Optional: Explicitly requests JSON responses
-        Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
-      },
-    })
+  ////////////////testing purposes/////////////////////////
+  const travelPlanID = "90ba0a8e-5bf0-40d7-875d-ae382c54e382";
+  const getAllSchedule = () => {
+    fetch(
+      `http://localhost:8080/travelPlan/${travelPlanID}/schedule/search_all`,
+      {
+        method: "GET",
+        headers: {
+          //Accept: "application/json", // Optional: Explicitly requests JSON responses
+          Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+        },
+      }
+    )
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then(
+        (data) => (
+          console.log(data),
+          data.forEach((items) => {
+            items.travelStartTimeEstimate = moment(
+              items.travelStartTimeEstimate.slice(0, 5)
+            ).toDate();
+            items.travelDepartTimeEstimate = moment(
+              items.travelDepartTimeEstimate.slice(0, 5)
+            ).toDate();
+          }),
+          setEvent(data),
+          console.log("events taken from api are", data)
+          //console.log(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
+        )
+      )
       .catch((error) => console.log(error));
   };
+  console.log("events directly are", event);
   return (
     <>
       <Container fluid p="0">
-        <Button onClick={getSchedule}>Test</Button>
+        <Button onClick={getAllSchedule}>Test</Button>
         <Link to="/">Click here to go back</Link>;
         <Grid grow overflow="hidden">
           <Grid.Col span={7}>
@@ -451,6 +475,7 @@ function SchedulePageMap(props) {
           </Grid.Col>
         </Grid>
       </Container>
+
       <MyCalender event={event} setEvents={setEvent} map={map}></MyCalender>
     </>
   );
