@@ -269,7 +269,40 @@ function MyCalender(props) {
   };
 
   /////
-  const [activeTab, setActiveTab] = useState<string | null>("description");
+  const updateEvents = () => {
+    var bodyData = {};
+    props.setEvents((p) => {
+      const existing = p.find((ev) => ev.id == eventID);
+      const filtered = p.filter((ev) => ev.id !== eventID);
+
+      const updatedExisting = {
+        ...existing,
+        name: modalActivityDescription.title,
+        description: modalActivityDescription.description,
+      };
+      bodyData = {
+        scheduleId: existing.id,
+        name: updatedExisting.name,
+        description: updatedExisting.description,
+        travelDepartTimeEstimate: existing.travelDepartTimeEstimate,
+        travelStartTimeEstimate: existing.travelStartTimeEstimate,
+        isActuallyVisited: existing.isActuallyVisited,
+      };
+      return [...filtered, updatedExisting];
+    });
+
+    fetch(
+      `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/update_schedule_metadata`,
+      {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(bodyData),
+      }
+    ).then((response) => console.log("success in updating information"));
+  };
 
   /*
   const showReviews = () => {
@@ -384,7 +417,8 @@ function MyCalender(props) {
               <Button
                 onClick={() => {
                   setOpened(false);
-
+                  updateEvents();
+                  /*
                   props.setEvents((p) => {
                     const existing = p.find((ev) => ev.id == eventID);
                     const filtered = p.filter((ev) => ev.id !== eventID);
@@ -396,6 +430,7 @@ function MyCalender(props) {
                     };
                     return [...filtered, updatedExisting];
                   });
+                  */
                 }}
               >
                 Update Content
