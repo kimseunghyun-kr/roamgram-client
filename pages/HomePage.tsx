@@ -24,6 +24,7 @@ import {
   NumberInput,
   Center,
   AspectRatio,
+  Chip,
 } from "@mantine/core";
 import Autoplay from "embla-carousel-autoplay";
 import { DatePickerInput } from "@mantine/dates";
@@ -46,9 +47,9 @@ const images = [
 ];
 
 function HomePage() {
-  //all the carousell stuff
-  const slides = images.map((url) => (
-    <Carousel.Slide key={url} w="100%">
+  //all the carousell stuff make edits below to the key!
+  const slides = images.map((url, index) => (
+    <Carousel.Slide key={index} w="100%">
       <Image src={url} />
     </Carousel.Slide>
   ));
@@ -56,6 +57,7 @@ function HomePage() {
 
   ///Explore Nearby Locations///
   const [map, setMap] = useState<google.maps.Map | null>(null);
+  const [currentLocation, setCurrentLocation] = useState();
   const mapRef = useRef<HTMLDivElement>(null);
 
   const googleMarker = new google.maps.Marker({
@@ -88,13 +90,95 @@ function HomePage() {
         googleMarker.setPosition(currentLoc);
         map.setCenter(currentLoc);
         console.log(currentLoc);
+        setCurrentLocation(currentLoc);
+        console.log("curr loc state", currentLocation);
       });
     } else {
       console.log("unsuccecsful");
     }
   }, [map]);
 
-  /////
+  /////For NEARBY SEARCH SECTION///
+  const [type, setType] = useState<string>();
+  const [serviceOn, setServiceOn] =
+    useState<google.maps.places.PlacesService>();
+
+  const infowindow = new google.maps.InfoWindow();
+
+  const [markerArray, setMarkerArray] = useState<google.maps.Marker[]>([]);
+
+  function createMarker(place: google.maps.places.PlaceResult) {
+    const marker = new google.maps.Marker({
+      map,
+      position: place.geometry?.location,
+    });
+
+    google.maps.event.addListener(marker, "click", () => {
+      console.log("is Info Window set?");
+      infowindow.setContent(
+        `<img src = ${place.icon}></img> <text>${place.name}</text>`
+      );
+
+      infowindow.open(map, marker);
+    });
+    setMarkerArray((p) => [...p, marker]);
+  }
+  function apiRequest(type_to_find: string) {
+    deleteMarker();
+    console.log("current location api", currentLocation);
+    const request = {
+      location: currentLocation as google.maps.LatLng,
+      radius: "500",
+      type: [type_to_find],
+    };
+    return serviceOn.nearbySearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        //console.log("Results below");
+        //console.log(results);
+        results?.map((item) => {
+          createMarker(item);
+        });
+      } else {
+        console.log("nearby search is not working as expected");
+      }
+    });
+  }
+
+  function deleteMarker() {
+    markerArray.forEach((item) => {
+      item.setMap(null);
+    });
+    console.log("delete marker Array", markerArray);
+    setMarkerArray([]);
+  }
+
+  useEffect(() => {
+    if (type) {
+      apiRequest(type);
+      console.log("type is", type);
+    }
+  }, [setType, type]);
+
+  useEffect(() => {
+    if (map) {
+      const service = new google.maps.places.PlacesService(map);
+      setServiceOn(service);
+
+      /*
+    service.nearbySearch(request, (results, status) => {
+      if (status === google.maps.places.PlacesServiceStatus.OK) {
+        console.log(results);
+        results?.map((item) => {
+          createMarker(item);
+        });
+      } else {
+        console.log("nearby search is not working as expected");
+      }
+    });
+    */
+    }
+  }, [map]);
+
   return (
     <>
       <Container fluid h={600} p="0">
@@ -212,9 +296,19 @@ function HomePage() {
           mb={20}
         ></Image>
         {/* Put Map Here*/}
-        <Center ref={mapRef} h={500}>
-          <AspectRatio ratio={16 / 5}></AspectRatio>
-        </Center>
+        <Container fluid ref={mapRef} h={400} />
+        <Chip.Group
+          onChange={(e) => {
+            setType(e as string);
+            //deleteMarker();
+            //apiRequest(e as string);
+          }}
+        >
+          <Chip value="food"> food </Chip>
+          <Chip value="shopping_mall">mall</Chip>
+          <Chip value="tourist_attraction">tourist attractions</Chip>
+          <Chip value="library">library</Chip>
+        </Chip.Group>
       </Container>
       <Container h={300} fluid>
         <Image

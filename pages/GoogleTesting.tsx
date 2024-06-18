@@ -62,6 +62,7 @@ function GoogleTesting() {
   useEffect(() => {
     if (type) {
       apiRequest(type);
+      console.log("type is", type);
     }
   }, [setType, type]);
 
@@ -89,7 +90,7 @@ function GoogleTesting() {
     deleteMarker();
     const request = {
       location: pyrmont,
-      radius: "400",
+      radius: "900",
       type: [type_to_find],
     };
     return serviceOn.nearbySearch(request, (results, status) => {
