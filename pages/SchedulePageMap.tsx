@@ -337,10 +337,10 @@ function SchedulePageMap(props) {
   const [keepEnd, setKeepEnd] = useState(false);
 
   ////////////////testing purposes/////////////////////////
-  const travelPlanID = "90ba0a8e-5bf0-40d7-875d-ae382c54e382";
+  const travelPlanId = "90ba0a8e-5bf0-40d7-875d-ae382c54e382";
   const getAllSchedule = () => {
     fetch(
-      `http://localhost:8080/travelPlan/${travelPlanID}/schedule/search_all`,
+      `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
       {
         method: "GET",
         headers: {
@@ -476,7 +476,12 @@ function SchedulePageMap(props) {
         </Grid>
       </Container>
 
-      <MyCalender event={event} setEvents={setEvent} map={map}></MyCalender>
+      <MyCalender
+        event={event}
+        setEvents={setEvent}
+        map={map}
+        travelPlanId={travelPlanId}
+      ></MyCalender>
     </>
   );
 }

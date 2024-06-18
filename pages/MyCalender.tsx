@@ -98,12 +98,15 @@ function MyCalender(props) {
     [props.setEvents]
   );
 
+  console.log("travelPlanID", props.travelPlanId);
+
   const deleteEvent = useCallback(() => {
     props.setEvents((p) => {
       //console.log("p is ", p);
       // console.log(eventID);
       //console.log(p);
-
+      const existing = p.filter((ev) => ev.id === eventID);
+      console.log("existing to delete", existing);
       const filtered = p.filter((ev) => ev.id != eventID);
       setOpened(false); //turns off modal
       //console.log("deleteEvent ID is", eventID);
@@ -112,6 +115,19 @@ function MyCalender(props) {
       //consol.log([...filtered]);
       return [...filtered];
     });
+    console.log("event id to delete is", eventID);
+
+    fetch(
+      `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/delete_schedule?scheduleId=${eventID}`,
+      {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => console.log("success in deletion"))
+      .catch((error) => console.log("error in deleting"));
+    //delete in DataBase
   }, [props.setEvents, eventID]);
 
   const [activityEvent, setActvityEvent] = useState();
@@ -120,7 +136,7 @@ function MyCalender(props) {
     if (eventID && props.event) {
       const selected = props.event.find((ev) => ev.id === eventID);
       setActvityEvent(selected);
-      console.log("selected is", selected);
+      //console.log("selected is", selected);
     }
   }, [eventID, setEventID]);
 
