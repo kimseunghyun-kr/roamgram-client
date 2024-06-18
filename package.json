@@ -12,6 +12,7 @@
   "dependencies": {
     "@bitnoi.se/react-scheduler": "^0.2.0",
     "@event-calendar/list": "^3.0.2",
+    "@hello-pangea/dnd": "^16.6.0",
     "@mantine/carousel": "^7.10.1",
     "@mantine/core": "^7.10.1",
     "@mantine/dates": "^7.10.1",

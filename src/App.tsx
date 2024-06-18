@@ -18,6 +18,7 @@ import HomePage from "../pages/HomePage.tsx";
 import GoogleMaps from "./components/GoogleMaps/GoogleMaps.tsx";
 import MapPage from "./pages/MapPage.tsx";
 import GoogleTesting from "../pages/GoogleTesting.tsx";
+import TravelPlans from "../pages/TravelPlans.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -57,12 +58,14 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        {/*   <Routes>
+        {/*
+        <Routes>
           <Route path="/schedulePage" element={<SchedulePageMap />}></Route>
           <Route path="" element={<HomePage />}></Route>
           <Route path="/travelPage" element={<TravelPage />}></Route>
           <Route path="/maps" element={<MapPage />}></Route>
-        </Routes>*/}
+        </Routes>
+  */}
         <SchedulePageMap></SchedulePageMap>
       </div>
     </>

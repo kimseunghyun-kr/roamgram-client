@@ -56,7 +56,10 @@ function TravelPage() {
   const test = () => {
     fetch("http://localhost:8080/travelPlan/create_travel_plan", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+      },
       body: JSON.stringify(travelPlanDetails),
     })
       .then((response) => response.json())
