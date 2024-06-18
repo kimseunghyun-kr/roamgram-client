@@ -17,6 +17,8 @@ function GoogleTesting() {
 
   const infowindow = new google.maps.InfoWindow();
 
+  const [markerArray, setMarkerArray] = useState<google.maps.Marker[]>([]);
+
   function createMarker(place: google.maps.places.PlaceResult) {
     const marker = new google.maps.Marker({
       map,
@@ -31,7 +33,10 @@ function GoogleTesting() {
 
       infowindow.open(map, marker);
     });
+    setMarkerArray((p) => [...p, marker]);
   }
+
+  //console.log("new marker array", markerArray);
   //map initialization
   useEffect(() => {
     const mapOptions = {
@@ -55,6 +60,12 @@ function GoogleTesting() {
   const pyrmont = new google.maps.LatLng(-33.8665433, 151.1956316);
 
   useEffect(() => {
+    if (type) {
+      apiRequest(type);
+    }
+  }, [setType, type]);
+
+  useEffect(() => {
     if (map) {
       const service = new google.maps.places.PlacesService(map);
       setServiceOn(service);
@@ -75,15 +86,16 @@ function GoogleTesting() {
   }, [map]);
 
   function apiRequest(type_to_find: string) {
+    deleteMarker();
     const request = {
       location: pyrmont,
-      radius: "500",
+      radius: "400",
       type: [type_to_find],
     };
     return serviceOn.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
-        console.log("Results below");
-        console.log(results);
+        //console.log("Results below");
+        //console.log(results);
         results?.map((item) => {
           createMarker(item);
         });
@@ -92,13 +104,23 @@ function GoogleTesting() {
       }
     });
   }
+
+  function deleteMarker() {
+    markerArray.forEach((item) => {
+      item.setMap(null);
+    });
+    console.log(markerArray);
+    setMarkerArray([]);
+  }
+
   return (
     <div>
       <Container h={500} ref={mapRef}></Container>
       <Chip.Group
         onChange={(e) => {
           setType(e as string);
-          apiRequest(e as string);
+          //deleteMarker();
+          //apiRequest(e as string);
         }}
       >
         <Chip value="food"> food </Chip>
