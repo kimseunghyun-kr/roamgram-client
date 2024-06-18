@@ -368,7 +368,7 @@ function SchedulePageMap(props) {
       )
       .catch((error) => console.log(error));
   };
-  console.log("events directly are", event);
+  //console.log("events directly are", event);
   return (
     <>
       <Container fluid p="0">

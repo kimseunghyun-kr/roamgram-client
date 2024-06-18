@@ -48,10 +48,20 @@ function MyCalender(props) {
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {
+      var bodyData = {};
       props.setEvents((prev) => {
         console.log("prev is", prev);
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
+        bodyData = {
+          scheduleId: existing.id,
+          name: existing.name,
+          description: existing.description,
+          travelDepartTimeEstimate: moment(end).format("YYYY-MM-DDTHH:mm:ss"),
+          travelStartTimeEstimate: moment(start).format("YYYY-MM-DDTHH:mm:ss"),
+          isActuallyVisited: existing.isActuallyVisited,
+        };
+
         console.log("existing is", existing);
         console.log("filtered is", filtered);
         console.log("returned is", [
@@ -71,6 +81,20 @@ function MyCalender(props) {
           },
         ];
       });
+      console.log("fetch resize is", bodyData);
+      console.log("jsonfied", JSON.stringify(bodyData));
+
+      fetch(
+        `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/update_schedule_metadata`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          },
+          body: JSON.stringify(bodyData),
+        }
+      ).then((response) => console.log("success"));
     },
     [props.setEvents]
   );
@@ -98,7 +122,7 @@ function MyCalender(props) {
     [props.setEvents]
   );
 
-  console.log("travelPlanID", props.travelPlanId);
+  //console.log("travelPlanID", props.travelPlanId);
 
   const deleteEvent = useCallback(() => {
     props.setEvents((p) => {
@@ -115,7 +139,7 @@ function MyCalender(props) {
       //consol.log([...filtered]);
       return [...filtered];
     });
-    console.log("event id to delete is", eventID);
+    //console.log("event id to delete is", eventID);
 
     fetch(
       `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/delete_schedule?scheduleId=${eventID}`,
