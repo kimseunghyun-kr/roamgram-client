@@ -94,17 +94,27 @@ function MyCalender(props) {
           },
           body: JSON.stringify(bodyData),
         }
-      ).then((response) => console.log("success"));
+      ).then((response) => console.log("success in moving"));
     },
     [props.setEvents]
   );
 
   const resizeEvent = useCallback(
     ({ event, start, end }) => {
+      var bodyData = {};
       props.setEvents((prev) => {
         console.log("prev is", prev);
+
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
+        bodyData = {
+          scheduleId: existing.id,
+          name: existing.name,
+          description: existing.description,
+          travelDepartTimeEstimate: moment(end).format("YYYY-MM-DDTHH:mm:ss"),
+          travelStartTimeEstimate: moment(start).format("YYYY-MM-DDTHH:mm:ss"),
+          isActuallyVisited: existing.isActuallyVisited,
+        };
 
         console.log("existing is", existing);
         console.log("filtered is", filtered);
@@ -118,6 +128,17 @@ function MyCalender(props) {
           },
         ];
       });
+      fetch(
+        `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/update_schedule_metadata`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          },
+          body: JSON.stringify(bodyData),
+        }
+      ).then((response) => console.log("success in resizing"));
     },
     [props.setEvents]
   );
