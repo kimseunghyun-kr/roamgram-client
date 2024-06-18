@@ -352,7 +352,7 @@ function SchedulePageMap(props) {
       .then((response) => response.json())
       .then(
         (data) => (
-          console.log(data),
+          //console.log(data),
           data.forEach((items) => {
             items.travelStartTimeEstimate = moment(
               items.travelStartTimeEstimate.slice(0, 5)
@@ -361,8 +361,8 @@ function SchedulePageMap(props) {
               items.travelDepartTimeEstimate.slice(0, 5)
             ).toDate();
           }),
-          setEvent(data),
-          console.log("events taken from api are", data)
+          setEvent(data)
+          //console.log("events taken from api are", data)
           //console.log(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
         )
       )

@@ -36,7 +36,7 @@ const DnDCalendar = withDragAndDrop(Calendar);
 function MyCalender(props) {
   const localizer = momentLocalizer(moment);
 
-  console.log("prop events are", props.event);
+  //console.log("prop events are", props.event);
 
   ////EventID for modal to keep track
   const [eventID, setEventID] = useState();
@@ -108,15 +108,28 @@ function MyCalender(props) {
       setOpened(false); //turns off modal
       //console.log("deleteEvent ID is", eventID);
       //console.log("filtered events delete are", [...filtered]);
-      console.log("EVENTID", eventID);
-      console.log([...filtered]);
+      //console.log("EVENTID", eventID);
+      //consol.log([...filtered]);
       return [...filtered];
     });
   }, [props.setEvents, eventID]);
 
-  const activityEvent = Array.isArray(props.event)
-    ? props.event.find((ev) => ev.id === eventID) || null
-    : null;
+  const [activityEvent, setActvityEvent] = useState();
+
+  useEffect(() => {
+    if (eventID && props.event) {
+      const selected = props.event.find((ev) => ev.id === eventID);
+      setActvityEvent(selected);
+      console.log("selected is", selected);
+    }
+  }, [eventID, setEventID]);
+
+  // const activityEvent = Array.isArray(props.event)
+  //  ? props.event.find((ev) => ev.id == eventID)
+  //  : null;
+
+  //console.log("Activity Event is", activityEvent);
+  //console.log("Event ID", eventID);
   //get Activity in modal functions
   const [modalActivityDescription, setModalActivityDescription] = useState({
     title: "",
@@ -130,14 +143,14 @@ function MyCalender(props) {
   useEffect(() => {
     if (activityEvent) {
       setModalActivityDescription({
-        googleMapsKeyId: activityEvent.place.googleMapsKeyId,
+        googleMapsKeyId: activityEvent.place?.googleMapsKeyId || null,
         title: activityEvent.name, //please check here and becareful
         description: activityEvent.description,
       });
     }
     //console.log("modal activity description is");
     //console.log(modalActivityDescription);
-  }, [activityEvent]);
+  }, [activityEvent, setActvityEvent]);
   //console.log("Modal", modalActivityDescription);
 
   //map for directions
@@ -238,6 +251,7 @@ function MyCalender(props) {
         }}
         onSelectEvent={(e) => {
           setOpened(true);
+          console.log("e is ", e);
           setEventID(e.id);
           //console.log("onSelectEventID");
           //console.log(eventID);
