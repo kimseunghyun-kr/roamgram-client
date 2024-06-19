@@ -238,10 +238,22 @@ function HomePage() {
               </Grid.Col>
               <Grid.Col span={4}>
                 <Group gap="xs" justify="flex-end">
-                  <Button w="5.5em" radius="xl" color="violet">
+                  <Button
+                    w="5.5em"
+                    radius="xl"
+                    color="violet"
+                    variant="gradient"
+                    gradient={{ from: "indigo", to: "violet", deg: 90 }}
+                  >
                     Login
                   </Button>
-                  <Button w="6.8em" radius="xl" color="violet">
+                  <Button
+                    w="6.8em"
+                    radius="xl"
+                    color="violet"
+                    variant="gradient"
+                    gradient={{ from: "indigo", to: "violet", deg: 90 }}
+                  >
                     Register
                   </Button>
                   <Switch
@@ -253,6 +265,9 @@ function HomePage() {
                   <NativeSelect
                     w={"4em"}
                     data={["ENG", "KR", "JPN", "CHI", "ETC."]}
+                    styles={{
+                      input: { backgroundColor: "rgba(255, 255, 255, 0.5)" },
+                    }}
                     variant="unstyled"
                     className="language-button"
                   ></NativeSelect>
