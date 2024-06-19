@@ -10,6 +10,7 @@ import {
   Select,
   Table,
   TextInput,
+  UnstyledButton,
 } from "@mantine/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
@@ -24,6 +25,7 @@ const data = [
   { name: "Second", startDate: "2024-06-18", endDate: "2024-06-20" },
   { name: "Third", startDate: "2024-06-18", endDate: "2024-06-31" },
 ];
+
 function TravelPlans() {
   const [token, setToken] = useState();
 
@@ -40,46 +42,23 @@ function TravelPlans() {
       .catch((error) => console.log("login error"));
   }, []);
 
-  const [event, setEvent] = useState();
-  const travelPlanId = "86b63927-848c-46ed-afac-0233ebb3938d";
+  const [event, setEvent] = useState([]);
+
   useEffect(() => {
     if (token) {
-      fetch(
-        `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
-        {
-          method: "GET",
-          headers: {
-            //Accept: "application/json", // Optional: Explicitly requests JSON responses
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      fetch(`http://localhost:8080/travelPlan/get_all`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
         .then((response) => response.json())
-        .then(
-          (data) => (
-            //console.log(data),
-            data.forEach((items) => {
-              items.travelStartTimeEstimate[1] =
-                items.travelStartTimeEstimate[1] - 1;
-              items.travelStartTimeEstimate = moment(
-                items.travelStartTimeEstimate.slice(0, 5)
-              ).toDate();
-              items.travelDepartTimeEstimate[1] =
-                items.travelDepartTimeEstimate[1] - 1;
-              items.travelDepartTimeEstimate = moment(
-                items.travelDepartTimeEstimate.slice(0, 5)
-              ).toDate();
-            }),
-            setEvent(data)
-            //console.log("events taken from api are", data)
-            //console.log(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
-          )
-        )
+        .then((data) => setEvent(data))
         .catch((error) => console.log(error));
     }
   }, [token]);
 
-  //console.log("rows");
+  console.log(event);
 
   const [opened, setOpened] = useState(false); //for modal
 
@@ -131,21 +110,40 @@ function TravelPlans() {
       body: JSON.stringify(travelPlanDetails),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data))
+      .then((data) => console.log("data is", data))
       .catch((error) => console.log(error));
   };
 
   const [editModalOpen, setEditModalOpen] = useState(false);
 
+  function deleteTravelPlan(id) {
+    console.log(id);
+    fetch(`http://localhost:8080/travelPlan/delete_travel_plan`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify([id]),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("successful in deleting travelPlan"))
+      .catch((error) => console.log("error in deleting traevlPlan"));
+
+    //EXTRA THINGS --> DELETE ALL SCHEDULES HERE
+  }
+
   const cardSecs = () => {
-    return (
+    return event ? (
       <>
-        {data.map((item) => (
+        {event.map((item) => (
           <Card shadow="sm" padding="lg" radius="md" withBorder>
             <Card.Section>
               <Text>{item.name}</Text>
               <Text>
-                From {item.startDate} to {item.endDate}
+                From {moment(item.travelStartDate).format("YYYY-MM-DD")} to{" "}
+                {` `}
+                {moment(item.travelEndDate).format("YYYY-MM-DD")}
               </Text>
               <Menu>
                 <Menu.Target>
@@ -155,20 +153,87 @@ function TravelPlans() {
                 </Menu.Target>
                 <Menu.Dropdown>
                   <Menu.Label>Application</Menu.Label>
-                  <Menu.Item>Edit</Menu.Item>
+                  <Menu.Item
+                    onClick={() => (
+                      setEditModalOpen(true), console.log(editModalOpen)
+                    )}
+                  >
+                    Edit
+                  </Menu.Item>
                   <Menu.Divider />
                   <Menu.Label>Danger</Menu.Label>
+                  <Menu.Item>
+                    <Text style={{ color: "red" }}>Delete</Text>
+                  </Menu.Item>
                 </Menu.Dropdown>
+                <Modal
+                  overlayProps={{
+                    backgroundOpacity: 0,
+                    blur: 1,
+                  }}
+                  opened={editModalOpen}
+                  onClose={() => (
+                    setEditModalOpen(false), console.log("close", editModalOpen)
+                  )}
+                >
+                  <Input
+                    //right hand side
+                    rightSectionPointerEvents="all"
+                    rightSection={
+                      <CloseButton
+                        aria-label="Clear Name"
+                        onClick={() =>
+                          setTravelPlanDetails((p) => ({ ...p, name: "" }))
+                        }
+                      />
+                    }
+                    required
+                    //other Input Properties
+                    placeholder="Choose Name"
+                    value={travelPlanDetails.name}
+                    onChange={(e) => {
+                      setTravelPlanDetails((p) => ({
+                        ...p,
+                        name: e.target.value,
+                      }));
+                    }}
+                  ></Input>
+                  <DatePickerInput
+                    clearable
+                    type="range"
+                    placeholder="Choose Date"
+                    value={dateRanges}
+                    onChange={settingTravelPlanDetailsDate}
+                  ></DatePickerInput>
+                  <Button
+                    type="submit"
+                    onClick={(e) => {
+                      console.log(travelPlanDetails);
+                    }}
+                  >
+                    Update Plan
+                  </Button>
+                </Modal>
               </Menu>
             </Card.Section>
           </Card>
         ))}
       </>
+    ) : (
+      <h1>Error Loading</h1>
     );
   };
 
   return (
     <>
+      <Button
+        onClick={() => {
+          deleteTravelPlan(`3ec21ce9-b695-4311-bcc6-141d6f376ee0`);
+        }}
+      >
+        Test Delete
+      </Button>
+      <Button>Update Edit</Button>
       {cardSecs()}
       <Modal
         opened={opened}
