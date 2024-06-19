@@ -359,7 +359,7 @@ function HomePage() {
         {/* Put Map Here*/}
         <Container ref={mapRef} fluid h={500} w={1370}></Container>
       </Container>
-      <Container fluid h={300}>
+      <Container fluid h={350}>
         <Grid>
           <Grid.Col span={3}>
             <Image
@@ -388,8 +388,8 @@ function HomePage() {
         <div style={{ minWidth: 1000 }}>
           <Carousel
             withIndicators
-            height={200}
-            slideSize="20%"
+            height={250}
+            slideSize="30%"
             slideGap="sm"
             loop
             align="start"
