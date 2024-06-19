@@ -67,7 +67,7 @@ function App() {
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>
   */}
-        <HomePage></HomePage>
+        <MapPage></MapPage>
       </div>
     </>
   ) : (

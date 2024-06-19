@@ -1,5 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Grid } from "@mantine/core";
+import {
+  Container,
+  Flex,
+  Grid,
+  NativeSelect,
+  SimpleGrid,
+  Stack,
+  TextInput,
+} from "@mantine/core";
+import { TimeInput } from "@mantine/dates";
 
 function GoogleMaps() {
   /*
@@ -226,87 +235,47 @@ function GoogleMaps() {
     directionsRenderer.setRouteIndex(routeIndex);
   }, [routeIndex, directionsRenderer]);
 
-  /*
-  useEffect(() => {
-    if (autoComplete !== null && autoCompleteDest !== null) {
-      directionsService?.route(
-        {
-          origin: { placeId: autoComplete.getPlace().place_id },
-          destination: { placeId: autoCompleteDest.getPlace().place_id },
-          travelMode: google.maps.TravelMode.DRIVING,
-        },
-        function (result, status) {
-          if (status == "OK") {
-            directionsRenderer?.setDirections(result);
-          }
-        }
-      );
-    }
-  }, [autoComplete, autoCompleteDest]);
-  */
-  /*
-  
-      if (autoComplete == null) {
-        directionsService?.route(
-          {
-            origin: { placeId: autoComplete.getPlace().place_id },
-            destination: { placeId: autoCompleteDest.getPlace().place_id },
-            travelMode: google.maps.TravelMode.DRIVING,
-          },
-          function (result, status) {
-            if (status == "OK") {
-              directionsRenderer?.setDirections(result);
-            }
-          }
-        );
-      }
-  */
-  /*
-  function setMarker(location: google.maps.LatLng, name: string) {
-    if (!map) return; //if map not initialized
-    //else we set to center
-
-    map.setCenter(location); //location given to center
-    map.setZoom(16); //sets zoom Level
-    console.log({ location });
-    const marker = new google.maps.Marker({
-      map: map,
-      position: location,
-      title: "Origin",
-    });
-  }
-
-  function setMarkerDest(location: google.maps.LatLng, name: string) {
-    if (!map) return;
-    const markerDest = new google.maps.Marker({
-      map: map,
-      position: location,
-      title: "Destination",
-    });
-  }
-  */
   return (
     <>
       <Grid.Col span="auto">
-        <div>
-          <label>From: </label>
-        </div>
-        <input ref={placeAutoCompleteRef} placeholder="From"></input>
-        <br></br>
-        <div>
-          <label>To:</label>
-        </div>
-        <input ref={placeAutoCompleteRefDest} placeholder="To" required></input>
-        <br></br>
-        <div id="floating-panel">
-          <b>Mode of Travel: </b>
-          <select id="mode" onChange={(e) => setTravelMethod(e.target.value)}>
-            <option value="DRIVING">Driving</option>
-            <option value="WALKING">Walking</option>
-            <option value="BICYCLING">Bicycling</option>
-            <option value="TRANSIT">Transit</option>
-          </select>
-        </div>
+        <Container h={300}>
+          <Stack align="center" mt={50} gap="7">
+            <TextInput
+              w={300}
+              description="From"
+              ref={placeAutoCompleteRef}
+            ></TextInput>
+            <TextInput
+              w={300}
+              description="To"
+              ref={placeAutoCompleteRefDest}
+            ></TextInput>
+            <SimpleGrid cols={2}>
+              <NativeSelect
+                w={150}
+                description="Method of Travel"
+                data={[
+                  { label: "Driving", value: "DRIVING" },
+                  { label: "Walking", value: "WALKING" },
+                  { label: "Bicycling", value: "BICYCLING" },
+                  { label: "Transit", value: "TRANSIT" },
+                ]}
+              ></NativeSelect>
+
+              <TimeInput mt={19} w={150} placeholder="Leave Now.."></TimeInput>
+            </SimpleGrid>
+          </Stack>
+          <br></br>
+          <div id="floating-panel">
+            <b>Mode of Travel: </b>
+            <select id="mode" onChange={(e) => setTravelMethod(e.target.value)}>
+              <option value="DRIVING">Driving</option>
+              <option value="WALKING">Walking</option>
+              <option value="BICYCLING">Bicycling</option>
+              <option value="TRANSIT">Transit</option>
+            </select>
+          </div>
+        </Container>
         <label>Origin: {selectedPlace}</label>
         <br></br>
         <label>Destination: {selectedPlaceDest} </label>
