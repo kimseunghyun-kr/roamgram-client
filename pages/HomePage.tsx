@@ -27,6 +27,7 @@ import {
   Chip,
   rgba,
   UnstyledButton,
+  Stack,
 } from "@mantine/core";
 import Autoplay from "embla-carousel-autoplay";
 import { DatePicker, DatePickerInput } from "@mantine/dates";
@@ -53,6 +54,21 @@ function HomePage() {
   const slides = images.map((url, index) => (
     <Carousel.Slide key={index}>
       <Image src={url} />
+    </Carousel.Slide>
+  ));
+
+  const slides2 = images.map((url, index) => (
+    <Carousel.Slide key={index}>
+      <Card shadow="sm" padding="lg" radius="md" withBorder>
+        <Card.Section>
+          <Image src={url} height={150}></Image>
+        </Card.Section>
+        <Text style={{ textAlign: "center" }}>Title</Text>
+        <Text style={{ textAlign: "center" }}>Descripton</Text>
+        <UnstyledButton style={{ textAlign: "center" }}>
+          Check More Here
+        </UnstyledButton>
+      </Card>
     </Carousel.Slide>
   ));
   const autoplay = useRef(Autoplay({ delay: 6000 }));
@@ -374,28 +390,30 @@ function HomePage() {
           h={71}
           w="auto"
           src="src\assets\Itinerary.png"
-          ml={50}
+          ml={250}
           mb={20}
         ></Image>
-        <div style={{ minWidth: 1000 }}>
-          <Carousel
-            withIndicators
-            height={200}
-            slideSize="15%"
-            slideGap="sm"
-            loop
-            align="start"
-            slidesToScroll={3}
-            plugins={[autoplay.current]}
-          >
-            {slides}
-          </Carousel>
-        </div>
+        <Container fluid>
+          <Container fluid w={1400}>
+            <Carousel
+              withIndicators
+              height={300}
+              slideSize="15%"
+              slideGap="sm"
+              loop
+              align="start"
+              slidesToScroll={3}
+              plugins={[autoplay.current]}
+            >
+              {slides2}
+            </Carousel>
+          </Container>
+        </Container>
       </Container>
       <Container></Container>
       <Container mt="50" fluid>
         <Image
-          ml={50}
+          ml={250}
           mb={20}
           h={79}
           w="auto"
