@@ -25,9 +25,11 @@ import {
   Center,
   AspectRatio,
   Chip,
+  rgba,
+  UnstyledButton,
 } from "@mantine/core";
 import Autoplay from "embla-carousel-autoplay";
-import { DatePickerInput } from "@mantine/dates";
+import { DatePicker, DatePickerInput } from "@mantine/dates";
 import "@mantine/core/styles.css";
 import "@mantine/carousel/styles.css";
 import "@mantine/dates/styles.css";
@@ -49,7 +51,7 @@ const images = [
 function HomePage() {
   //all the carousell stuff make edits below to the key!
   const slides = images.map((url, index) => (
-    <Carousel.Slide key={index} w="100%">
+    <Carousel.Slide key={index}>
       <Image src={url} />
     </Carousel.Slide>
   ));
@@ -194,93 +196,102 @@ function HomePage() {
             <CarouselSlide>
               <Image
                 h={600}
-                fallbackSrc="https://placehold.co/600x400?text=Placeholder"
+                style={{ minWidth: 1200 }}
+                fallbackSrc="src\assets\japan-background-digital-art.jpg"
               ></Image>
             </CarouselSlide>
             {/*slides*/}
           </Carousel>
         </Container>
         <Overlay backgroundOpacity={0} h={600}>
-          <Grid grow pt="15">
-            <Grid.Col span={4}></Grid.Col>
-            <Grid.Col span={4}>
-              <Group justify="center" gap="5em">
-                <li className="l-header-menu-list-child">
-                  <Link to="/travelPage">Routes</Link>
-                </li>
-                <li className="l-header-menu-list-child">
-                  <Link to="maps">Map</Link>
-                  <Link to="/schedulePage">Schedule</Link>
-                </li>
-                <li className="l-header-menu-list-child">
-                  <a href="Book">Booking</a>
-                </li>
-              </Group>
-            </Grid.Col>
-            <Grid.Col span={4}>
-              <Group gap="xs" justify="flex-end">
-                <Button w="5.5em" radius="xl" color="violet">
-                  Login
-                </Button>
-                <Button w="6.8em" radius="xl" color="violet">
-                  Register
-                </Button>
-                <Switch
-                  size="lg"
-                  onLabel="Dark"
-                  offLabel="Light"
-                  color="dark.4"
-                />
-                <NativeSelect
-                  w={"4em"}
-                  data={["ENG", "KR", "JPN", "CHI", "ETC."]}
-                  variant="unstyled"
-                  className="language-button"
-                ></NativeSelect>
-              </Group>
-            </Grid.Col>
-          </Grid>
+          <Container fluid>
+            <Grid overflow="hidden" grow pt="15" style={{ minWidth: 900 }}>
+              <Grid.Col span={6.8}>
+                <Group justify="flex-end" gap="5em">
+                  <li className="l-header-menu-list-child">
+                    <Link to="/travelPage">Routes</Link>
+                  </li>
+                  <li className="l-header-menu-list-child">
+                    <Link to="maps">Map</Link>
+                    <Link to="/schedulePage">Schedule</Link>
+                  </li>
+                  <li className="l-header-menu-list-child">
+                    <a href="Book">Booking</a>
+                  </li>
+                </Group>
+              </Grid.Col>
+              <Grid.Col span={4}>
+                <Group gap="xs" justify="flex-end">
+                  <Button w="5.5em" radius="xl" color="violet">
+                    Login
+                  </Button>
+                  <Button w="6.8em" radius="xl" color="violet">
+                    Register
+                  </Button>
+                  <Switch
+                    size="lg"
+                    onLabel="Dark"
+                    offLabel="Light"
+                    color="dark.4"
+                  />
+                  <NativeSelect
+                    w={"4em"}
+                    data={["ENG", "KR", "JPN", "CHI", "ETC."]}
+                    variant="unstyled"
+                    className="language-button"
+                  ></NativeSelect>
+                </Group>
+              </Grid.Col>
+            </Grid>
+          </Container>
           <Flex h={450} justify="flex-end" align="center" direction="column">
             <Center>
               <Image
                 w="auto"
                 h="90px"
-                src="\components\assets\RoamGram Logo.png"
+                src="src\assets\roamgram with white.png"
                 mb={20}
               ></Image>
             </Center>
             <Space></Space>
             <Center>
-              <Fieldset variant="filled" w={800} radius="xl">
+              <Fieldset
+                style={{ backgroundColor: rgba("0", 0.2) }}
+                variant="filled"
+                w={800}
+                radius="lg"
+              >
                 {/* change to form eventually :) */}
+
                 <Flex justify="center" align="center" gap="xl">
                   <TextInput
                     placeholder="Input Name"
-                    description="NAME "
+                    description="Name Of Plan"
                   ></TextInput>
                   <Divider
                     orientation="vertical"
                     size="md"
+                    h={50}
+                    mt={20}
                     color="steelblue"
                   ></Divider>
                   <DatePickerInput
                     type="range"
                     description="DATES"
                     placeholder="Choose Date"
-                    w={250}
+                    w={300}
                   ></DatePickerInput>
                   <Divider
                     orientation="vertical"
                     size="md"
                     color="steelblue"
+                    h={50}
+                    mt={20}
                   ></Divider>
-                  <NumberInput
-                    description="TRAVELLERS"
-                    min={1}
-                    placeholder="Num"
-                    w={80}
-                  ></NumberInput>
-                  <Button mt={20}>Enter</Button>
+
+                  <Button variant="light" mt={20}>
+                    Enter
+                  </Button>
                 </Flex>
               </Fieldset>
             </Center>
@@ -288,48 +299,75 @@ function HomePage() {
         </Overlay>
       </Container>
       <Container fluid h={700} mt="50">
-        <Image
-          h={79}
-          w="auto"
-          src="src\assets\Explore Nearby.png"
-          ml={50}
-          mb={20}
-        ></Image>
+        <SimpleGrid cols={2}>
+          <Image
+            h={79}
+            w="auto"
+            src="src\assets\Explore Nearby.png"
+            ml={250}
+            mb={20}
+          ></Image>
+          <Chip.Group
+            onChange={(e) => {
+              setType(e as string);
+              //deleteMarker();
+              //apiRequest(e as string);
+            }}
+          >
+            <Group mt={35}>
+              <Chip value="food"> food </Chip>
+              <Chip value="shopping_mall">mall</Chip>
+              <Chip value="tourist_attraction">tourist attractions</Chip>
+              <Chip value="library">library</Chip>
+              <Chip value="no">hotels</Chip>
+              <Chip value="n2o">public transport</Chip>
+              <Chip value="n1o">parking</Chip>
+            </Group>
+          </Chip.Group>
+        </SimpleGrid>
         {/* Put Map Here*/}
-        <Container fluid ref={mapRef} h={400} />
-        <Chip.Group
-          onChange={(e) => {
-            setType(e as string);
-            //deleteMarker();
-            //apiRequest(e as string);
-          }}
-        >
-          <Chip value="food"> food </Chip>
-          <Chip value="shopping_mall">mall</Chip>
-          <Chip value="tourist_attraction">tourist attractions</Chip>
-          <Chip value="library">library</Chip>
-        </Chip.Group>
+        <Container ref={mapRef} fluid h={500} w={1370}></Container>
       </Container>
-      <Container h={300} fluid>
-        <Image
-          h={71}
-          w="auto"
-          src="src\assets\Guide.png"
-          ml={50}
-          mb={20}
-        ></Image>
-        <Carousel
-          withIndicators
-          height={200}
-          slideSize="20%"
-          slideGap="sm"
-          loop
-          align="start"
-          slidesToScroll={3}
-          plugins={[autoplay.current]}
-        >
-          {slides}
-        </Carousel>
+      <Container fluid h={300}>
+        <Grid>
+          <Grid.Col span={3}>
+            <Image
+              h={71}
+              w="auto"
+              src="src\assets\Guide.png"
+              ml={250}
+              mb={20}
+            ></Image>
+          </Grid.Col>
+          <Grid.Col
+            span="content"
+            offset={3}
+            style={{ alignContent: "center" }}
+          >
+            <Group gap="5em" mt={20}>
+              <UnstyledButton>Nature</UnstyledButton>
+              <UnstyledButton>Shopping</UnstyledButton>
+              <UnstyledButton>Food</UnstyledButton>
+              <UnstyledButton>Nightlife</UnstyledButton>
+              <UnstyledButton>Travelling</UnstyledButton>
+            </Group>
+            <Divider mt={5} size="md" color="black"></Divider>
+          </Grid.Col>
+        </Grid>
+        <div style={{ minWidth: 1000 }}>
+          <Carousel
+            withIndicators
+            height={200}
+            slideSize="20%"
+            slideGap="sm"
+            loop
+            align="start"
+            slidesToScroll={3}
+            plugins={[autoplay.current]}
+          >
+            {slides}
+          </Carousel>
+        </div>
       </Container>
       <Container h={300} fluid mt="50">
         <Image
@@ -339,18 +377,20 @@ function HomePage() {
           ml={50}
           mb={20}
         ></Image>
-        <Carousel
-          withIndicators
-          height={200}
-          slideSize="20%"
-          slideGap="sm"
-          loop
-          align="start"
-          slidesToScroll={3}
-          plugins={[autoplay.current]}
-        >
-          {slides}
-        </Carousel>
+        <div style={{ minWidth: 1000 }}>
+          <Carousel
+            withIndicators
+            height={200}
+            slideSize="15%"
+            slideGap="sm"
+            loop
+            align="start"
+            slidesToScroll={3}
+            plugins={[autoplay.current]}
+          >
+            {slides}
+          </Carousel>
+        </div>
       </Container>
       <Container></Container>
       <Container mt="50" fluid>

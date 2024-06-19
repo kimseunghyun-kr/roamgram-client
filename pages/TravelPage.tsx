@@ -53,7 +53,7 @@ function TravelPage() {
   };
 
   //to add to backend function
-  const test = () => {
+  const submitTravelPlan = () => {
     fetch("http://localhost:8080/travelPlan/create_travel_plan", {
       method: "POST",
       headers: {

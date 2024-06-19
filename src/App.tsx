@@ -19,6 +19,7 @@ import GoogleMaps from "./components/GoogleMaps/GoogleMaps.tsx";
 import MapPage from "./pages/MapPage.tsx";
 import GoogleTesting from "../pages/GoogleTesting.tsx";
 import TravelPlans from "../pages/TravelPlans.tsx";
+import WalletPage from "../pages/WalletPage.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -66,7 +67,7 @@ function App() {
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>
   */}
-        <TravelPlans></TravelPlans>
+        <HomePage></HomePage>
       </div>
     </>
   ) : (
