@@ -20,6 +20,7 @@ import MapPage from "./pages/MapPage.tsx";
 import GoogleTesting from "../pages/GoogleTesting.tsx";
 import TravelPlans from "../pages/TravelPlans.tsx";
 import WalletPage from "../pages/WalletPage.tsx";
+import LoginPage from "../pages/LoginPage.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -67,7 +68,7 @@ function App() {
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>
   */}
-        <SchedulePageMap></SchedulePageMap>
+        <LoginPage></LoginPage>
       </div>
     </>
   ) : (
