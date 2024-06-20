@@ -16,6 +16,7 @@ import {
   Flex,
   ActionIcon,
   Box,
+  Transition,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft } from "@tabler/icons-react";
@@ -63,7 +64,7 @@ function CreatePage(props) {
                 <Flex h={30} pt={15}>
                   <ActionIcon
                     variant="transparent"
-                    onClick={() => props.setSection("login")}
+                    onClick={() => props.setSection(false)}
                   >
                     <IconArrowLeft color="gray"></IconArrowLeft>
                   </ActionIcon>
