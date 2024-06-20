@@ -23,6 +23,7 @@ import WalletPage from "../pages/WalletPage.tsx";
 import LoginPage from "../pages/LoginPage.tsx";
 import CreatePage from "../pages/CreatePage.tsx";
 import Login from "./components/Login.tsx";
+import Header from "../pages/Header.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -70,7 +71,7 @@ function App() {
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>
   */}
-        <LoginPage></LoginPage>
+        <SchedulePageMap></SchedulePageMap>
       </div>
     </>
   ) : (

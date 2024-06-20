@@ -333,7 +333,7 @@ function MyCalender(props) {
         endAccessor="travelDepartTimeEstimate"
         titleAccessor="name"
         //resourceIdAccessor="place: id"
-        style={{ height: 500, width: "100vw" }}
+        style={{ height: 500, width: "100%" }}
         defaultView="week"
         views={["month", "week", "day", "agenda"]}
         formats={{

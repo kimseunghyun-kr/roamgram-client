@@ -3,10 +3,13 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
   Anchor,
+  AspectRatio,
+  Box,
   Button,
   Center,
   Checkbox,
   Container,
+  Divider,
   Grid,
   Group,
   Input,
@@ -386,11 +389,9 @@ function SchedulePageMap(props) {
   //console.log("events directly are", event);
   return (
     <>
-      <Container fluid>
-        <Button onClick={getAllSchedule}>Test</Button>
-        <Link to="/">Click here to go back</Link>;
+      <Box>
         <Grid grow align="center">
-          <Grid.Col span={7}>
+          <Grid.Col span={3}>
             <Center>
               <form style={{}} onSubmit={handleSubmit}>
                 <Input
@@ -503,11 +504,12 @@ function SchedulePageMap(props) {
             </Center>
           </Grid.Col>
 
-          <Grid.Col span={5} ref={mapRef} h={"50vh"}>
+          <Grid.Col span={8} ref={mapRef} h={"50vh"} w={600}>
             TEST
           </Grid.Col>
         </Grid>
-      </Container>
+      </Box>
+      <Divider></Divider>
 
       <MyCalender
         event={event}

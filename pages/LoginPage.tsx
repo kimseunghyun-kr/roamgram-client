@@ -25,6 +25,7 @@ import { FcGoogle } from "react-icons/fc";
 import CreatePage from "./CreatePage.tsx";
 import { IconArrowLeft, IconUser } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { Link } from "react-router-dom";
 
 function LoginPage() {
   const form = useForm({
@@ -60,6 +61,7 @@ function LoginPage() {
 
   const [section, setSection] = useState(false);
   const [loginError, setLoginError] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   // console.log("email is", form.getInputProps("email").defaultValue);
   //console.log({ ...form.getInputProps("email") });
