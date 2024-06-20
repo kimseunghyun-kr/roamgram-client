@@ -323,8 +323,6 @@ function MyCalender(props) {
 
   return (
     <>
-      <Text>click to edit to delete button to dete</Text>
-      <Text> Click on 9th Sunday etc to go on specific day</Text>
       <DnDCalendar
         selectable //
         onEventDrop={moveEvent}

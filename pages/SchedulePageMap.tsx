@@ -4,12 +4,15 @@ import {
   ActionIcon,
   Anchor,
   Button,
+  Center,
   Checkbox,
   Container,
   Grid,
+  Group,
   Input,
   NativeSelect,
   Popover,
+  Stack,
   Text,
   Textarea,
 } from "@mantine/core";
@@ -383,103 +386,121 @@ function SchedulePageMap(props) {
   //console.log("events directly are", event);
   return (
     <>
-      <Container fluid p="0">
+      <Container fluid>
         <Button onClick={getAllSchedule}>Test</Button>
         <Link to="/">Click here to go back</Link>;
-        <Grid grow overflow="hidden">
+        <Grid grow align="center">
           <Grid.Col span={7}>
-            <form onSubmit={handleSubmit}>
-              <Input
-                placeholder="Name of Activity"
-                value={scheduleName}
-                onChange={(e) => {
-                  setScheduleName(e.currentTarget.value);
-                  //console.log(e.currentTarget.value);
-                }}
-              ></Input>
-              <Textarea
-                placeholder="add description of activity if needed"
-                value={scheduleDescription}
-                onChange={(e) => {
-                  setScheduleDescription(e.currentTarget.value);
-                  //console.log(scheduleDescription);
-                }}
-              />
-              <Input
-                placeholder="Start Location --> Check Distance"
-                ref={autoCompleteStartRef}
-                disabled={keepStart}
-              ></Input>
-              <Input
-                placeholder="Destination(Which is added as place to our schedule)"
-                ref={autoCompleteEndRef}
-                disabled={keepEnd}
-              ></Input>
-              <Text>For Checking distances between your locations</Text>
-              <Checkbox
-                label="Keep Start Destiantion"
-                checked={keepStart}
-                onChange={(e) => {
-                  setKeepStart(e.currentTarget.checked);
-                  console.log(keepStart);
-                }}
-              />
-              <Checkbox
-                label="Keep End Destination"
-                checked={keepEnd}
-                onChange={(e) => {
-                  setKeepEnd(e.currentTarget.checked);
-                }}
-              />
-              <DatePickerInput
-                disabled={!scheduleName}
-                allowDeselect
-                onChange={(e) => {
-                  setTravelDay(e);
-                }}
-                value={travelDay}
-              />
-              <TimeInput
-                description="start"
-                id="startTime"
-                disabled={!travelDay}
-                onChange={(e) => {
-                  console.log(
-                    "Start using currentTargetValue",
-                    e.currentTarget.value
-                  );
-                  const startTarget = e.currentTarget.value;
-                  setStartTime(startTarget);
-                }}
-              />
+            <Center>
+              <form style={{}} onSubmit={handleSubmit}>
+                <Input
+                  placeholder="Name of Activity"
+                  w={350}
+                  value={scheduleName}
+                  onChange={(e) => {
+                    setScheduleName(e.currentTarget.value);
+                    //console.log(e.currentTarget.value);
+                  }}
+                ></Input>
+                <Textarea
+                  w={350}
+                  placeholder="add description of activity if needed"
+                  value={scheduleDescription}
+                  onChange={(e) => {
+                    setScheduleDescription(e.currentTarget.value);
+                    //console.log(scheduleDescription);
+                  }}
+                />
+                <Group>
+                  <Input
+                    w={350}
+                    placeholder="Start Location --> Check Distance"
+                    ref={autoCompleteStartRef}
+                    disabled={keepStart}
+                  ></Input>
+                  <Checkbox
+                    label="KEEP"
+                    checked={keepStart}
+                    onChange={(e) => {
+                      setKeepStart(e.currentTarget.checked);
+                      console.log(keepStart);
+                    }}
+                  />
+                </Group>
+                <Group>
+                  <Input
+                    w={350}
+                    placeholder="Destination(Which is added as place to our schedule)"
+                    ref={autoCompleteEndRef}
+                    disabled={keepEnd}
+                  ></Input>
+                  <Checkbox
+                    label="KEEP"
+                    checked={keepEnd}
+                    onChange={(e) => {
+                      setKeepEnd(e.currentTarget.checked);
+                    }}
+                  />
+                </Group>
+                <Text>For Checking distances between your locations</Text>
+                <Group>
+                  <TimeInput
+                    w={175}
+                    description="start"
+                    id="startTime"
+                    disabled={!travelDay}
+                    onChange={(e) => {
+                      console.log(
+                        "Start using currentTargetValue",
+                        e.currentTarget.value
+                      );
+                      const startTarget = e.currentTarget.value;
+                      setStartTime(startTarget);
+                    }}
+                  />
 
-              <TimeInput
-                disabled={!startTime}
-                description="end"
-                id="endTime"
-                error={
-                  endTimePop
-                    ? "End Time Should be later than Start Time"
-                    : false
-                }
-                onChange={(e) => {
-                  e.currentTarget.value < startTime
-                    ? (console.log("less than start"),
-                      setEndTimePop(true),
-                      setEndTime(e.currentTarget.value))
-                    : (setEndTime(e.currentTarget.value),
-                      console.log("okie"),
-                      setEndTimePop(false));
-                }}
-              />
-              <Button
-                disabled={endTime < startTime || endTime === undefined}
-                type="submit"
-                onClick={createScheduleButton}
-              >
-                Create Schedule
-              </Button>
-            </form>
+                  <TimeInput
+                    w={175}
+                    disabled={!startTime}
+                    description="end"
+                    id="endTime"
+                    error={
+                      endTimePop
+                        ? "End Time Should be later than Start Time"
+                        : false
+                    }
+                    onChange={(e) => {
+                      e.currentTarget.value < startTime
+                        ? (console.log("less than start"),
+                          setEndTimePop(true),
+                          setEndTime(e.currentTarget.value))
+                        : (setEndTime(e.currentTarget.value),
+                          console.log("okie"),
+                          setEndTimePop(false));
+                    }}
+                  />
+                </Group>
+                <Group>
+                  <DatePickerInput
+                    description="day"
+                    w={175}
+                    disabled={!scheduleName}
+                    allowDeselect
+                    onChange={(e) => {
+                      setTravelDay(e);
+                    }}
+                    value={travelDay}
+                  />
+                  <Button
+                    disabled={endTime < startTime || endTime === undefined}
+                    type="submit"
+                    onClick={createScheduleButton}
+                  >
+                    Create Schedule
+                  </Button>
+                </Group>
+              </form>
+            </Center>
           </Grid.Col>
 
           <Grid.Col span={5} ref={mapRef} h={"50vh"}>
