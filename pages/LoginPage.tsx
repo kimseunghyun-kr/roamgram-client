@@ -16,12 +16,14 @@ import {
   Flex,
   ActionIcon,
   Transition,
+  Popover,
+  PopoverDropdown,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import React, { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import CreatePage from "./CreatePage.tsx";
-import { IconArrowLeft } from "@tabler/icons-react";
+import { IconArrowLeft, IconUser } from "@tabler/icons-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 function LoginPage() {
@@ -38,7 +40,26 @@ function LoginPage() {
     },
   });
 
+  const formCreate = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      username: "",
+      password: "",
+      name: "",
+      email: "",
+    },
+    validate: {
+      username: (value) => (value.length > 0 ? null : "Invalid Username"),
+      password: (value) =>
+        value.length < 4 ? "Password should be more than 4 characters" : null,
+      name: (value) => (value.length > 0 ? null : "Invalid Name"),
+      email: (value) =>
+        /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value) ? null : "Invalid Email",
+    },
+  });
+
   const [section, setSection] = useState(false);
+  const [loginError, setLoginError] = useState(false);
 
   // console.log("email is", form.getInputProps("email").defaultValue);
   //console.log({ ...form.getInputProps("email") });
@@ -58,30 +79,48 @@ function LoginPage() {
       body: JSON.stringify(values),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then((data) => console.log(data))
+      .catch(
+        (error) => (
+          console.log("Error getting user authentication"), setLoginError(true)
+        )
+      );
+  }
+
+  function createAccount(values: {}) {
+    fetch(`http://localhost:8080/authentication/sign-up`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(values),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Success Registering, data is", data))
+      .catch((error) => console.log("Error Signing Up"));
   }
 
   return (
     <>
       <Center>
-        <form
-          onSubmit={form.onSubmit(
-            (values, event) => (
-              console.log(values, event), continueLogIn(values)
-            )
-          )}
+        <Card
+          withBorder
+          mt={85}
+          w={1300}
+          h={800}
+          pt={0}
+          shadow="xl"
+          radius="md"
         >
-          <Card
-            withBorder
-            mt={85}
-            w={1300}
-            h={800}
-            pt={0}
-            shadow="xl"
-            radius="md"
-          >
-            <SimpleGrid cols={2}>
-              {section === false ? (
+          <SimpleGrid cols={2}>
+            {section === false ? (
+              <form
+                onSubmit={form.onSubmit(
+                  (values, event) => (
+                    console.log(values, event), continueLogIn(values)
+                  )
+                )}
+              >
                 <div
                   style={{
                     textAlign: "center",
@@ -110,6 +149,7 @@ function LoginPage() {
                     <Stack align="center" mt={40}>
                       <TextInput
                         w={300}
+                        leftSection={<IconUser size={15}></IconUser>}
                         placeholder="Enter Username"
                         key={form.key("username")}
                         {...form.getInputProps("username")}
@@ -121,14 +161,28 @@ function LoginPage() {
                         {...form.getInputProps("password")}
                       ></PasswordInput>
                       <Center>
-                        <Button
-                          type="submit"
-                          variant="gradient"
-                          w={150}
-                          radius="lg"
+                        <Popover
+                          offset={10}
+                          opened={loginError}
+                          onChange={setLoginError}
+                          withArrow
+                          shadow="sm"
+                          arrowSize={12}
                         >
-                          Continue
-                        </Button>
+                          <Popover.Target>
+                            <Button
+                              type="submit"
+                              variant="gradient"
+                              w={150}
+                              radius="lg"
+                            >
+                              Continue
+                            </Button>
+                          </Popover.Target>
+                          <PopoverDropdown>
+                            <Text size="xs">Error Logging In</Text>
+                          </PopoverDropdown>
+                        </Popover>
                       </Center>
                     </Stack>
                   </Container>
@@ -151,7 +205,15 @@ function LoginPage() {
                     </UnstyledButton>
                   </Flex>
                 </div>
-              ) : (
+              </form>
+            ) : (
+              <form
+                onSubmit={formCreate.onSubmit(
+                  (values, event) => (
+                    console.log(values, event), createAccount(values)
+                  )
+                )}
+              >
                 <div
                   style={{
                     textAlign: "center",
@@ -188,15 +250,27 @@ function LoginPage() {
                     <Stack align="center" mt={40}>
                       <TextInput
                         w={300}
+                        placeholder="Enter Name"
+                        key={formCreate.key("name")}
+                        {...formCreate.getInputProps("name")}
+                      ></TextInput>
+                      <TextInput
+                        w={300}
                         placeholder="Enter Email Address"
-                        key={form.key("username")}
-                        {...form.getInputProps("username")}
+                        key={formCreate.key("email")}
+                        {...formCreate.getInputProps("email")}
+                      ></TextInput>
+                      <TextInput
+                        w={300}
+                        placeholder="Enter Username"
+                        key={formCreate.key("username")}
+                        {...formCreate.getInputProps("username")}
                       ></TextInput>
                       <PasswordInput
                         w={300}
                         placeholder="Enter Password"
-                        key={form.key("password")}
-                        {...form.getInputProps("password")}
+                        key={formCreate.key("password")}
+                        {...formCreate.getInputProps("password")}
                       ></PasswordInput>
                       <Center>
                         <Button
@@ -211,14 +285,14 @@ function LoginPage() {
                     </Stack>
                   </Container>
                 </div>
-              )}
+              </form>
+            )}
 
-              <CardSection>
-                <Image h={1000} src="src\assets\shibuya-crossing.png"></Image>
-              </CardSection>
-            </SimpleGrid>
-          </Card>
-        </form>
+            <CardSection>
+              <Image h={1000} src="src\assets\shibuya-crossing.png"></Image>
+            </CardSection>
+          </SimpleGrid>
+        </Card>
       </Center>
     </>
   );
