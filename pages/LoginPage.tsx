@@ -189,10 +189,11 @@ function LoginPage() {
                   <Space h={15}></Space>
                   <Divider label="or" labelPosition="center"></Divider>
                   <Space h={15}></Space>
-
-                  <ActionIcon size={65} variant="default">
-                    <FcGoogle size={45}></FcGoogle>
-                  </ActionIcon>
+                  <form action="http://localhost:8080/h2-console">
+                    <ActionIcon type="submit" size={65} variant="default">
+                      <FcGoogle size={45}></FcGoogle>
+                    </ActionIcon>
+                  </form>
                   <Space h={100}></Space>
                   <UnstyledButton style={{ color: "" }}>
                     Forgot your password?
