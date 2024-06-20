@@ -9,6 +9,12 @@ import {
   Button,
   Divider,
   UnstyledButton,
+  SimpleGrid,
+  Center,
+  Stack,
+  Space,
+  Flex,
+  ActionIcon,
 } from "@mantine/core";
 import React from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -16,24 +22,72 @@ import { FcGoogle } from "react-icons/fc";
 function LoginPage() {
   return (
     <>
-      <Container>
-        <h1>Login Page</h1>
-        <Card shadow="xl">
-          <CardSection>
-            <Image h={75} w="auto" src="src\assets\RoamGram Logo.png"></Image>
-          </CardSection>
-          <TextInput placeholder="Enter Email Address"></TextInput>
-          <PasswordInput></PasswordInput>
-          <Button>Continue</Button>
-          <br></br>
-          <Divider label="or" labelPosition="center"></Divider>
-          <Button variant="light" leftSection={<FcGoogle size={20} />}>
-            Continue with Google
-          </Button>
-          <Text>Don't have an account?</Text>
-          <UnstyledButton>Create an account</UnstyledButton>
+      <Center>
+        <Card mt={60} w={1300} h={700} pt={0} shadow="xl" radius="md">
+          <SimpleGrid cols={2}>
+            <div
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <Container mt={85}>
+                <Center>
+                  <Image
+                    h={75}
+                    w="auto"
+                    src="src\assets\roamgram logo only.png"
+                  ></Image>
+                </Center>
+                <Center>
+                  <Image
+                    h={85}
+                    w="auto"
+                    src="src\assets\roamgram words only.png"
+                  ></Image>
+                </Center>
+                <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
+                  Keep your plans in check.
+                </Text>
+
+                <Stack align="center" mt={40}>
+                  <TextInput
+                    w={300}
+                    placeholder="Enter Email Address"
+                  ></TextInput>
+                  <PasswordInput
+                    w={300}
+                    placeholder="Enter Password"
+                  ></PasswordInput>
+                  <Center>
+                    <Button variant="gradient" w={150} radius="lg">
+                      Continue
+                    </Button>
+                  </Center>
+                </Stack>
+              </Container>
+              <Space h={15}></Space>
+              <Divider label="or" labelPosition="center"></Divider>
+              <Space h={15}></Space>
+
+              <ActionIcon size={65} variant="default">
+                <FcGoogle size={45}></FcGoogle>
+              </ActionIcon>
+              <Space h={50}></Space>
+              <UnstyledButton style={{ color: "" }}>
+                Forgot your password?
+              </UnstyledButton>
+              <Space h={7}></Space>
+              <Flex gap="xs" justify="center">
+                <Text c="gray">Don't have an account?</Text>
+                <UnstyledButton c="green">Create Here</UnstyledButton>
+              </Flex>
+            </div>
+            <CardSection>
+              <Image h={1000} src="src\assets\shibuya-crossing.png"></Image>
+            </CardSection>
+          </SimpleGrid>
         </Card>
-      </Container>
+      </Center>
     </>
   );
 }
