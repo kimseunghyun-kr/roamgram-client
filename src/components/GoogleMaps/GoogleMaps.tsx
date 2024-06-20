@@ -11,6 +11,7 @@ import {
   TextInput,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
+import moment from "moment";
 
 function GoogleMaps() {
   /*
@@ -266,18 +267,22 @@ function GoogleMaps() {
                 ]}
               ></NativeSelect>
 
-              <TimeInput mt={19} w={150} placeholder="Leave Now.."></TimeInput>
+              <TimeInput
+                mt={19}
+                w={150}
+                value={`${new Date().getHours()}:${new Date().getMinutes()}`}
+              ></TimeInput>
             </SimpleGrid>
           </Stack>
         </Container>
         <Divider size="sm"></Divider>
         <Space h="md"></Space>
-        <Container>
+        <Container fluid>
           <label>Origin: {selectedPlace}</label>
           <br></br>
           <label>Destination: {selectedPlaceDest} </label>
-          <Divider></Divider>
         </Container>
+        <Divider size="sm"></Divider>
         {leg ? (
           <>
             <p>Distance: {leg.distance?.text}</p>
@@ -287,14 +292,23 @@ function GoogleMaps() {
           ""
         )}
         <h3>Alternative Routes to Choose</h3>
+
         <ul>
-          {routes.map((route, index) => (
-            <li key={route.summary}>
-              <button onClick={() => setRouteIndex(index)}>
-                {route.summary}
-              </button>
+          {routes.length > 1 ? (
+            <li>
+              {routes.map((route, index) => (
+                <li key={route.summary}>
+                  <button onClick={() => setRouteIndex(index)}>
+                    {route.summary}
+                  </button>
+                  <Space></Space>
+                  <Divider></Divider>
+                </li>
+              ))}
             </li>
-          ))}
+          ) : (
+            <></>
+          )}
         </ul>
       </Grid.Col>
       <Grid.Col span={7}>
