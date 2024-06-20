@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import {
   Container,
+  Divider,
   Flex,
   Grid,
   NativeSelect,
   SimpleGrid,
+  Space,
   Stack,
   TextInput,
 } from "@mantine/core";
@@ -238,8 +240,8 @@ function GoogleMaps() {
   return (
     <>
       <Grid.Col span="auto">
-        <Container h={300}>
-          <Stack align="center" mt={50} gap="7">
+        <Container h={300} style={{ alignContent: "center" }}>
+          <Stack justify="center" align="center" mt={50} gap="7">
             <TextInput
               w={300}
               description="From"
@@ -252,6 +254,8 @@ function GoogleMaps() {
             ></TextInput>
             <SimpleGrid cols={2}>
               <NativeSelect
+                onChange={(e) => setTravelMethod(e.target.value)}
+                id="mode"
                 w={150}
                 description="Method of Travel"
                 data={[
@@ -265,20 +269,15 @@ function GoogleMaps() {
               <TimeInput mt={19} w={150} placeholder="Leave Now.."></TimeInput>
             </SimpleGrid>
           </Stack>
-          <br></br>
-          <div id="floating-panel">
-            <b>Mode of Travel: </b>
-            <select id="mode" onChange={(e) => setTravelMethod(e.target.value)}>
-              <option value="DRIVING">Driving</option>
-              <option value="WALKING">Walking</option>
-              <option value="BICYCLING">Bicycling</option>
-              <option value="TRANSIT">Transit</option>
-            </select>
-          </div>
         </Container>
-        <label>Origin: {selectedPlace}</label>
-        <br></br>
-        <label>Destination: {selectedPlaceDest} </label>
+        <Divider size="sm"></Divider>
+        <Space h="md"></Space>
+        <Container>
+          <label>Origin: {selectedPlace}</label>
+          <br></br>
+          <label>Destination: {selectedPlaceDest} </label>
+          <Divider></Divider>
+        </Container>
         {leg ? (
           <>
             <p>Distance: {leg.distance?.text}</p>
