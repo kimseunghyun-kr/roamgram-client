@@ -21,6 +21,8 @@ import GoogleTesting from "../pages/GoogleTesting.tsx";
 import TravelPlans from "../pages/TravelPlans.tsx";
 import WalletPage from "../pages/WalletPage.tsx";
 import LoginPage from "../pages/LoginPage.tsx";
+import CreatePage from "../pages/CreatePage.tsx";
+import Login from "./components/Login.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
