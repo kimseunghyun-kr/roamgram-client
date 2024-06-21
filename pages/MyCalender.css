@@ -93,3 +93,10 @@
     font-size: 15px; 
 
 }
+
+
+.delete-content:hover{
+    background-color: #C91A25;
+    color: white;
+    transition: 500ms ease;
+}

@@ -25,10 +25,18 @@ import {
   Textarea,
   UnstyledButton,
   Image,
+  Stack,
+  Space,
+  Divider,
 } from "@mantine/core";
 import SchedulePageMap from "./SchedulePageMap";
 import { useDisclosure } from "@mantine/hooks";
 import { useJsApiLoader } from "@react-google-maps/api";
+import {
+  IconDirections,
+  IconFileDescription,
+  IconPencil,
+} from "@tabler/icons-react";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -352,7 +360,7 @@ function MyCalender(props) {
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         localizer={localizer}
-        events={events111}
+        events={props.event}
         startAccessor="travelStartTimeEstimate"
         endAccessor="travelDepartTimeEstimate"
         titleAccessor="name"
@@ -376,6 +384,7 @@ function MyCalender(props) {
         //onDoubleClickEvent={deleteEvent}
       />
       <Modal
+        size="auto"
         opened={opened}
         onClose={() => {
           setOpened(false);
@@ -385,26 +394,41 @@ function MyCalender(props) {
         <nav>
           <Tabs defaultValue="description" keepMounted={false}>
             <Tabs.List grow>
-              <Tabs.Tab value="description">Description</Tabs.Tab>
+              <Tabs.Tab
+                value="description"
+                leftSection={<IconFileDescription size={15} color="gray" />}
+              >
+                Description
+              </Tabs.Tab>
               <Tabs.Tab value="reviews">Reviews</Tabs.Tab>
-              <Tabs.Tab value="directions">Directions</Tabs.Tab>
-              <Tabs.Tab value="edit">Edit</Tabs.Tab>
+              <Tabs.Tab
+                value="directions"
+                leftSection={<IconDirections size={15} color="gray" />}
+              >
+                Directions
+              </Tabs.Tab>
+              <Tabs.Tab
+                value="edit"
+                leftSection={<IconPencil size={15} color="gray" />}
+              >
+                Edit
+              </Tabs.Tab>
             </Tabs.List>
-            <Tabs.Panel value="description">
+            <Tabs.Panel mt={10} value="description">
               {modalActivityDescription.description ? (
                 <Text>{modalActivityDescription.description}</Text>
               ) : (
                 <Text>Empty Description</Text>
               )}
             </Tabs.Panel>
-            <Tabs.Panel value="reviews">
+            <Tabs.Panel mt={10} value="reviews">
               <Image h={200} w="auto" src={review.photo} />
               <Text>{review.isOpen}</Text>
               <Text>{review.website}</Text>
               <Text>{showOpeningHours()}</Text>
             </Tabs.Panel>
 
-            <Tabs.Panel value="directions">
+            <Tabs.Panel mt={10} value="directions">
               <NativeSelect
                 data={["Driving", "Walking", "Cycling"]}
               ></NativeSelect>
@@ -412,35 +436,41 @@ function MyCalender(props) {
               <Container h="10em"></Container>
             </Tabs.Panel>
 
-            <Tabs.Panel value="edit">
-              <Input
-                value={modalActivityDescription.title}
-                placeholder="ACTIVITY nAME"
-                onChange={(e) => {
-                  setModalActivityDescription((p) => ({
-                    ...p,
-                    title: e.target.value,
-                  }));
-                }}
-              ></Input>
-              <Textarea
-                placeholder="description"
-                value={modalActivityDescription.description}
-                onChange={(e) => {
-                  setModalActivityDescription((p) => ({
-                    ...p,
-                    description: e.target.value,
-                  }));
-                  //console.log(e.currentTarget.value);
-                  //console.log("modal", modalActivityDescription);
-                }}
-              ></Textarea>
-              <Textarea placeholder="destination"></Textarea>
-              <Button
-                onClick={() => {
-                  setOpened(false);
-                  updateEvents();
-                  /*
+            <Tabs.Panel mt={10} value="edit">
+              <Stack>
+                <Input.Wrapper description="Schedule Name" size="sm">
+                  <Input
+                    value={modalActivityDescription.title}
+                    placeholder="Activity Name"
+                    onChange={(e) => {
+                      setModalActivityDescription((p) => ({
+                        ...p,
+                        title: e.target.value,
+                      }));
+                    }}
+                  ></Input>
+                </Input.Wrapper>
+                <Textarea
+                  description="Schedule Description"
+                  placeholder="Description"
+                  value={modalActivityDescription.description}
+                  onChange={(e) => {
+                    setModalActivityDescription((p) => ({
+                      ...p,
+                      description: e.target.value,
+                    }));
+                    //console.log(e.currentTarget.value);
+                    //console.log("modal", modalActivityDescription);
+                  }}
+                ></Textarea>
+                <Button
+                  className="update-content"
+                  variant="outline"
+                  color="green"
+                  onClick={() => {
+                    setOpened(false);
+                    updateEvents();
+                    /*
                   props.setEvents((p) => {
                     const existing = p.find((ev) => ev.id == eventID);
                     const filtered = p.filter((ev) => ev.id !== eventID);
@@ -453,11 +483,20 @@ function MyCalender(props) {
                     return [...filtered, updatedExisting];
                   });
                   */
-                }}
-              >
-                Update Content
-              </Button>
-              <Button onClick={deleteEvent}>Delete</Button>
+                  }}
+                >
+                  Update Content
+                </Button>
+                <Divider label="Danger" labelPosition="center"></Divider>
+                <Button
+                  className="delete-content"
+                  color="red"
+                  variant="outline"
+                  onClick={deleteEvent}
+                >
+                  Delete
+                </Button>
+              </Stack>
             </Tabs.Panel>
           </Tabs>
         </nav>
