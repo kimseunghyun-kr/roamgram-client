@@ -1,4 +1,5 @@
 import {
+  Button,
   Container,
   Divider,
   Group,
@@ -19,15 +20,21 @@ function Header() {
 
   return (
     <header>
-      <Container size="md" style={{ display: "flex" }}>
+      <Container w={1300} size="xl" style={{ display: "flex" }}>
         <a href="#">
           <Image w={200} src="src\assets\RoamGram Logo.png"></Image>
         </a>
 
-        <Group gap="xl" ml={500} style={{ fontFamily: "roboto" }}>
+        <Group gap="xl" ml={500} className="header-group">
           <UnstyledButton className="header-button">Guide </UnstyledButton>
           <UnstyledButton className="header-button">Routes</UnstyledButton>
           <UnstyledButton className="header-button">Planner</UnstyledButton>
+          <UnstyledButton style={{ fontWeight: 600 }} className="header-button">
+            Sign Up
+          </UnstyledButton>
+          <Button radius="md" color={"cyan"} style={{ fontSize: "13px" }}>
+            Login
+          </Button>
         </Group>
       </Container>
       <Divider></Divider>

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
   Anchor,
+  AppShell,
   AspectRatio,
   Box,
   Button,
@@ -389,9 +390,10 @@ function SchedulePageMap(props) {
   //console.log("events directly are", event);
   return (
     <>
-      <Box>
+      <AppShell></AppShell>
+      <Container h={550}>
         <Grid grow align="center">
-          <Grid.Col span={3}>
+          <Grid.Col span={5}>
             <Center>
               <form style={{}} onSubmit={handleSubmit}>
                 <Input
@@ -504,11 +506,11 @@ function SchedulePageMap(props) {
             </Center>
           </Grid.Col>
 
-          <Grid.Col span={8} ref={mapRef} h={"50vh"} w={600}>
+          <Grid.Col span={7} ref={mapRef} h={550} w="auto">
             TEST
           </Grid.Col>
         </Grid>
-      </Box>
+      </Container>
       <Divider></Divider>
 
       <MyCalender
