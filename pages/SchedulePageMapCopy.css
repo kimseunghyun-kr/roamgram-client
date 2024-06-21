@@ -1,0 +1,4 @@
+.schedule-button:hover{
+    background-color: lavender;
+    transition: 400ms ease;
+}

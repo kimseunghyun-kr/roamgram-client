@@ -324,6 +324,7 @@ function MyCalender(props) {
   return (
     <>
       <DnDCalendar
+        className={"root"}
         selectable //
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}

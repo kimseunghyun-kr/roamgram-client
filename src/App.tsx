@@ -24,6 +24,7 @@ import LoginPage from "../pages/LoginPage.tsx";
 import CreatePage from "../pages/CreatePage.tsx";
 import Login from "./components/Login.tsx";
 import Header from "../pages/Header.tsx";
+import SchedulePageMapCopy from "../pages/SchedulePageMapCopy.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -71,7 +72,12 @@ function App() {
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>
   */}
-        <Header></Header>
+        <header>
+          <Header></Header>
+        </header>
+        <body>
+          <SchedulePageMapCopy></SchedulePageMapCopy>
+        </body>
       </div>
     </>
   ) : (

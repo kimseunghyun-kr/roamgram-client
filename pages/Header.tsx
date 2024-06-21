@@ -36,10 +36,10 @@ function Header() {
           <Button
             className="header-login"
             h={30}
-            w={70}
+            w={75}
             radius="xl"
             color={"cyan"}
-            style={{ fontSize: "12px" }}
+            style={{ fontSize: "13px" }}
           >
             Login
           </Button>
