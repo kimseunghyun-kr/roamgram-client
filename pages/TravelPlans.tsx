@@ -72,7 +72,7 @@ function TravelPlans() {
         },
       })
         .then((response) => response.json())
-        .then((data) => setEvent(data))
+        .then((data) => (setEvent(data), console.log("events are", data)))
         .catch((error) => console.log(error));
     }
   }, [token]);
@@ -247,151 +247,54 @@ function TravelPlans() {
   };
 
   const cardTravel = () => {
-    return event ? (
-      <>
-        {event.map((items) => (
+    return event
+      ? event.map((items) => (
           <Carousel.Slide key={items.id}>
-            <Center>
-              <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
-                <Tabs
-                  className="tabs"
-                  variant="outline"
-                  radius="md"
-                  defaultValue="incomplete"
-                >
-                  <Tabs.List>
-                    <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
-                    <Tabs.Tab
-                      value="complete"
-                      leftSection={<IconCheck size={15} color="green" />}
-                    >
-                      Complete
-                    </Tabs.Tab>
-                    <Tabs.Tab
-                      ml={225}
-                      value="create_travel"
-                      leftSection={<IconPlus size={15} color="gray" />}
-                    >
-                      Create
-                    </Tabs.Tab>
-                  </Tabs.List>
-                  <Tabs.Panel value="incomplete">
-                    <Center h={500}>
-                      <Stack align="center">
-                        <Title>{items.name}</Title>
-                        <Text style={{ fontSize: "20px" }}>
-                          From{" "}
-                          {moment(items.travelStartDate).format("YYYY-MM-DD")}{" "}
-                          to {` `}
-                          {moment(items.travelEndDate).format("YYYY-MM-DD")}
-                        </Text>
-                        <ActionIcon
-                          className="edit-button"
-                          variant="subtle"
-                          color="cyan"
-                          onClick={() => setOpened(true)}
-                        >
-                          <IconEdit />
-                        </ActionIcon>
-                        <ActionIcon
-                          variant="transparent"
-                          className="to-schedule-button"
-                        >
-                          <IconSquareRoundedArrowRight
-                            size={28}
-                            color="black"
-                          />
-                        </ActionIcon>
-                      </Stack>
-                    </Center>
-                    <Center>
-                      <Menu className="delete-button" shadow="md">
-                        <Menu.Target>
-                          <ActionIcon variant="subtle" c="red">
-                            <IconX />
-                          </ActionIcon>
-                        </Menu.Target>
-                        <Menu.Dropdown>
-                          <Menu.Label>Danger</Menu.Label>
-                          <Menu.Divider></Menu.Divider>
-                          <Menu.Item
-                            c="red"
-                            leftSection={<IconTrash size={14} />}
-                          >
-                            Delete
-                          </Menu.Item>
-                        </Menu.Dropdown>
-                      </Menu>
-                    </Center>
-                  </Tabs.Panel>
-                  <Tabs.Panel value="create_travel">
-                    <Center h={500}>
-                      <Stack w={300}>
-                        <Title
-                          style={{
-                            textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
-                          }}
-                        >
-                          Create Plan
-                        </Title>
-                        <Divider></Divider>
-                        <TextInput
-                          //right hand side
-                          description="Activity Name"
-                          rightSectionPointerEvents="all"
-                          rightSection={
-                            <CloseButton
-                              size={23}
-                              aria-label="Clear Name"
-                              onClick={() =>
-                                setTravelPlanDetails((p) => ({
-                                  ...p,
-                                  name: "",
-                                }))
-                              }
-                            />
-                          }
-                          required
-                          //other Input Properties
-                          placeholder="Choose Name"
-                          value={travelPlanDetails.name}
-                          onChange={(e) => {
-                            setTravelPlanDetails((p) => ({
-                              ...p,
-                              name: e.target.value,
-                            }));
-                          }}
-                        ></TextInput>
-                        <DatePickerInput
-                          description="Date Range"
-                          clearable
-                          type="range"
-                          placeholder="Choose Date"
-                          value={dateRanges}
-                          onChange={settingTravelPlanDetailsDate}
-                        ></DatePickerInput>
-                        <Button
-                          mt={15}
-                          color="red"
-                          radius="lg"
-                          type="submit"
-                          onClick={(e) => {
-                            console.log(travelPlanDetails);
-                            submitTravelPlan();
-                          }}
-                        >
-                          Create
-                        </Button>
-                      </Stack>
-                    </Center>
-                  </Tabs.Panel>
-                </Tabs>
-              </Card>
-            </Center>
+            <Tabs.Panel value="incomplete">
+              <Center h={500}>
+                <Stack align="center">
+                  <Title>{items.name}</Title>
+                  <Text style={{ fontSize: "20px" }}>
+                    From {moment(items.travelStartDate).format("YYYY-MM-DD")} to{" "}
+                    {` `}
+                    {moment(items.travelEndDate).format("YYYY-MM-DD")}
+                  </Text>
+                  <ActionIcon
+                    className="edit-button"
+                    variant="subtle"
+                    color="cyan"
+                    onClick={() => setOpened(true)}
+                  >
+                    <IconEdit />
+                  </ActionIcon>
+                  <ActionIcon
+                    variant="transparent"
+                    className="to-schedule-button"
+                  >
+                    <IconSquareRoundedArrowRight size={28} color="black" />
+                  </ActionIcon>
+                </Stack>
+              </Center>
+              <Center>
+                <Menu className="delete-button" shadow="md">
+                  <Menu.Target>
+                    <ActionIcon variant="subtle" c="red">
+                      <IconX />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Danger</Menu.Label>
+                    <Menu.Divider></Menu.Divider>
+                    <Menu.Item c="red" leftSection={<IconTrash size={14} />}>
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Center>
+            </Tabs.Panel>
           </Carousel.Slide>
-        ))}
-      </>
-    ) : null;
+        ))
+      : null;
   };
 
   return (
@@ -405,18 +308,96 @@ function TravelPlans() {
       </Button>
       <Button>Update Edit</Button>
       <Space h={85} />
-      <Carousel
-        withIndicators
-        styles={{
-          control: {
-            marginLeft: "300px",
-            marginRight: "300px",
-            padding: "10px",
-          },
-        }}
-      >
-        {cardTravel()}
-      </Carousel>
+      <Center>
+        <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
+          <Tabs
+            className="tabs"
+            variant="outline"
+            radius="md"
+            defaultValue="incomplete"
+          >
+            <Tabs.List>
+              <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
+              <Tabs.Tab
+                value="complete"
+                leftSection={<IconCheck size={15} color="green" />}
+              >
+                Complete
+              </Tabs.Tab>
+              <Tabs.Tab
+                ml={225}
+                value="create_travel"
+                leftSection={<IconPlus size={15} color="gray" />}
+              >
+                Create
+              </Tabs.Tab>
+            </Tabs.List>
+
+            <Carousel withIndicators>{cardTravel()}</Carousel>
+            <Tabs.Panel value="create_travel">
+              <Center h={500}>
+                <Stack w={300}>
+                  <Title
+                    style={{
+                      textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
+                    }}
+                  >
+                    Create Plan
+                  </Title>
+                  <Divider></Divider>
+                  <TextInput
+                    //right hand side
+                    description="Activity Name"
+                    rightSectionPointerEvents="all"
+                    rightSection={
+                      <CloseButton
+                        size={23}
+                        aria-label="Clear Name"
+                        onClick={() =>
+                          setTravelPlanDetails((p) => ({
+                            ...p,
+                            name: "",
+                          }))
+                        }
+                      />
+                    }
+                    required
+                    //other Input Properties
+                    placeholder="Choose Name"
+                    value={travelPlanDetails.name}
+                    onChange={(e) => {
+                      setTravelPlanDetails((p) => ({
+                        ...p,
+                        name: e.target.value,
+                      }));
+                    }}
+                  ></TextInput>
+                  <DatePickerInput
+                    description="Date Range"
+                    clearable
+                    type="range"
+                    placeholder="Choose Date"
+                    value={dateRanges}
+                    onChange={settingTravelPlanDetailsDate}
+                  ></DatePickerInput>
+                  <Button
+                    mt={15}
+                    color="red"
+                    radius="lg"
+                    type="submit"
+                    onClick={(e) => {
+                      console.log(travelPlanDetails);
+                      submitTravelPlan();
+                    }}
+                  >
+                    Create
+                  </Button>
+                </Stack>
+              </Center>
+            </Tabs.Panel>
+          </Tabs>
+        </Card>
+      </Center>
 
       {/* 
       {cardSecs()}
