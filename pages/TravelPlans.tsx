@@ -246,52 +246,51 @@ function TravelPlans() {
     );
   };
 
+  const [planID, setPlanID] = useState("");
   const cardTravel = () => {
     return event
       ? event.map((items) => (
           <Carousel.Slide key={items.id}>
-            <Tabs.Panel value="incomplete">
-              <Center h={500}>
-                <Stack align="center">
-                  <Title>{items.name}</Title>
-                  <Text style={{ fontSize: "20px" }}>
-                    From {moment(items.travelStartDate).format("YYYY-MM-DD")} to{" "}
-                    {` `}
-                    {moment(items.travelEndDate).format("YYYY-MM-DD")}
-                  </Text>
-                  <ActionIcon
-                    className="edit-button"
-                    variant="subtle"
-                    color="cyan"
-                    onClick={() => setOpened(true)}
-                  >
-                    <IconEdit />
+            <Center h={500}>
+              <Stack align="center">
+                <Title>{items.name}</Title>
+                <Text style={{ fontSize: "15px" }}>
+                  From {moment(items.travelStartDate).format("MMM Do YY")} to{" "}
+                  {` `}
+                  {moment(items.travelEndDate).format("MMM Do YY")}
+                </Text>
+                <ActionIcon
+                  className="edit-button"
+                  variant="subtle"
+                  color="cyan"
+                  onClick={() => setOpened(true)}
+                >
+                  <IconEdit />
+                </ActionIcon>
+                <ActionIcon
+                  variant="transparent"
+                  className="to-schedule-button"
+                >
+                  <IconSquareRoundedArrowRight size={28} color="black" />
+                </ActionIcon>
+              </Stack>
+            </Center>
+            <Center>
+              <Menu className="delete-button" shadow="md">
+                <Menu.Target>
+                  <ActionIcon variant="subtle" c="red">
+                    <IconX />
                   </ActionIcon>
-                  <ActionIcon
-                    variant="transparent"
-                    className="to-schedule-button"
-                  >
-                    <IconSquareRoundedArrowRight size={28} color="black" />
-                  </ActionIcon>
-                </Stack>
-              </Center>
-              <Center>
-                <Menu className="delete-button" shadow="md">
-                  <Menu.Target>
-                    <ActionIcon variant="subtle" c="red">
-                      <IconX />
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Label>Danger</Menu.Label>
-                    <Menu.Divider></Menu.Divider>
-                    <Menu.Item c="red" leftSection={<IconTrash size={14} />}>
-                      Delete
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Center>
-            </Tabs.Panel>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Danger</Menu.Label>
+                  <Menu.Divider></Menu.Divider>
+                  <Menu.Item c="red" leftSection={<IconTrash size={14} />}>
+                    Delete
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Center>
           </Carousel.Slide>
         ))
       : null;
@@ -332,8 +331,9 @@ function TravelPlans() {
                 Create
               </Tabs.Tab>
             </Tabs.List>
-
-            <Carousel withIndicators>{cardTravel()}</Carousel>
+            <Tabs.Panel value="incomplete">
+              <Carousel>{cardTravel()}</Carousel>
+            </Tabs.Panel>
             <Tabs.Panel value="create_travel">
               <Center h={500}>
                 <Stack w={300}>
