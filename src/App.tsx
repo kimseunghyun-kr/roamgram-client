@@ -8,7 +8,6 @@ import "@mantine/dates/styles.css";
 import "./App.css";
 import "@bitnoi.se/react-scheduler/dist/style.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import SchedulePageMap from "../pages/SchedulePageMap.tsx";
 import { useJsApiLoader } from "@react-google-maps/api";
 import TravelPage from "../pages/TravelPage.tsx";
 import MyCalender from "../pages/MyCalender.tsx";
@@ -24,7 +23,7 @@ import LoginPage from "../pages/LoginPage.tsx";
 import CreatePage from "../pages/CreatePage.tsx";
 import Login from "./components/Login.tsx";
 import Header from "../pages/Header.tsx";
-import SchedulePageMapCopy from "../pages/SchedulePageMapCopy.tsx";
+import SchedulePageMap from "../pages/SchedulePageMap.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -76,7 +75,7 @@ function App() {
           <Header></Header>
         </header>
         <body>
-          <SchedulePageMapCopy></SchedulePageMapCopy>
+          <SchedulePageMap></SchedulePageMap>
         </body>
       </div>
     </>

@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
   Anchor,
+  AppShell,
   AspectRatio,
   Box,
   Button,
@@ -15,9 +16,13 @@ import {
   Input,
   NativeSelect,
   Popover,
+  SimpleGrid,
   Stack,
   Text,
   Textarea,
+  Tooltip,
+  Image,
+  Space,
 } from "@mantine/core";
 import { v4 as uuid } from "uuid";
 import {
@@ -33,6 +38,8 @@ import MyCalender from "./MyCalender.tsx";
 
 import TravelPage from "./TravelPage.tsx";
 import { Link, Navigate } from "react-router-dom";
+import "./SchedulePageMap.css";
+import { IconMapPin } from "@tabler/icons-react";
 
 //testing purposese but make sure to store the travelPlanID somewhere
 
@@ -349,9 +356,7 @@ function SchedulePageMap(props) {
   const [keepEnd, setKeepEnd] = useState(false);
 
   ////////////////testing purposes/////////////////////////
-
-  ////Test Events
-  const travelPlanId = "ca456981-6da9-402a-95e9-d91076815578";
+  const travelPlanId = "d91cc99f-3f8c-44da-8747-08d16b08604c";
   const getAllSchedule = () => {
     fetch(
       `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
@@ -387,140 +392,172 @@ function SchedulePageMap(props) {
       .catch((error) => console.log(error));
   };
 
-  console.log(event);
+  const checkValidForm = () => {};
+
+  //console.log(event);
   //console.log("events directly are", event);
   return (
     <>
-      <Box>
-        <Button onClick={getAllSchedule}>Test</Button>
-        <Link to="/">Click here to go back</Link>;
-        <Grid grow align="center">
-          <Grid.Col span={3}>
-            <Center>
-              <form style={{}} onSubmit={handleSubmit}>
+      <Stack align="stretch" justify="space-between">
+        <SimpleGrid cols={2}>
+          <Center mt={30}>
+            <form style={{}} onSubmit={handleSubmit}>
+              <Image
+                h={74}
+                w="auto"
+                src="src\assets\Create Schedule.png"
+              ></Image>
+              <Space h={20}></Space>
+              <Input
+                mb={10}
+                placeholder="Name of Activity"
+                w={350}
+                value={scheduleName}
+                required
+                onChange={(e) => {
+                  setScheduleName(e.currentTarget.value);
+                  //console.log(e.currentTarget.value);
+                }}
+              ></Input>
+              <Textarea
+                mb={10}
+                w={350}
+                placeholder="Activity Description"
+                value={scheduleDescription}
+                onChange={(e) => {
+                  setScheduleDescription(e.currentTarget.value);
+                  //console.log(scheduleDescription);
+                }}
+              />
+              <Group mb={10}>
                 <Input
-                  placeholder="Name of Activity"
                   w={350}
-                  value={scheduleName}
-                  onChange={(e) => {
-                    setScheduleName(e.currentTarget.value);
-                    //console.log(e.currentTarget.value);
-                  }}
+                  placeholder="Start Location --> Check Distance"
+                  ref={autoCompleteStartRef}
+                  disabled={keepStart}
+                  leftSection={
+                    <IconMapPin size={"15"} color="green"></IconMapPin>
+                  }
+                  rightSectionPointerEvents="all"
+                  rightSection={
+                    <Tooltip label="Press checkbox to Keep location on Map">
+                      <Checkbox
+                        checked={keepStart}
+                        onChange={(e) => {
+                          setKeepStart(e.currentTarget.checked);
+                          console.log(keepStart);
+                        }}
+                      />
+                    </Tooltip>
+                  }
                 ></Input>
-                <Textarea
+              </Group>
+              <Group mb={10}>
+                <Input
+                  leftSection={
+                    <IconMapPin size={"15"} color="red"></IconMapPin>
+                  }
+                  required
                   w={350}
-                  placeholder="add description of activity if needed"
-                  value={scheduleDescription}
+                  placeholder="Destination [Place Added to Schedules]"
+                  ref={autoCompleteEndRef}
+                  disabled={keepEnd}
+                  rightSectionPointerEvents="all"
+                  rightSection={
+                    <Tooltip label="Press checkbox to Keep location on Map">
+                      <Checkbox
+                        checked={keepEnd}
+                        onChange={(e) => {
+                          setKeepEnd(e.currentTarget.checked);
+                        }}
+                      />
+                    </Tooltip>
+                  }
+                ></Input>
+              </Group>
+
+              <Group>
+                <TimeInput
+                  w={167}
+                  description="START"
+                  required
+                  id="startTime"
                   onChange={(e) => {
-                    setScheduleDescription(e.currentTarget.value);
-                    //console.log(scheduleDescription);
+                    console.log(
+                      "Start using currentTargetValue",
+                      e.currentTarget.value
+                    );
+                    const startTarget = e.currentTarget.value;
+                    setStartTime(startTarget);
                   }}
                 />
-                <Group>
-                  <Input
-                    w={350}
-                    placeholder="Start Location --> Check Distance"
-                    ref={autoCompleteStartRef}
-                    disabled={keepStart}
-                  ></Input>
-                  <Checkbox
-                    label="KEEP"
-                    checked={keepStart}
-                    onChange={(e) => {
-                      setKeepStart(e.currentTarget.checked);
-                      console.log(keepStart);
-                    }}
-                  />
-                </Group>
-                <Group>
-                  <Input
-                    w={350}
-                    placeholder="Destination(Which is added as place to our schedule)"
-                    ref={autoCompleteEndRef}
-                    disabled={keepEnd}
-                  ></Input>
-                  <Checkbox
-                    label="KEEP"
-                    checked={keepEnd}
-                    onChange={(e) => {
-                      setKeepEnd(e.currentTarget.checked);
-                    }}
-                  />
-                </Group>
-                <Text>For Checking distances between your locations</Text>
-                <Group>
-                  <TimeInput
-                    w={175}
-                    description="start"
-                    id="startTime"
-                    disabled={!travelDay}
-                    onChange={(e) => {
-                      console.log(
-                        "Start using currentTargetValue",
-                        e.currentTarget.value
-                      );
-                      const startTarget = e.currentTarget.value;
-                      setStartTime(startTarget);
-                    }}
-                  />
 
-                  <TimeInput
-                    w={175}
-                    disabled={!startTime}
-                    description="end"
-                    id="endTime"
-                    error={
-                      endTimePop
-                        ? "End Time Should be later than Start Time"
-                        : false
-                    }
-                    onChange={(e) => {
-                      e.currentTarget.value < startTime
-                        ? (console.log("less than start"),
-                          setEndTimePop(true),
-                          setEndTime(e.currentTarget.value))
-                        : (setEndTime(e.currentTarget.value),
-                          console.log("okie"),
-                          setEndTimePop(false));
-                    }}
-                  />
-                </Group>
-                <Group>
-                  <DatePickerInput
-                    description="day"
-                    w={175}
-                    disabled={!scheduleName}
-                    allowDeselect
-                    onChange={(e) => {
-                      setTravelDay(e);
-                    }}
-                    value={travelDay}
-                  />
-                  <Button
-                    disabled={endTime < startTime || endTime === undefined}
-                    type="submit"
-                    onClick={createScheduleButton}
-                  >
-                    Create Schedule
-                  </Button>
-                </Group>
-              </form>
-            </Center>
-          </Grid.Col>
+                <Popover
+                  opened={endTimePop}
+                  onChange={setEndTimePop}
+                  position="right"
+                  withArrow
+                  shadow="md"
+                >
+                  <Popover.Target>
+                    <TimeInput
+                      required
+                      w={167}
+                      description="END"
+                      id="endTime"
+                      onChange={(e) => {
+                        e.currentTarget.value < startTime
+                          ? (console.log("less than start"),
+                            setEndTimePop(true),
+                            setEndTime(e.currentTarget.value))
+                          : (setEndTime(e.currentTarget.value),
+                            console.log("okie"),
+                            setEndTimePop(false));
+                      }}
+                    />
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    <Text size="xs" c="red">
+                      End time should be later than start time
+                    </Text>
+                  </Popover.Dropdown>
+                </Popover>
+              </Group>
+              <Group mt={10}>
+                <DatePickerInput
+                  description="DAY"
+                  w={167}
+                  allowDeselect
+                  onChange={(e) => {
+                    setTravelDay(e);
+                  }}
+                  value={travelDay}
+                  required
+                />
+                <Button
+                  className="schedule-button"
+                  mt={17}
+                  w={167}
+                  //disabled={endTime < startTime || endTime === undefined}
+                  type="submit"
+                  radius="lg"
+                  onClick={createScheduleButton}
+                  variant="light"
+                  c="cyan"
+                >
+                  Create Schedule
+                </Button>
+              </Group>
+            </form>
+          </Center>
 
-          <Grid.Col span={8} ref={mapRef} h={"50vh"} w={600}>
-            TEST
-          </Grid.Col>
-        </Grid>
-      </Box>
-      <Divider></Divider>
-
-      <MyCalender
-        event={event}
-        setEvents={setEvent}
-        map={map}
-        travelPlanId={travelPlanId}
-      ></MyCalender>
+          <Box ref={mapRef}></Box>
+        </SimpleGrid>
+        <Divider size="sm" color="lavender" mt={5}></Divider>
+        <div>
+          <MyCalender h="auto"></MyCalender>
+        </div>
+      </Stack>
     </>
   );
 }

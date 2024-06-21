@@ -29,7 +29,7 @@ import {
   Space,
   Divider,
 } from "@mantine/core";
-import SchedulePageMap from "./SchedulePageMap";
+import SchedulePageMap from "./SchedulePageMap_copy";
 import { useDisclosure } from "@mantine/hooks";
 import { useJsApiLoader } from "@react-google-maps/api";
 import {
