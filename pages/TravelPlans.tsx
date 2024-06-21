@@ -6,6 +6,7 @@ import {
   Center,
   CloseButton,
   Container,
+  Divider,
   Flex,
   Input,
   Menu,
@@ -281,13 +282,18 @@ function TravelPlans() {
                 <Stack align="center">
                   <Title>Travel Plan Name</Title>
                   <Text style={{ fontSize: "20px" }}>From 23132 to 23132</Text>
-                  <ActionIcon variant="subtle" color="cyan">
+                  <ActionIcon
+                    className="edit-button"
+                    variant="subtle"
+                    color="cyan"
+                    onClick={() => setOpened(true)}
+                  >
                     <IconEdit />
                   </ActionIcon>
                 </Stack>
               </Center>
               <Center>
-                <Menu shadow="md">
+                <Menu className="delete-button" shadow="md">
                   <Menu.Target>
                     <ActionIcon variant="subtle" c="red">
                       <IconX />
@@ -304,91 +310,121 @@ function TravelPlans() {
               </Center>
             </Tabs.Panel>
             <Tabs.Panel value="create_travel">
-              <Input
-                //right hand side
-                rightSectionPointerEvents="all"
-                rightSection={
-                  <CloseButton
-                    aria-label="Clear Name"
-                    onClick={() =>
-                      setTravelPlanDetails((p) => ({ ...p, name: "" }))
+              <Center h={500}>
+                <Stack w={300}>
+                  <Title
+                    style={{ textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)" }}
+                  >
+                    Create Plan
+                  </Title>
+                  <Divider></Divider>
+                  <TextInput
+                    //right hand side
+                    description="Activity Name"
+                    rightSectionPointerEvents="all"
+                    rightSection={
+                      <CloseButton
+                        size={23}
+                        aria-label="Clear Name"
+                        onClick={() =>
+                          setTravelPlanDetails((p) => ({ ...p, name: "" }))
+                        }
+                      />
                     }
-                  />
-                }
-                required
-                //other Input Properties
-                placeholder="Choose Name"
-                value={travelPlanDetails.name}
-                onChange={(e) => {
-                  setTravelPlanDetails((p) => ({
-                    ...p,
-                    name: e.target.value,
-                  }));
-                }}
-              ></Input>
-              <DatePickerInput
-                clearable
-                type="range"
-                placeholder="Choose Date"
-                value={dateRanges}
-                onChange={settingTravelPlanDetailsDate}
-              ></DatePickerInput>
-              <Button
-                type="submit"
-                onClick={(e) => {
-                  console.log(travelPlanDetails);
-                  submitTravelPlan();
-                }}
-              >
-                Submit
-              </Button>
+                    required
+                    //other Input Properties
+                    placeholder="Choose Name"
+                    value={travelPlanDetails.name}
+                    onChange={(e) => {
+                      setTravelPlanDetails((p) => ({
+                        ...p,
+                        name: e.target.value,
+                      }));
+                    }}
+                  ></TextInput>
+                  <DatePickerInput
+                    description="Date Range"
+                    clearable
+                    type="range"
+                    placeholder="Choose Date"
+                    value={dateRanges}
+                    onChange={settingTravelPlanDetailsDate}
+                  ></DatePickerInput>
+                  <Button
+                    mt={15}
+                    radius="lg"
+                    type="submit"
+                    onClick={(e) => {
+                      console.log(travelPlanDetails);
+                      submitTravelPlan();
+                    }}
+                  >
+                    Submit
+                  </Button>
+                </Stack>
+              </Center>
             </Tabs.Panel>
           </Tabs>
         </Card>
       </Center>
 
       {cardSecs()}
+
       <Modal
+        centered
+        size="auto"
         opened={opened}
         onClose={() => setOpened(false)}
-        overlayProps={{ backgroundOpacity: 0 }}
+        overlayProps={{ backgroundOpacity: 0.3 }}
       >
-        <Input
-          //right hand side
-          rightSectionPointerEvents="all"
-          rightSection={
-            <CloseButton
-              aria-label="Clear Name"
-              onClick={() => setTravelPlanDetails((p) => ({ ...p, name: "" }))}
-            />
-          }
-          required
-          //other Input Properties
-          placeholder="Choose Name"
-          value={travelPlanDetails.name}
-          onChange={(e) => {
-            setTravelPlanDetails((p) => ({
-              ...p,
-              name: e.target.value,
-            }));
-          }}
-        ></Input>
-        <DatePickerInput
-          clearable
-          type="range"
-          placeholder="Choose Date"
-          value={dateRanges}
-          onChange={settingTravelPlanDetailsDate}
-        ></DatePickerInput>
-        <Button
-          type="submit"
-          onClick={(e) => {
-            console.log(travelPlanDetails);
-            submitTravelPlan();
-          }}
-        >
-          Submit
-        </Button>
+        <Stack>
+          <Title style={{ fontFamily: "monospace" }}>Edit Details</Title>
+          <Divider></Divider>
+          <TextInput
+            w={350}
+            //right hand side
+            description="Name"
+            rightSectionPointerEvents="all"
+            rightSection={
+              <CloseButton
+                aria-label="Clear Name"
+                onClick={() =>
+                  setTravelPlanDetails((p) => ({ ...p, name: "" }))
+                }
+              />
+            }
+            required
+            //other Input Properties
+            placeholder="Choose Name"
+            value={travelPlanDetails.name}
+            onChange={(e) => {
+              setTravelPlanDetails((p) => ({
+                ...p,
+                name: e.target.value,
+              }));
+            }}
+          ></TextInput>
+          <DatePickerInput
+            description="Date Range"
+            clearable
+            type="range"
+            placeholder="Choose Date"
+            value={dateRanges}
+            onChange={settingTravelPlanDetailsDate}
+          ></DatePickerInput>
+          <Button
+            color="green"
+            variant="outline"
+            type="submit"
+            onClick={(e) => {
+              console.log(travelPlanDetails);
+              submitTravelPlan();
+              setOpened(false);
+            }}
+          >
+            Update
+          </Button>
+        </Stack>
       </Modal>
       <Button onClick={() => setOpened(true)}>Create New Travel Plan</Button>
     </>
