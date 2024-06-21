@@ -71,11 +71,12 @@ function App() {
           <Route path="/maps" element={<MapPage />}></Route>
         </Routes>
   */}
+
         <header>
           <Header></Header>
         </header>
         <body>
-          <SchedulePageMap></SchedulePageMap>
+          <TravelPlans></TravelPlans>
         </body>
       </div>
     </>

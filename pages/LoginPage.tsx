@@ -128,7 +128,15 @@ function LoginPage() {
                     textAlign: "center",
                   }}
                 >
-                  <Container mt={85} h={425}>
+                  <Flex h={30} pt={15}>
+                    <ActionIcon
+                      variant="transparent"
+                      onClick={() => console.log("Back to Homepage")}
+                    >
+                      <IconArrowLeft color="gray"></IconArrowLeft>
+                    </ActionIcon>
+                  </Flex>
+                  <Container mt={55} h={425}>
                     <Center>
                       <Image
                         h={75}

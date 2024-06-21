@@ -1,24 +1,38 @@
 import {
   ActionIcon,
+  Burger,
   Button,
   Card,
+  Center,
   CloseButton,
   Container,
+  Flex,
   Input,
   Menu,
   Modal,
   Select,
+  Space,
+  Stack,
   Table,
+  Tabs,
   TextInput,
+  Title,
   UnstyledButton,
 } from "@mantine/core";
 import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Text } from "@mantine/core";
-import { IconEdit } from "@tabler/icons-react";
+import {
+  IconCheck,
+  IconEdit,
+  IconPlus,
+  IconTrash,
+  IconX,
+} from "@tabler/icons-react";
 import { v4 as uuid } from "uuid";
 import { DatePickerInput } from "@mantine/dates";
+import "./TravelPlans.css";
 
 const data = [
   { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
@@ -147,8 +161,11 @@ function TravelPlans() {
               </Text>
               <Menu>
                 <Menu.Target>
-                  <ActionIcon size="xl">
-                    <IconEdit></IconEdit>
+                  <ActionIcon
+                    size="xl"
+                    style={{ backgroundColor: "transparent" }}
+                  >
+                    <IconEdit color="gray"></IconEdit>
                   </ActionIcon>
                 </Menu.Target>
                 <Menu.Dropdown>
@@ -234,6 +251,102 @@ function TravelPlans() {
         Test Delete
       </Button>
       <Button>Update Edit</Button>
+      <Space h={85} />
+      <Center>
+        <Card radius="lg" h={600} w={600} withBorder>
+          <Tabs
+            className="tabs"
+            variant="outline"
+            radius="md"
+            defaultValue="incomplete"
+          >
+            <Tabs.List>
+              <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
+              <Tabs.Tab
+                value="complete"
+                leftSection={<IconCheck size={15} color="green" />}
+              >
+                Complete
+              </Tabs.Tab>
+              <Tabs.Tab
+                ml={225}
+                value="create_travel"
+                leftSection={<IconPlus size={15} color="gray" />}
+              >
+                Create
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="incomplete">
+              <Center h={500}>
+                <Stack align="center">
+                  <Title>Travel Plan Name</Title>
+                  <Text style={{ fontSize: "20px" }}>From 23132 to 23132</Text>
+                  <ActionIcon variant="subtle" color="cyan">
+                    <IconEdit />
+                  </ActionIcon>
+                </Stack>
+              </Center>
+              <Center>
+                <Menu shadow="md">
+                  <Menu.Target>
+                    <ActionIcon variant="subtle" c="red">
+                      <IconX />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Danger</Menu.Label>
+                    <Menu.Divider></Menu.Divider>
+                    <Menu.Item c="red" leftSection={<IconTrash size={14} />}>
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Center>
+            </Tabs.Panel>
+            <Tabs.Panel value="create_travel">
+              <Input
+                //right hand side
+                rightSectionPointerEvents="all"
+                rightSection={
+                  <CloseButton
+                    aria-label="Clear Name"
+                    onClick={() =>
+                      setTravelPlanDetails((p) => ({ ...p, name: "" }))
+                    }
+                  />
+                }
+                required
+                //other Input Properties
+                placeholder="Choose Name"
+                value={travelPlanDetails.name}
+                onChange={(e) => {
+                  setTravelPlanDetails((p) => ({
+                    ...p,
+                    name: e.target.value,
+                  }));
+                }}
+              ></Input>
+              <DatePickerInput
+                clearable
+                type="range"
+                placeholder="Choose Date"
+                value={dateRanges}
+                onChange={settingTravelPlanDetailsDate}
+              ></DatePickerInput>
+              <Button
+                type="submit"
+                onClick={(e) => {
+                  console.log(travelPlanDetails);
+                  submitTravelPlan();
+                }}
+              >
+                Submit
+              </Button>
+            </Tabs.Panel>
+          </Tabs>
+        </Card>
+      </Center>
+
       {cardSecs()}
       <Modal
         opened={opened}
