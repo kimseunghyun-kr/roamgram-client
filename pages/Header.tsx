@@ -4,6 +4,7 @@ import {
   Divider,
   Group,
   Image,
+  Space,
   Tabs,
   UnstyledButton,
 } from "@mantine/core";
@@ -24,7 +25,7 @@ function Header() {
         <a href="#">
           <Image w={200} src="src\assets\RoamGram Logo.png"></Image>
         </a>
-
+        <Space w={75}></Space>
         <Group gap="xl" ml={500} className="header-group">
           <UnstyledButton className="header-button">Guide </UnstyledButton>
           <UnstyledButton className="header-button">Routes</UnstyledButton>
@@ -32,7 +33,14 @@ function Header() {
           <UnstyledButton style={{ fontWeight: 600 }} className="header-button">
             Sign Up
           </UnstyledButton>
-          <Button radius="md" color={"cyan"} style={{ fontSize: "13px" }}>
+          <Button
+            className="header-login"
+            h={30}
+            w={70}
+            radius="xl"
+            color={"cyan"}
+            style={{ fontSize: "12px" }}
+          >
             Login
           </Button>
         </Group>
