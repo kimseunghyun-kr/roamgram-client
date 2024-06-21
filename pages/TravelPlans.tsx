@@ -247,6 +247,7 @@ function TravelPlans() {
   };
 
   const [planID, setPlanID] = useState("");
+
   const cardTravel = () => {
     return event
       ? event.map((items) => (
@@ -263,7 +264,11 @@ function TravelPlans() {
                   className="edit-button"
                   variant="subtle"
                   color="cyan"
-                  onClick={() => setOpened(true)}
+                  onClick={() => (
+                    setOpened(true),
+                    console.log("item id is", items.id),
+                    setPlanID(items.id)
+                  )}
                 >
                   <IconEdit />
                 </ActionIcon>
@@ -285,7 +290,11 @@ function TravelPlans() {
                 <Menu.Dropdown>
                   <Menu.Label>Danger</Menu.Label>
                   <Menu.Divider></Menu.Divider>
-                  <Menu.Item c="red" leftSection={<IconTrash size={14} />}>
+                  <Menu.Item
+                    c="red"
+                    onClick={() => deleteTravelPlan(items.id)}
+                    leftSection={<IconTrash size={14} />}
+                  >
                     Delete
                   </Menu.Item>
                 </Menu.Dropdown>
@@ -416,11 +425,13 @@ function TravelPlans() {
           <TextInput
             w={350}
             //right hand side
+
             description="Name"
             rightSectionPointerEvents="all"
             rightSection={
               <CloseButton
                 aria-label="Clear Name"
+                size={23}
                 onClick={() =>
                   setTravelPlanDetails((p) => ({ ...p, name: "" }))
                 }
