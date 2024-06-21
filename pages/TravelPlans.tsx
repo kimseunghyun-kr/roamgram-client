@@ -425,7 +425,7 @@ function TravelPlans() {
           <TextInput
             w={350}
             //right hand side
-
+            value={event.find((ev) => ev.id == planID).name}
             description="Name"
             rightSectionPointerEvents="all"
             rightSection={
@@ -440,13 +440,13 @@ function TravelPlans() {
             required
             //other Input Properties
             placeholder="Choose Name"
-            value={travelPlanDetails.name}
-            onChange={(e) => {
-              setTravelPlanDetails((p) => ({
-                ...p,
-                name: e.target.value,
-              }));
-            }}
+            //value={travelPlanDetails.name}
+            //onChange={(e) => {
+            //</Stack>  setTravelPlanDetails((p) => ({
+            //    ...p,
+            //    name: e.target.value,
+            //  }));
+            //}}
           ></TextInput>
           <DatePickerInput
             description="Date Range"
@@ -454,7 +454,7 @@ function TravelPlans() {
             type="range"
             placeholder="Choose Date"
             value={dateRanges}
-            onChange={settingTravelPlanDetailsDate}
+            //onChange={settingTravelPlanDetailsDate}
           ></DatePickerInput>
           <Button
             color="green"
