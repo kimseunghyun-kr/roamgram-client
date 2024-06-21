@@ -1,33 +1,95 @@
 .rbc-header{
     background-color:white;
-    font-weight: 500;
-    font-size: 13px;
+    font-weight: 400;
+    font-size: 12px;
     color: #424E88;
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 35px
+    height: 35px;
+    margin-right: 0px;
 }
+
 
 .rbc-allday-cell{
     display: none;
 }
 
+
 .rbc-time-header-cell .rbc-today{
+    font-family: monospace;
     background-color: #5C68AC !important;
-    color: white
+    color: white;
+    
+    
 }
+
 
 
 .rbc-time-slot{
     display: flex;
     justify-content: center;
     align-items: center;
-    color: #364379;
-    font-size: 0.9em;
-    font-weight: bold
+    color: #364379 ;
+    font-size: 0.85em;
+    font-weight: light;
   }
 
 .rbc-timeslot-group{
     min-height: 60px;
+    width: auto;
+
+}
+
+.rbc-event{
+    width: 100%;
+    margin: 0;
+    padding: 0px;
+    background-color: #b9c7e29f  !important;
+    color: #364379  !important;
+    text-align: center !important;
+    display: flex;
+    justify-content: center !important;
+    height: 100%;
+    align-items: center !important;
+    padding-top: 5px;
+    font-size: 13px;
+    border-radius: 0px;
+    border: none !important;
+
+
+    
+}
+
+
+.rbc-event-label{
+    font-size: 15px;
+    font-family: monospace;
+    
+}
+
+.rbc-events-container{
+    width: 100%;
+    text-align: center;
+    
+}
+
+.rbc-toolbar-label {
+    font-size: 20px;
+    font-family: monospace;
+    color: #364379;
+  }
+
+  
+
+  .rbc-btn-group{
+    font-size: 13px;
+    font-family: monospace;
+    font-weight: bold;
+  }
+
+  .rbc-event-content{
+    font-family: monospace;
+    font-size: 15px; 
+
 }

@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActionIcon,
   Anchor,
-  AppShell,
   AspectRatio,
   Box,
   Button,
@@ -350,7 +349,9 @@ function SchedulePageMap(props) {
   const [keepEnd, setKeepEnd] = useState(false);
 
   ////////////////testing purposes/////////////////////////
-  const travelPlanId = "d91cc99f-3f8c-44da-8747-08d16b08604c";
+
+  ////Test Events
+  const travelPlanId = "ca456981-6da9-402a-95e9-d91076815578";
   const getAllSchedule = () => {
     fetch(
       `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
@@ -390,10 +391,11 @@ function SchedulePageMap(props) {
   //console.log("events directly are", event);
   return (
     <>
-      <AppShell></AppShell>
-      <Container h={550}>
+      <Box>
+        <Button onClick={getAllSchedule}>Test</Button>
+        <Link to="/">Click here to go back</Link>;
         <Grid grow align="center">
-          <Grid.Col span={5}>
+          <Grid.Col span={3}>
             <Center>
               <form style={{}} onSubmit={handleSubmit}>
                 <Input
@@ -506,11 +508,11 @@ function SchedulePageMap(props) {
             </Center>
           </Grid.Col>
 
-          <Grid.Col span={7} ref={mapRef} h={550} w="auto">
+          <Grid.Col span={8} ref={mapRef} h={"50vh"} w={600}>
             TEST
           </Grid.Col>
         </Grid>
-      </Container>
+      </Box>
       <Divider></Divider>
 
       <MyCalender

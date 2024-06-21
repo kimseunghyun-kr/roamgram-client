@@ -321,22 +321,45 @@ function MyCalender(props) {
     console.log("names of events", props.event.name);
   }
 
+  const events111 = [
+    {
+      uuid: "33213",
+      name: "2222222",
+      description: "",
+      place: {
+        id: "test",
+        googleMapsKeyId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
+        name: "string",
+        country: "string",
+        visitedCount: 0,
+        Latitude: 0,
+        Longitude: 0,
+        longitude: 0,
+        latitude: 0,
+      },
+      isActuallyVisited: false,
+      travelStartTimeEstimate: moment("2024-06-21T10:00:00").toDate(),
+      travelDepartTimeEstimate: moment("2024-06-21T11:00:00").toDate(),
+      previousScheduleId: null,
+      nextScheduleId: null,
+    },
+  ];
+
   return (
     <>
       <DnDCalendar
-        className={"root"}
         selectable //
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         localizer={localizer}
-        events={props.event}
+        events={events111}
         startAccessor="travelStartTimeEstimate"
         endAccessor="travelDepartTimeEstimate"
         titleAccessor="name"
         //resourceIdAccessor="place: id"
         style={{ height: 500, width: "100%" }}
         defaultView="week"
-        views={["month", "week", "day", "agenda"]}
+        views={["month", "week", "day"]}
         formats={{
           dayFormat: (date) => {
             return moment(date).format("Do dddd");

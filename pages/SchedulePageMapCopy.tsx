@@ -400,7 +400,7 @@ function SchedulePageMapCopy(props) {
     <>
       <Stack align="stretch" justify="space-between">
         <SimpleGrid cols={2}>
-          <Center mt={40}>
+          <Center mt={30}>
             <form style={{}} onSubmit={handleSubmit}>
               <Image
                 h={74}
