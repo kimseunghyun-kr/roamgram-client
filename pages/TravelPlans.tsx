@@ -81,7 +81,7 @@ function TravelPlans() {
 
   const [opened, setOpened] = useState(false); //for modal
 
-  //travelPlan details
+  //travelPlan details for CREATION
   const [travelPlanDetails, setTravelPlanDetails] = useState({
     uuid: uuid(),
     startDate: "",
@@ -267,7 +267,8 @@ function TravelPlans() {
                   onClick={() => (
                     setOpened(true),
                     console.log("item id is", items.id),
-                    setPlanID(items.id)
+                    setPlanID(items.id),
+                    open_modifiy_travel_plan(items.id)
                   )}
                 >
                   <IconEdit />
@@ -304,6 +305,67 @@ function TravelPlans() {
         ))
       : null;
   };
+
+  ////getting the modal start and end date in the proper format
+  const modalDate = (idArray: Date[]) => {
+    if (idArray) {
+      const modalEventStart = moment(idArray.travelStartDate).toDate();
+      const modalEventEnd = moment(idArray.travelEndDate).toDate();
+      return [modalEventStart, modalEventEnd];
+    }
+  };
+
+  ///UpdatedTravelPlan Information in our API
+  const [updateTravelPlan, setUpdateTravelPlan] = useState({
+    uuid: "",
+    name: "",
+    date: [],
+  });
+
+  const [updateFormattedTravelPlan, setUpdateFormattedTravelPlan] = useState({
+    uuid: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  ///This is in unformatted --> Let updateButton handle the formatting of Start and EndDate;
+  const open_modifiy_travel_plan = (eventID: string) => {
+    const plan = event.find((ev) => ev.id === eventID);
+    if (plan) {
+      const unformattedPlan = {
+        uuid: plan.id,
+        name: plan.name,
+        date: [moment(plan.travelStartDate), moment(plan.travelEndDate)],
+      };
+      setUpdateTravelPlan(unformattedPlan);
+    }
+    console.log("plan is from open_modify", plan);
+  };
+
+  const submit_modify_travel_plan = () => {
+    const formattedTravelPlan = {
+      uuid: updateTravelPlan.uuid,
+      name: updateTravelPlan.name,
+      startDate: moment(updateTravelPlan.date[0]).format("YYYY-MM-DD"),
+      endDate: moment(updateTravelPlan.date[1]).format("YYYY-MM-DD"),
+    };
+    //this is for the formatted//
+    setUpdateFormattedTravelPlan(formattedTravelPlan);
+    //this is for the api
+    fetch(`http://localhost:8080/travelPlan/modify_travel_plan`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formattedTravelPlan),
+    })
+      .then((response) => response.json())
+      .then((data) => console.log("Success in Modifying travel plan"))
+      .catch((error) => console.log("Error in modifying plan", error));
+  };
+  console.log("submit is for format", updateFormattedTravelPlan);
 
   return (
     <>
@@ -425,7 +487,10 @@ function TravelPlans() {
           <TextInput
             w={350}
             //right hand side
-            value={event.find((ev) => ev.id == planID).name}
+            value={updateTravelPlan.name}
+            onChange={(e) =>
+              setUpdateTravelPlan((p) => ({ ...p, name: e.target.value }))
+            }
             description="Name"
             rightSectionPointerEvents="all"
             rightSection={
@@ -453,17 +518,21 @@ function TravelPlans() {
             clearable
             type="range"
             placeholder="Choose Date"
-            value={dateRanges}
+            value={updateTravelPlan.date}
             //onChange={settingTravelPlanDetailsDate}
+            onChange={(e) => (
+              setUpdateTravelPlan((p) => ({ ...p, date: e })),
+              console.log("e is", e)
+            )}
           ></DatePickerInput>
           <Button
             color="green"
             variant="outline"
             type="submit"
             onClick={(e) => {
-              console.log(travelPlanDetails);
-              submitTravelPlan();
+              //console.log("submit update is ", updateTravelPlan);
               setOpened(false);
+              submit_modify_travel_plan();
             }}
           >
             Update

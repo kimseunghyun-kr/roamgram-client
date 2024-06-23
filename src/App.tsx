@@ -72,9 +72,6 @@ function App() {
         </Routes>
   */}
 
-        <header>
-          <Header></Header>
-        </header>
         <body>
           <TravelPlans></TravelPlans>
         </body>
