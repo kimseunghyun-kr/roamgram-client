@@ -60,6 +60,7 @@ function TravelPlans() {
   }, []);
 
   const [event, setEvent] = useState([]);
+  console.log("is event empty?", event);
 
   //Gets All Travel Plans
   /////////get_all/////////
@@ -252,7 +253,7 @@ function TravelPlans() {
     return event
       ? event.map((items) => (
           <Carousel.Slide key={items.id}>
-            <Center h={500}>
+            <Center h={550}>
               <Stack align="center">
                 <Title>{items.name}</Title>
                 <Text style={{ fontSize: "15px" }}>
@@ -279,27 +280,25 @@ function TravelPlans() {
                 >
                   <IconSquareRoundedArrowRight size={28} color="black" />
                 </ActionIcon>
+                <Menu className="delete-button" shadow="md">
+                  <Menu.Target>
+                    <ActionIcon variant="subtle" c="red">
+                      <IconX />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Danger</Menu.Label>
+                    <Menu.Divider></Menu.Divider>
+                    <Menu.Item
+                      c="red"
+                      onClick={() => deleteTravelPlan(items.id)}
+                      leftSection={<IconTrash size={14} />}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               </Stack>
-            </Center>
-            <Center>
-              <Menu className="delete-button" shadow="md">
-                <Menu.Target>
-                  <ActionIcon variant="subtle" c="red">
-                    <IconX />
-                  </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Danger</Menu.Label>
-                  <Menu.Divider></Menu.Divider>
-                  <Menu.Item
-                    c="red"
-                    onClick={() => deleteTravelPlan(items.id)}
-                    leftSection={<IconTrash size={14} />}
-                  >
-                    Delete
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
             </Center>
           </Carousel.Slide>
         ))
@@ -403,7 +402,15 @@ function TravelPlans() {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="incomplete">
-              <Carousel>{cardTravel()}</Carousel>
+              <Carousel
+                withIndicators
+                withControls={event.length > 0}
+                styles={{
+                  indicator: { backgroundColor: "gray", marginTop: "px" },
+                }}
+              >
+                {cardTravel()}
+              </Carousel>
             </Tabs.Panel>
             <Tabs.Panel value="create_travel">
               <Center h={500}>
