@@ -133,7 +133,12 @@ function TravelPlans() {
       body: JSON.stringify([id]),
     })
       .then((response) => response.json())
-      .then((data) => console.log("successful in deleting travelPlan"))
+      .then(
+        (data) => (
+          console.log("successful in deleting travelPlan"),
+          setEvent((p) => p.filter((ev) => ev.id !== id))
+        )
+      )
       .catch((error) => console.log("error in deleting traevlPlan"));
 
     //EXTRA THINGS --> DELETE ALL SCHEDULES HERE
@@ -349,9 +354,6 @@ function TravelPlans() {
       .then((response) => response.json())
       .then((data) => console.log("Success in Modifying travel plan"))
       .catch((error) => console.log("Error in modifying plan", error));
-  };
-
-  const reget_all_events = () => {
     fetch(`http://localhost:8080/travelPlan/get_all`, {
       method: "GET",
       headers: {
@@ -363,10 +365,6 @@ function TravelPlans() {
       .then((data) => (setEvent(data), console.log("events are", data)))
       .catch((error) => console.log(error));
   };
-
-  useEffect(() => {
-    reget_all_events();
-  }, [token]);
 
   useEffect(() => {
     if (token) {
@@ -527,7 +525,7 @@ function TravelPlans() {
             value={updateTravelPlan.name}
             onChange={(e) => (
               setUpdateTravelPlan((p) => ({ ...p, name: e.target.value })),
-              reget_all_events()
+              console.log("upate button pressed")
             )}
             description="Name"
             rightSectionPointerEvents="all"
@@ -570,6 +568,8 @@ function TravelPlans() {
             onClick={(e) => {
               //console.log("submit update is ", updateTravelPlan);
               setOpened(false);
+              e.preventDefault();
+              console.log("e is from update button", e);
               submit_modify_travel_plan();
             }}
           >
