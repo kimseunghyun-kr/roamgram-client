@@ -4,28 +4,34 @@
 
   .l-header-menu-list-child{
     list-style: none;
+    
+    
   }
+
+
   .l-header-menu-list-child a{
-    font-size: 20px;
+    font-size: 22px;
     text-decoration: none;
-    color: rgba(255, 255, 255, 1);
+    color:  #333333;
     font-weight: bold;
     text-transform: uppercase;
-    text-shadow: 1px 1px hsla(0, 0%, 0%, 0.386);
+
+   
+  
   }
   
-
 .l-header-menu-list-child a:after{    
     background: none repeat scroll 0 0 transparent;
     bottom: 0;
     content: "";
     display: block;
-    height: 2px;
+    height: 4px;
     left: 50%;
     position: relative;
-    background: rgb(236, 110, 110);
+    background: rgba(232, 72, 72, 0.693);
     transition: width 0.3s ease 0s, left 0.3s ease 0s;
     width: 0;
+    -webkit-text-fill-color: transparent;
   }
 
   .l-header-menu-list-child a:hover:after { 
@@ -33,3 +39,14 @@
     left: 0; 
   }
 
+  .buttons-login:hover{
+    transition: 150ms ease-in;
+    background-color: orangered;
+  }
+
+
+  .popup.description{
+    color: red;
+    outline: 3px red
+  
+  }

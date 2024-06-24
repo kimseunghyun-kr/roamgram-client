@@ -21,7 +21,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Text } from "@mantine/core";
 import {
@@ -60,23 +60,9 @@ function TravelPlans() {
   }, []);
 
   const [event, setEvent] = useState([]);
-  console.log("is event empty?", event);
 
   //Gets All Travel Plans
   /////////get_all/////////
-  useEffect(() => {
-    if (token) {
-      fetch(`http://localhost:8080/travelPlan/get_all`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => (setEvent(data), console.log("events are", data)))
-        .catch((error) => console.log(error));
-    }
-  }, [token]);
 
   console.log(event);
 
@@ -351,7 +337,7 @@ function TravelPlans() {
     };
     //this is for the formatted//
     setUpdateFormattedTravelPlan(formattedTravelPlan);
-    //this is for the api
+    //this is for the api call////////////
     fetch(`http://localhost:8080/travelPlan/modify_travel_plan`, {
       method: "PATCH",
       headers: {
@@ -364,7 +350,51 @@ function TravelPlans() {
       .then((data) => console.log("Success in Modifying travel plan"))
       .catch((error) => console.log("Error in modifying plan", error));
   };
-  console.log("submit is for format", updateFormattedTravelPlan);
+
+  const reget_all_events = () => {
+    fetch(`http://localhost:8080/travelPlan/get_all`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => (setEvent(data), console.log("events are", data)))
+      .catch((error) => console.log(error));
+  };
+
+  useEffect(() => {
+    reget_all_events();
+  }, [token]);
+
+  useEffect(() => {
+    if (token) {
+      fetch(`http://localhost:8080/travelPlan/get_all`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => (setEvent(data), console.log("events are", data)))
+        .catch((error) => console.log(error));
+    }
+  }, [token]);
+
+  /*
+  useEffect(() => {
+    fetch(`http://localhost:8080/travelPlan/get_all`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then((response) => response.json())
+      .then((data) => (setEvent(data), console.log("events are", data)))
+      .catch((error) => console.log("error changing get all"));
+  }, [updateFormattedTravelPlan]);
+  */
 
   return (
     <>
@@ -406,7 +436,7 @@ function TravelPlans() {
                 withIndicators
                 withControls={event.length > 0}
                 styles={{
-                  indicator: { backgroundColor: "gray", marginTop: "px" },
+                  indicator: { backgroundColor: "#A9ADB9", marginTop: "px" },
                 }}
               >
                 {cardTravel()}
@@ -495,9 +525,10 @@ function TravelPlans() {
             w={350}
             //right hand side
             value={updateTravelPlan.name}
-            onChange={(e) =>
-              setUpdateTravelPlan((p) => ({ ...p, name: e.target.value }))
-            }
+            onChange={(e) => (
+              setUpdateTravelPlan((p) => ({ ...p, name: e.target.value })),
+              reget_all_events()
+            )}
             description="Name"
             rightSectionPointerEvents="all"
             rightSection={

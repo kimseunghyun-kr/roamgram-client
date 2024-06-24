@@ -24,6 +24,7 @@ import CreatePage from "../pages/CreatePage.tsx";
 import Login from "./components/Login.tsx";
 import Header from "../pages/Header.tsx";
 import SchedulePageMap from "../pages/SchedulePageMap.tsx";
+import HomePageDupe from "../pages/HomePageDupe.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
