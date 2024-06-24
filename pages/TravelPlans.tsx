@@ -140,6 +140,7 @@ function TravelPlans() {
     });
 
     setDateRanges([new Date(), null]);
+    setInitialSlides(event.length);
   };
 
   const [submittedID, setSubmittedID] = useState("");
@@ -358,6 +359,8 @@ function TravelPlans() {
   }, [updateFormattedTravelPlan]);
   */
 
+  const [initialSlides, setInitialSlides] = useState(0);
+
   const [activeTab, setActiveTab] = useState<string | null>("incomplete");
 
   return (
@@ -390,6 +393,7 @@ function TravelPlans() {
             </Tabs.List>
             <Tabs.Panel value="incomplete">
               <Carousel
+                initialSlide={initialSlides}
                 withIndicators
                 key={event.length}
                 withControls={event.length > 0}
