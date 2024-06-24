@@ -265,6 +265,7 @@ function TravelPlans() {
   });
 
   ///UpdateTravelPlan info for our modal since its 1 month ahead always --> 0-based indexing for Date_pickker_input
+  const [updateTravelModalName, setUpdateTravelPlanModalName] = useState("");
   const [updateTravelPlanModal, setUpdateTravelPlanModal] = useState([]);
   console.log("updateTravenPlanModal is", updateTravelPlanModal);
 
@@ -283,6 +284,7 @@ function TravelPlans() {
       ];
       setUpdateTravelPlan(unformattedPlan);
       setUpdateTravelPlanModal(formattedDateforModal);
+      setUpdateTravelPlanModalName(plan.name);
     }
     console.log("plan is from open_modify", plan);
   };
@@ -506,7 +508,9 @@ function TravelPlans() {
             clearable
             type="range"
             placeholder="Choose Date"
-            value={updateTravelPlanModal}
+            value={updateTravelPlanModal.map((item) =>
+              item ? moment(item) : null
+            )}
             //onChange={settingTravelPlanDetailsDate}
             onChange={(e) => (
               setUpdateTravelPlan((p) => ({ ...p, date: e })),
@@ -521,7 +525,7 @@ function TravelPlans() {
             onClick={(e) => {
               //console.log("submit update is ", updateTravelPlan);
               setOpened(false);
-              e.preventDefault();
+              //e.preventDefault();
               //console.log("e is from update button", e);
               submit_modify_travel_plan();
             }}
