@@ -29,29 +29,6 @@ import HomePageDupe from "../pages/HomePageDupe.tsx";
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
 //];
-const events111 = [
-  {
-    uuid: "33213",
-    name: "2222222",
-    description: "",
-    place: {
-      id: "test",
-      googleMapsKeyId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-      name: "string",
-      country: "string",
-      visitedCount: 0,
-      Latitude: 0,
-      Longitude: 0,
-      longitude: 0,
-      latitude: 0,
-    },
-    isActuallyVisited: false,
-    travelStartTimeEstimate: moment("2024-06-16T10:00:00").toDate(),
-    travelDepartTimeEstimate: moment("2024-06-16T11:00:00").toDate(),
-    previousScheduleId: null,
-    nextScheduleId: null,
-  },
-];
 
 function App() {
   const { isLoaded } = useJsApiLoader({

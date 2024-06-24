@@ -107,6 +107,9 @@ function TravelPlans() {
   }
 
   const submitTravelPlan = () => {
+    let travelPlanID = "";
+    let newTravelPlan = {};
+
     fetch("http://localhost:8080/travelPlan/create_travel_plan", {
       method: "POST",
       headers: {
@@ -116,8 +119,27 @@ function TravelPlans() {
       body: JSON.stringify(travelPlanDetails),
     })
       .then((response) => response.json())
-      .then((data) => console.log("data is", data))
-      .catch((error) => console.log(error));
+      .then(
+        (data) => (
+          console.log("data ism", data),
+          fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((response) => response.json())
+            .then(
+              (_data) => (
+                setEvent((p) => [...p, _data]),
+                console.log("new travel plan is", _data)
+              )
+            )
+
+            .catch((error) => console.log(error))
+        )
+      );
+    //setEvent((p) => [...p, newTravelPlan])
   };
 
   const [editModalOpen, setEditModalOpen] = useState(false);
@@ -333,7 +355,7 @@ function TravelPlans() {
     console.log("plan is from open_modify", plan);
   };
 
-  const submit_modify_travel_plan = () => {
+  const submit_modify_travel_plan = async () => {
     const formattedTravelPlan = {
       uuid: updateTravelPlan.uuid,
       name: updateTravelPlan.name,
@@ -352,18 +374,19 @@ function TravelPlans() {
       body: JSON.stringify(formattedTravelPlan),
     })
       .then((response) => response.json())
-      .then((data) => console.log("Success in Modifying travel plan"))
+      .then(
+        (data) => (
+          console.log("Success in Modifying travel plan", data),
+          setEvent((p) => {
+            const index = event.findIndex((item) => item.id === data.id);
+            const currentItems = [...p];
+            currentItems[index] = data;
+            console.log("index of item is", index);
+            return currentItems;
+          })
+        )
+      )
       .catch((error) => console.log("Error in modifying plan", error));
-    fetch(`http://localhost:8080/travelPlan/get_all`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => (setEvent(data), console.log("events are", data)))
-      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
@@ -533,9 +556,7 @@ function TravelPlans() {
               <CloseButton
                 aria-label="Clear Name"
                 size={23}
-                onClick={() =>
-                  setTravelPlanDetails((p) => ({ ...p, name: "" }))
-                }
+                onClick={() => setUpdateTravelPlan((p) => ({ ...p, name: "" }))}
               />
             }
             required
