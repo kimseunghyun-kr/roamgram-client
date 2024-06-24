@@ -166,100 +166,6 @@ function TravelPlans() {
     //EXTRA THINGS --> DELETE ALL SCHEDULES HERE
   }
 
-  const cardSecs = () => {
-    return event ? (
-      <>
-        {event.map((item) => (
-          <Card shadow="sm" padding="lg" radius="md" withBorder>
-            <Card.Section>
-              <Text>{item.name}</Text>
-              <Text>
-                From {moment(item.travelStartDate).format("YYYY-MM-DD")} to{" "}
-                {` `}
-                {moment(item.travelEndDate).format("YYYY-MM-DD")}
-              </Text>
-              <Menu>
-                <Menu.Target>
-                  <ActionIcon
-                    size="xl"
-                    style={{ backgroundColor: "transparent" }}
-                  >
-                    <IconEdit color="gray"></IconEdit>
-                  </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Application</Menu.Label>
-                  <Menu.Item
-                    onClick={() => (
-                      setEditModalOpen(true), console.log(editModalOpen)
-                    )}
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Label>Danger</Menu.Label>
-                  <Menu.Item>
-                    <Text style={{ color: "red" }}>Delete</Text>
-                  </Menu.Item>
-                </Menu.Dropdown>
-                <Modal
-                  overlayProps={{
-                    backgroundOpacity: 0,
-                    blur: 1,
-                  }}
-                  opened={editModalOpen}
-                  onClose={() => (
-                    setEditModalOpen(false), console.log("close", editModalOpen)
-                  )}
-                >
-                  <Input
-                    //right hand side
-                    rightSectionPointerEvents="all"
-                    rightSection={
-                      <CloseButton
-                        aria-label="Clear Name"
-                        onClick={() =>
-                          setTravelPlanDetails((p) => ({ ...p, name: "" }))
-                        }
-                      />
-                    }
-                    required
-                    //other Input Properties
-                    placeholder="Choose Name"
-                    value={travelPlanDetails.name}
-                    onChange={(e) => {
-                      setTravelPlanDetails((p) => ({
-                        ...p,
-                        name: e.target.value,
-                      }));
-                    }}
-                  ></Input>
-                  <DatePickerInput
-                    clearable
-                    type="range"
-                    placeholder="Choose Date"
-                    value={dateRanges}
-                    onChange={settingTravelPlanDetailsDate}
-                  ></DatePickerInput>
-                  <Button
-                    type="submit"
-                    onClick={(e) => {
-                      console.log(travelPlanDetails);
-                    }}
-                  >
-                    Update Plan
-                  </Button>
-                </Modal>
-              </Menu>
-            </Card.Section>
-          </Card>
-        ))}
-      </>
-    ) : (
-      <h1>Error Loading</h1>
-    );
-  };
-
   const [planID, setPlanID] = useState("");
 
   const cardTravel = () => {
@@ -527,10 +433,6 @@ function TravelPlans() {
           </Tabs>
         </Card>
       </Center>
-
-      {/* 
-      {cardSecs()}
-      */}
 
       <Modal
         centered
