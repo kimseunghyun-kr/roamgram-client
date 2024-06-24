@@ -106,10 +106,12 @@ function TravelPlans() {
     }
   }
 
-  const submitTravelPlan = () => {
-    let travelPlanID = "";
-    let newTravelPlan = {};
+  //this is in the eventFormat(from our og response) rather than the submission format
+  const [itemToAdd, setItemToAdd] = useState();
 
+  /*
+  const submitTravelPlan = () => {
+    
     fetch("http://localhost:8080/travelPlan/create_travel_plan", {
       method: "POST",
       headers: {
@@ -122,25 +124,89 @@ function TravelPlans() {
       .then(
         (data) => (
           console.log("data ism", data),
+          setSubmittedID(data);
           fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
             method: "GET",
             headers: {
               Authorization: `Bearer ${token}`,
             },
           })
-            .then((response) => response.json())
-            .then(
-              (_data) => (
-                setEvent((p) => [...p, _data]),
-                console.log("new travel plan is", _data)
-              )
-            )
-
-            .catch((error) => console.log(error))
-        )
-      );
-    //setEvent((p) => [...p, newTravelPlan])
+          .then((response) => response.json())
+          .then(
+            (_data) => (
+              setEvent((p) => [...p, _data]),
+              console.log("new travel plan is", _data)
+*/
+  const submit_travel_plan = () => {
+    fetch("http://localhost:8080/travelPlan/create_travel_plan", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(travelPlanDetails),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        setSubmittedID(data);
+        fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+          .then((response) => response.json())
+          .then((_data) => setItemToAdd(_data))
+          .catch((error) => console.log("error in adding new item to add"));
+      });
   };
+
+  const [submittedID, setSubmittedID] = useState("");
+  console.log("item to add is", itemToAdd);
+  /*
+  function submit_travel_plan_api() {
+    fetch("http://localhost:8080/travelPlan/create_travel_plan", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(travelPlanDetails),
+    })
+      .then((response) => response.json())
+      .then((data) => setSubmittedID(data))
+      .catch((error) => console.log("submit travel plan error api"));
+  }
+
+  function submit_travel_plan() {
+    submit_travel_plan_api();
+    console.log("submittedID is", submittedID);
+    if (submittedID) {
+      fetch(
+        `http://localhost:8080/travelPlan/get_by_id?planId=${submittedID}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      )
+        .then((response) => response.json())
+        .then((data) => setItemToAdd(data))
+        .catch((error) => console.log("error getting the ItemToAdd"));
+
+      if (itemToAdd) {
+        setEvent((p) => [...p, itemToAdd]);
+      }
+    }
+  }
+*/
+  useEffect(() => {
+    if (itemToAdd) {
+      setEvent((p) => [...p, itemToAdd]);
+    }
+    console.log("event is after adding", event);
+  }, [itemToAdd]);
 
   const [editModalOpen, setEditModalOpen] = useState(false);
 
@@ -167,10 +233,12 @@ function TravelPlans() {
   }
 
   const [planID, setPlanID] = useState("");
+  const [carouselKey, setCarouselKey] = useState(0);
 
   const cardTravel = () => {
     return event
       ? event.map((items) => (
+          //console.log("Rendering item", items.id),
           <Carousel.Slide key={items.id}>
             <Center h={550}>
               <Stack align="center">
@@ -210,7 +278,9 @@ function TravelPlans() {
                     <Menu.Divider></Menu.Divider>
                     <Menu.Item
                       c="red"
-                      onClick={() => deleteTravelPlan(items.id)}
+                      onClick={(e) => (
+                        deleteTravelPlan(items.id), e.preventDefault()
+                      )}
                       leftSection={<IconTrash size={14} />}
                     >
                       Delete
@@ -223,7 +293,6 @@ function TravelPlans() {
         ))
       : null;
   };
-
   ////getting the modal start and end date in the proper format
   const modalDate = (idArray: Date[]) => {
     if (idArray) {
@@ -261,7 +330,7 @@ function TravelPlans() {
     console.log("plan is from open_modify", plan);
   };
 
-  const submit_modify_travel_plan = async () => {
+  const submit_modify_travel_plan = () => {
     const formattedTravelPlan = {
       uuid: updateTravelPlan.uuid,
       name: updateTravelPlan.name,
@@ -309,6 +378,11 @@ function TravelPlans() {
     }
   }, [token]);
 
+  useEffect(() => {
+    console.log("Event updated:", event);
+    // Optionally force a refresh here if the carousel supports it
+  }, [event]);
+
   /*
   useEffect(() => {
     fetch(`http://localhost:8080/travelPlan/get_all`, {
@@ -323,16 +397,10 @@ function TravelPlans() {
   }, [updateFormattedTravelPlan]);
   */
 
+  const [activeTab, setActiveTab] = useState<string | null>("incomplete");
+
   return (
     <>
-      <Button
-        onClick={() => {
-          deleteTravelPlan(`3ec21ce9-b695-4311-bcc6-141d6f376ee0`);
-        }}
-      >
-        Test Delete
-      </Button>
-      <Button>Update Edit</Button>
       <Space h={85} />
       <Center>
         <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
@@ -340,7 +408,8 @@ function TravelPlans() {
             className="tabs"
             variant="outline"
             radius="md"
-            defaultValue="incomplete"
+            value={activeTab}
+            onChange={setActiveTab}
           >
             <Tabs.List>
               <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
@@ -361,6 +430,7 @@ function TravelPlans() {
             <Tabs.Panel value="incomplete">
               <Carousel
                 withIndicators
+                key={event.length}
                 withControls={event.length > 0}
                 styles={{
                   indicator: { backgroundColor: "#A9ADB9", marginTop: "px" },
@@ -422,7 +492,8 @@ function TravelPlans() {
                     type="submit"
                     onClick={(e) => {
                       console.log(travelPlanDetails);
-                      submitTravelPlan();
+                      submit_travel_plan();
+                      setActiveTab("incomplete");
                     }}
                   >
                     Create
