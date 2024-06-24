@@ -187,14 +187,9 @@ function TravelPlans() {
               <Stack align="center">
                 <Title>{items.name}</Title>
                 <Text style={{ fontSize: "15px" }}>
-                  From{" "}
-                  {moment(items.travelStartDate)
-                    .subtract(1, "month")
-                    .format("MMM Do YY")}{" "}
-                  to {` `}
-                  {moment(items.travelEndDate)
-                    .subtract(1, "month")
-                    .format("MMM Do YY")}
+                  From {moment(items.travelStartDate).format("MMM Do YY")} to{" "}
+                  {` `}
+                  {moment(items.travelEndDate).format("MMM Do YY")}
                 </Text>
                 <ActionIcon
                   className="edit-button"
@@ -265,9 +260,8 @@ function TravelPlans() {
   });
 
   ///UpdateTravelPlan info for our modal since its 1 month ahead always --> 0-based indexing for Date_pickker_input
-  const [updateTravelModalName, setUpdateTravelPlanModalName] = useState("");
   const [updateTravelPlanModal, setUpdateTravelPlanModal] = useState([]);
-  console.log("updateTravenPlanModal is", updateTravelPlanModal);
+  //console.log("updateTravenPlanModal is", updateTravelPlanModal);
 
   ///This is in unformatted --> Let updateButton handle the formatting of Start and EndDate;
   const open_modifiy_travel_plan = (eventID: string) => {
@@ -276,15 +270,17 @@ function TravelPlans() {
       const unformattedPlan = {
         uuid: plan.id,
         name: plan.name,
-        date: [moment(plan.travelStartDate), moment(plan.travelEndDate)],
+        date: [
+          moment(plan.travelStartDate).format("YYYY-MM-DD"),
+          moment(plan.travelEndDate).format("YYYY-MM-DD"),
+        ],
       };
       const formattedDateforModal = [
-        moment(plan.travelStartDate).subtract(1, "month"),
-        moment(plan.travelEndDate).subtract(1, "month"),
+        moment(plan.travelStartDate),
+        moment(plan.travelEndDate),
       ];
       setUpdateTravelPlan(unformattedPlan);
       setUpdateTravelPlanModal(formattedDateforModal);
-      setUpdateTravelPlanModalName(plan.name);
     }
     console.log("plan is from open_modify", plan);
   };
@@ -294,12 +290,16 @@ function TravelPlans() {
       "update start datre is",
       moment(updateTravelPlan.date[0]).format("YYYY-MM-DD")
     );
-    console.log("update start datre is111111", updateTravelPlan.date[0]);
+
     const formattedTravelPlan = {
       uuid: updateTravelPlan.uuid,
       name: updateTravelPlan.name,
-      startDate: moment(updateTravelPlan.date[0]).format("YYYY-MM-DD"),
-      endDate: moment(updateTravelPlan.date[1]).format("YYYY-MM-DD"),
+      startDate: moment(updateTravelPlan.date[0])
+        .subtract(1, "month")
+        .format("YYYY-MM-DD"),
+      endDate: moment(updateTravelPlan.date[1])
+        .subtract(1, "month")
+        .format("YYYY-MM-DD"),
     };
     //this is for the formatted//
     setUpdateFormattedTravelPlan(formattedTravelPlan);
@@ -313,17 +313,15 @@ function TravelPlans() {
       body: JSON.stringify(formattedTravelPlan),
     })
       .then((response) => response.json())
-      .then(
-        (data) => (
-          console.log("Success in Modifying travel plan", data),
-          setEvent((p) => {
-            const index = event.findIndex((item) => item.id === data.id);
-            const currentItems = [...p];
-            currentItems[index] = data;
-            console.log("index of item is", index);
-            return currentItems;
-          })
-        )
+      .then((data) =>
+        //console.log("Success in Modifying travel plan", data),
+        setEvent((p) => {
+          const index = event.findIndex((item) => item.id === data.id);
+          const currentItems = [...p];
+          currentItems[index] = data;
+          //console.log("index of item is", index);
+          return currentItems;
+        })
       )
       .catch((error) => console.log("Error in modifying plan", error));
   };
@@ -364,6 +362,11 @@ function TravelPlans() {
   const [initialSlides, setInitialSlides] = useState(0);
 
   const [activeTab, setActiveTab] = useState<string | null>("incomplete");
+
+  const [dateTest, changeTestDate] = useState<[Date | null, Date | null]>([
+    null,
+    null,
+  ]);
 
   return (
     <>
@@ -508,9 +511,7 @@ function TravelPlans() {
             clearable
             type="range"
             placeholder="Choose Date"
-            value={updateTravelPlanModal.map((item) =>
-              item ? moment(item) : null
-            )}
+            value={updateTravelPlanModal}
             //onChange={settingTravelPlanDetailsDate}
             onChange={(e) => (
               setUpdateTravelPlan((p) => ({ ...p, date: e })),
