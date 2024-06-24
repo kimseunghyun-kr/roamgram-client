@@ -331,11 +331,20 @@ function TravelPlans() {
   };
 
   const submit_modify_travel_plan = () => {
+    console.log(
+      "update start datre is",
+      moment(updateTravelPlan.date[0]).format("YYYY-MM-DD")
+    );
+    console.log("update start datre is111111", updateTravelPlan.date[0]);
     const formattedTravelPlan = {
       uuid: updateTravelPlan.uuid,
       name: updateTravelPlan.name,
-      startDate: moment(updateTravelPlan.date[0]).format("YYYY-MM-DD"),
-      endDate: moment(updateTravelPlan.date[1]).format("YYYY-MM-DD"),
+      startDate: moment(updateTravelPlan.date[0])
+        .subtract(1, "month")
+        .format("YYYY-MM-DD"),
+      endDate: moment(updateTravelPlan.date[1])
+        .subtract(1, "month")
+        .format("YYYY-MM-DD"),
     };
     //this is for the formatted//
     setUpdateFormattedTravelPlan(formattedTravelPlan);
