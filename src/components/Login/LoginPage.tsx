@@ -68,7 +68,7 @@ function LoginPage() {
   //console.log({ ...form.getInputProps("password") });
 
   function continueLogIn(values: {}) {
-    fetch(`http://localhost:8080/authentication/sign-in`, {
+    fetch(`${import.meta.env.VITE_APP_API_URL}/authentication/sign-in`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,8 +96,17 @@ function LoginPage() {
       },
       body: JSON.stringify(values),
     })
-      .then((response) => response.json())
-      .then((data) => console.log("Success Registering, data is", data));
+      .then((response) => response.text())
+      .then((text) => {
+        console.log(text);
+        return JSON.parse(text);
+      })
+      .then(
+        (data) => (
+          console.log("Success Registering, data is", data),
+          console.log("create values are", values)
+        )
+      );
   }
 
   return (
@@ -117,7 +126,9 @@ function LoginPage() {
               <form
                 onSubmit={form.onSubmit(
                   (values, event) => (
-                    console.log(values, event), continueLogIn(values)
+                    console.log(values, event),
+                    continueLogIn(values),
+                    history(-1)
                   )
                 )}
               >
@@ -199,7 +210,7 @@ function LoginPage() {
                   <Space h={15}></Space>
                   <Divider label="or" labelPosition="center"></Divider>
                   <Space h={15}></Space>
-                  <form action="http://localhost:8080/h2-console">
+                  <form action={import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}>
                     <ActionIcon type="submit" size={65} variant="default">
                       <FcGoogle size={45}></FcGoogle>
                     </ActionIcon>
@@ -221,7 +232,9 @@ function LoginPage() {
               <form
                 onSubmit={formCreate.onSubmit(
                   (values, event) => (
-                    console.log(values, event), createAccount(values)
+                    console.log(values, event),
+                    createAccount(values),
+                    setSection(false)
                   )
                 )}
               >

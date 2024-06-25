@@ -194,6 +194,18 @@ function HomePage() {
     ? console.log(localStorage.getItem(`authToken`))
     : console.log("No");
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const authToken = localStorage.getItem(`authToken`);
+    if (authToken) {
+      setIsLoggedIn(true);
+    }
+    console.log("logged in?", isLoggedIn);
+  });
+
+  useEffect(() => {
+    console.log("logged in?", isLoggedIn);
+  }, [isLoggedIn]);
   return (
     <>
       <Container fluid h={600} p="0">
@@ -234,16 +246,20 @@ function HomePage() {
               </Grid.Col>
               <Grid.Col span={4}>
                 <Group gap="xs" justify="flex-end">
-                  <Link to="/login">
-                    <Button
-                      className="buttons-login"
-                      w="11em"
-                      radius="xl"
-                      color="violet"
-                    >
-                      Login / Sign up
-                    </Button>
-                  </Link>
+                  {!isLoggedIn ? (
+                    <Link to="/login">
+                      <Button
+                        className="buttons-login"
+                        w="11em"
+                        radius="xl"
+                        color="violet"
+                      >
+                        Login / Sign up
+                      </Button>
+                    </Link>
+                  ) : (
+                    <Text>Welcome Back!</Text>
+                  )}
 
                   <Switch
                     size="lg"
