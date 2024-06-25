@@ -6,11 +6,21 @@ import {
   Image,
   Space,
   UnstyledButton,
+  Text,
 } from "@mantine/core";
 import "./Header.css";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Header() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  useEffect(() => {
+    const authToken = localStorage.getItem(`authToken`);
+    if (authToken) {
+      setIsLoggedIn(true);
+    }
+    console.log("logged in?", isLoggedIn);
+  });
   return (
     <header>
       <Container w={1700} size="1900" style={{ display: "flex" }}>
@@ -32,18 +42,30 @@ function Header() {
           <Link to="/travelPage">
             <UnstyledButton className="header-button">Planner</UnstyledButton>
           </Link>
-          <Link to="/login">
-            <Button
-              className="header-login"
-              h={30}
-              w={140}
-              radius="xl"
-              color={"cyan"}
-              style={{ fontSize: "13px" }}
+          {!isLoggedIn ? (
+            <Link to="/login">
+              <Button
+                className="header-login"
+                h={30}
+                w={140}
+                radius="xl"
+                color={"cyan"}
+                style={{ fontSize: "13px" }}
+              >
+                Login / Sign Up
+              </Button>
+            </Link>
+          ) : (
+            <Text
+              style={{
+                fontSize: "15zpx",
+                fontFamily: "Arial",
+                color: "#4A5167",
+              }}
             >
-              Login / Sign Up
-            </Button>
-          </Link>
+              Welcome
+            </Text>
+          )}
         </Group>
       </Container>
       <Divider></Divider>

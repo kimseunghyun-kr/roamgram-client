@@ -14,6 +14,7 @@ import {
   Text,
   TextInput,
   Title,
+  Tooltip,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
@@ -214,14 +215,26 @@ function TravelPlans() {
                 >
                   <IconEdit />
                 </ActionIcon>
-                <Link to={`/schedulePage/${items.id}`}>
-                  <ActionIcon
-                    variant="transparent"
-                    className="to-schedule-button"
-                  >
-                    <IconSquareRoundedArrowRight size={28} color="black" />
-                  </ActionIcon>
-                </Link>
+                {localStorage.getItem(`authToken`) ? (
+                  <Link to={`/schedulePage/${items.id}`}>
+                    <ActionIcon
+                      variant="transparent"
+                      className="to-schedule-button"
+                    >
+                      <IconSquareRoundedArrowRight size={28} color="black" />
+                    </ActionIcon>
+                  </Link>
+                ) : (
+                  <Tooltip label="Sign In to Create Schedules">
+                    <ActionIcon
+                      className="to-schedule-button"
+                      variant="filled"
+                      data-disabled
+                    >
+                      <IconSquareRoundedArrowRight size={28} />
+                    </ActionIcon>
+                  </Tooltip>
+                )}
                 <Menu shadow="md">
                   <Menu.Target>
                     <ActionIcon variant="subtle" c="red">

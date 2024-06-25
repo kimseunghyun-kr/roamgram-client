@@ -258,7 +258,7 @@ function HomePage() {
                       </Button>
                     </Link>
                   ) : (
-                    <Text>Welcome Back!</Text>
+                    <Text style={{ fontSize: "18px" }}>Welcome Back!</Text>
                   )}
 
                   <Switch

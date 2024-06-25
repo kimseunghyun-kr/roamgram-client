@@ -27,7 +27,6 @@ import "./MyCalender.css";
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
 
-
 function MyCalender(props) {
   const localizer = momentLocalizer(moment);
 
