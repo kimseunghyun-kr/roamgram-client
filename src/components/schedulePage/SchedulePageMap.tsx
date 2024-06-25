@@ -37,7 +37,11 @@ interface scheduleGoogle {
   longitude: number;
 }
 
-function SchedulePageMap(props) {
+function SchedulePageMap(
+  {
+    /*props*/
+  }
+) {
   /////////////////////////////MAP STUFF//////////////////////////////////////
   //Map
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -65,8 +69,8 @@ function SchedulePageMap(props) {
     name: "test",
     description: "",
     isActuallyVisited: false,
-    travelStartTimeEstimate: "",
-    travelDepartTimeEstimate: "",
+    travelStartTimeEstimate: null,
+    travelDepartTimeEstimate: null,
     previousScheduleId: null,
     nextScheduleId: null,
   });
@@ -221,7 +225,6 @@ function SchedulePageMap(props) {
     }
     if (autoCompleteStart) {
       autoCompleteStart.addListener("place_changed", () => {
-        const startPlace = autoCompleteStart.getPlace();
         //add Stuff here
       });
     }
@@ -234,7 +237,7 @@ function SchedulePageMap(props) {
   const [endTime, setEndTime] = useState<string>("");
   const [scheduleName, setScheduleName] = useState<string>("");
   const [scheduleDescription, setScheduleDescription] = useState<string>("");
-  const [event, setEvent] = useState([]);
+  //const [event, setEvent] = useState([]);
   const [travelDay, setTravelDay] = useState<Date | null>(null);
   const [endTimePop, setEndTimePop] = useState(false);
 
@@ -319,12 +322,14 @@ function SchedulePageMap(props) {
       }
     )
       .then((response) => response.json())
-      .then((data) => console.log("success in adding"))
-      .catch((error) => console.log("error in adding new schedule"));
+      .then((data) => console.log("success in adding", data))
+      .catch((error) => console.log("error in adding new schedule", error));
 
     ////////////
     ///////////////////////
-    setEvent((p) => [...p, scheduleDetails]);
+
+    //setEvent((p) => [...p, scheduleDetails]);
+
     //console.log("shecule aded");
     setScheduleDetails({
       name: "",
@@ -346,8 +351,9 @@ function SchedulePageMap(props) {
   const [keepEnd, setKeepEnd] = useState(false);
 
   ////////////////testing purposes/////////////////////////
-  const travelPlanId = props.travelID;
+  //const travelPlanId = props.travelID;
 
+  /*
   const getAllSchedule = () => {
     fetch(
       `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
@@ -382,9 +388,7 @@ function SchedulePageMap(props) {
       )
       .catch((error) => console.log(error));
   };
-
-  const checkValidForm = () => {};
-
+  */
   //console.log(event);
   //console.log("events directly are", event);
   return (
