@@ -37,6 +37,8 @@ import "./TravelPlans.css";
 //  { name: "Third", startDate: "2024-06-18", endDate: "2024-06-31" },
 //];
 
+type DatesRangeValue = [Date | null, Date | null];
+
 interface TravelPlan {
   id: string;
   name: string;
@@ -53,11 +55,9 @@ interface EventType {
   travelStartDate: number[];
 }
 
-interface scheduleEventList {}
-
 interface ModalItem {
   name: string;
-  date: Date[];
+  date: DatesRangeValue;
 }
 
 function TravelPlans() {
@@ -282,7 +282,7 @@ function TravelPlans() {
 
   const [editTravelPlanModal, setEditTravelPlanModal] = useState<ModalItem>({
     name: "",
-    date: [],
+    date: [null, null],
   });
 
   const open_travel_plan = (planID: string) => {

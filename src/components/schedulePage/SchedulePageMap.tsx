@@ -335,8 +335,8 @@ function SchedulePageMap(props) {
         latitude: 0,
       },
       isActuallyVisited: false,
-      travelStartTimeEstimate: null,
-      travelDepartTimeEstimate: null,
+      travelStartTimeEstimate: "",
+      travelDepartTimeEstimate: "null",
       previousScheduleId: null,
       nextScheduleId: null,
     });
