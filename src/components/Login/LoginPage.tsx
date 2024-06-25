@@ -129,7 +129,7 @@ function LoginPage() {
                       <Image
                         h={75}
                         w="auto"
-                        src="src\assets\roamgram logo only.png"
+                        src="public\assets\roamgram logo only.png"
                       ></Image>
                     </Center>
 
@@ -137,7 +137,7 @@ function LoginPage() {
                       <Image
                         h={85}
                         w="auto"
-                        src="src\assets\roamgram words only.png"
+                        src="public\assets\roamgram words only.png"
                       ></Image>
                     </Center>
                     <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
@@ -232,7 +232,7 @@ function LoginPage() {
                       <Image
                         h={75}
                         w="auto"
-                        src="src\assets\roamgram logo only.png"
+                        src="public\assets\roamgram logo only.png"
                       ></Image>
                     </Center>
 
@@ -240,7 +240,7 @@ function LoginPage() {
                       <Image
                         h={85}
                         w="auto"
-                        src="src\assets\roamgram words only.png"
+                        src="public\assets\roamgram words only.png"
                       ></Image>
                     </Center>
                     <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
@@ -288,7 +288,7 @@ function LoginPage() {
             )}
 
             <CardSection>
-              <Image h={1000} src="src\assets\shibuya-crossing.png"></Image>
+              <Image h={1000} src="public\assets\shibuya-crossing.png"></Image>
             </CardSection>
           </SimpleGrid>
         </Card>

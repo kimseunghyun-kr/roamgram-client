@@ -205,7 +205,7 @@ function HomePage() {
               <Image
                 h={600}
                 style={{ minWidth: 1200 }}
-                fallbackSrc="src\assets\japan-background-digital-art.jpg"
+                fallbackSrc="public\assets\japan-background-digital-art.jpg"
               ></Image>
             </CarouselSlide>
             {/*slides*/}
@@ -265,7 +265,7 @@ function HomePage() {
               <Image
                 w="auto"
                 h="90px"
-                src="src\assets\roamgram with white.png"
+                src="public\assets\roamgram with white.png"
                 mb={20}
               ></Image>
             </Center>
@@ -319,7 +319,7 @@ function HomePage() {
           <Image
             h={79}
             w="auto"
-            src="src\assets\Explore Nearby.png"
+            src="public\assets\Explore Nearby.png"
             ml={250}
             mb={20}
           ></Image>
@@ -350,7 +350,7 @@ function HomePage() {
             <Image
               h={71}
               w="auto"
-              src="src\assets\Guide.png"
+              src="public\assets\Guide.png"
               ml={250}
               mb={20}
             ></Image>
@@ -389,7 +389,7 @@ function HomePage() {
         <Image
           h={71}
           w="auto"
-          src="src\assets\Itinerary.png"
+          src="public\assets\Itinerary.png"
           ml={250}
           mb={20}
         ></Image>
