@@ -1,43 +1,34 @@
-import { useState, useRef, useEffect } from "react";
-import {
-  Container,
-  Title,
-  Button,
-  Text,
-  Grid,
-  Card,
-  Image,
-  TextInput,
-  Select,
-  Flex,
-  SimpleGrid,
-  Switch,
-  NativeSelect,
-  Group,
-  Box,
-  BackgroundImage,
-  Overlay,
-  Space,
-  Paper,
-  Fieldset,
-  Divider,
-  NumberInput,
-  Center,
-  AspectRatio,
-  Chip,
-  rgba,
-  UnstyledButton,
-  Stack,
-} from "@mantine/core";
-import Autoplay from "embla-carousel-autoplay";
-import { DatePicker, DatePickerInput } from "@mantine/dates";
-import "@mantine/core/styles.css";
-import "@mantine/carousel/styles.css";
-import "@mantine/dates/styles.css";
-import "./HomePage.css";
 import { Carousel, CarouselSlide } from "@mantine/carousel";
-import React from "react";
+import "@mantine/carousel/styles.css";
+import {
+  Button,
+  Card,
+  Center,
+  Chip,
+  Container,
+  Divider,
+  Fieldset,
+  Flex,
+  Grid,
+  Group,
+  Image,
+  NativeSelect,
+  Overlay,
+  SimpleGrid,
+  Space,
+  Switch,
+  Text,
+  TextInput,
+  UnstyledButton,
+  rgba,
+} from "@mantine/core";
+import "@mantine/core/styles.css";
+import { DatePickerInput } from "@mantine/dates";
+import "@mantine/dates/styles.css";
+import Autoplay from "embla-carousel-autoplay";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import "./HomePage.css";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",

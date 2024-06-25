@@ -5,11 +5,8 @@ import {
   Group,
   Image,
   Space,
-  Tabs,
   UnstyledButton,
 } from "@mantine/core";
-import { useDisclosure } from "@mantine/hooks";
-import { useState } from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 
