@@ -190,10 +190,6 @@ function HomePage() {
     }
   }, [map]);
 
-  localStorage.getItem(`authToken`)
-    ? console.log(localStorage.getItem(`authToken`))
-    : console.log("No");
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const authToken = localStorage.getItem(`authToken`);
@@ -203,9 +199,6 @@ function HomePage() {
     console.log("logged in?", isLoggedIn);
   });
 
-  useEffect(() => {
-    console.log("logged in?", isLoggedIn);
-  }, [isLoggedIn]);
   return (
     <>
       <Container fluid h={600} p="0">
