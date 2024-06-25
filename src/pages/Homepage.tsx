@@ -29,6 +29,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import "./HomePage.css";
+import { IconSearch } from "@tabler/icons-react";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -189,6 +190,10 @@ function HomePage() {
     }
   }, [map]);
 
+  localStorage.getItem(`authToken`)
+    ? console.log(localStorage.getItem(`authToken`))
+    : console.log("No");
+
   return (
     <>
       <Container fluid h={600} p="0">
@@ -231,11 +236,10 @@ function HomePage() {
                 <Group gap="xs" justify="flex-end">
                   <Link to="/login">
                     <Button
+                      className="buttons-login"
                       w="11em"
                       radius="xl"
                       color="violet"
-                      variant="gradient"
-                      gradient={{ from: "indigo", to: "violet", deg: 90 }}
                     >
                       Login / Sign up
                     </Button>
@@ -271,41 +275,49 @@ function HomePage() {
             </Center>
             <Space></Space>
             <Center>
-              <Fieldset
-                style={{ backgroundColor: rgba("0", 0.2) }}
-                variant="filled"
-                w={800}
-                radius="lg"
-              >
+              <Fieldset c="white" variant="filled" h={76} w={800} radius="lg">
                 {/* change to form eventually :) */}
 
-                <Flex justify="center" align="center" gap="xl">
+                <Flex justify="center" align="center" gap="lg">
                   <TextInput
                     placeholder="Input Name"
-                    description="Name Of Plan"
+                    description="PLAN NAME"
+                    variant="unstyled"
+                    styles={{
+                      input: { fontSize: "17px" },
+                      description: { height: "7px" },
+                    }}
                   ></TextInput>
                   <Divider
                     orientation="vertical"
-                    size="md"
                     h={50}
-                    mt={20}
                     color="steelblue"
                   ></Divider>
                   <DatePickerInput
+                    variant="unstyled"
                     type="range"
                     description="DATES"
                     placeholder="Choose Date"
                     w={300}
+                    styles={{
+                      input: { fontSize: "16px" },
+                      description: { height: "7px" },
+                    }}
                   ></DatePickerInput>
                   <Divider
                     orientation="vertical"
-                    size="md"
-                    color="steelblue"
                     h={50}
-                    mt={20}
+                    color="steelblue"
                   ></Divider>
 
-                  <Button variant="light" mt={20}>
+                  <Button
+                    variant="filled"
+                    mt={7}
+                    color="#487D2E"
+                    leftSection={<IconSearch size={24} />}
+                    style={{ fontSize: "16px" }}
+                    radius="md"
+                  >
                     Enter
                   </Button>
                 </Flex>

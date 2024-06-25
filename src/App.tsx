@@ -27,7 +27,6 @@ function App() {
   return isLoaded ? (
     <>
       <div>
-        {/*
         <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
@@ -35,9 +34,6 @@ function App() {
           <Route path="/schedulePage/:travelID" element={<SchedulePageMap />} />
           <Route path="/planner" element={<MapPage />}></Route>
         </Routes>
-  */}
-
-        <MapPage></MapPage>
       </div>
     </>
   ) : (

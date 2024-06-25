@@ -23,8 +23,11 @@ import { IconArrowLeft, IconUser } from "@tabler/icons-react";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function LoginPage() {
+  const history = useNavigate();
+
   const form = useForm({
     mode: "uncontrolled",
     initialValues: {
@@ -73,7 +76,16 @@ function LoginPage() {
       body: JSON.stringify(values),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data));
+      .then(
+        (data) => (
+          console.log(data),
+          localStorage.setItem(
+            "authToken",
+            `${data.grantType} ${data.accessToken}`
+          ),
+          console.log(localStorage.getItem(`authToken`))
+        )
+      ); //history("/") goes back to homepage
   }
 
   function createAccount(values: {}) {

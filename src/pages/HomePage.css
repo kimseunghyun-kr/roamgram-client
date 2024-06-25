@@ -39,7 +39,15 @@
     left: 0; 
   }
 
+
   .buttons-login:hover{
-    transition: 150ms ease-in;
+    transition: 250ms ease-in-out;
     background-color: orangered;
+
   }
+
+  .buttons-login{
+    transition: 700ms ease;
+  }
+           
+ 
