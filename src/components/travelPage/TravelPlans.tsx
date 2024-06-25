@@ -37,6 +37,29 @@ import "./TravelPlans.css";
 //  { name: "Third", startDate: "2024-06-18", endDate: "2024-06-31" },
 //];
 
+interface TravelPlan {
+  id: string;
+  name: string;
+  travelStartDate: string;
+  travelEndDate: string;
+}
+
+interface EventType {
+  id: string;
+  name: string;
+  public: boolean;
+  scheduleList: [];
+  travelEndDate: number[];
+  travelStartDate: number[];
+}
+
+interface scheduleEventList {}
+
+interface ModalItem {
+  name: string;
+  date: Date[];
+}
+
 function TravelPlans() {
   const [token, setToken] = useState();
 
@@ -49,11 +72,11 @@ function TravelPlans() {
       body: JSON.stringify({ username: "string", password: "string" }),
     })
       .then((response) => response.json())
-      .then((data) => setToken(data.accessToken))
-      .catch((error) => console.log("login error"));
+      .then((data) => setToken(data.accessToken));
   }, []);
 
   const [event, setEvent] = useState([]);
+  console.log("Event", event);
 
   //Gets All Travel Plans
   /////////get_all/////////
@@ -70,7 +93,6 @@ function TravelPlans() {
     name: "",
   });
 
-  const [travelName, setTravelName] = useState<string>("");
   const [dateRanges, setDateRanges] = useState<[Date | null, Date | null]>([
     new Date(),
     null,
@@ -112,7 +134,6 @@ function TravelPlans() {
     })
       .then((response) => response.json())
       .then((data) => {
-        setSubmittedID(data);
         fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
           method: "GET",
           headers: {
@@ -120,8 +141,7 @@ function TravelPlans() {
           },
         })
           .then((response) => response.json())
-          .then((_data) => setItemToAdd(_data))
-          .catch((error) => console.log("error in adding new item to add"));
+          .then((_data) => setItemToAdd(_data));
       });
 
     setTravelPlanDetails({
@@ -135,8 +155,6 @@ function TravelPlans() {
     setInitialSlides(event.length);
   };
 
-  const [submittedID, setSubmittedID] = useState("");
-
   useEffect(() => {
     if (itemToAdd) {
       setEvent((p) => [...p, itemToAdd]);
@@ -144,7 +162,7 @@ function TravelPlans() {
     //console.log("event is after adding", event);
   }, [itemToAdd]);
 
-  function deleteTravelPlan(id) {
+  function deleteTravelPlan(id: string) {
     console.log(id);
     fetch(`http://localhost:8080/travelPlan/delete_travel_plan`, {
       method: "DELETE",
@@ -157,20 +175,18 @@ function TravelPlans() {
       .then((response) => response.json())
       .then(
         (data) => (
-          console.log("successful in deleting travelPlan"),
-          setEvent((p) => p.filter((ev) => ev.id !== id))
+          console.log("successful in deleting travelPlan", data),
+          setEvent((p) => p.filter((ev: EventType) => ev.id !== id))
         )
       )
-      .catch((error) => console.log("error in deleting traevlPlan"));
+      .catch((error) => console.log("error in deleting traevlPlan", error));
 
     //EXTRA THINGS --> DELETE ALL SCHEDULES HERE
   }
 
-  const [planID, setPlanID] = useState("");
-
   const cardTravel = () => {
     return event
-      ? event.map((items) => (
+      ? event.map((items: TravelPlan) => (
           //console.log("Rendering item", items.id),
           <Carousel.Slide key={items.id}>
             <Center h={550}>
@@ -193,7 +209,6 @@ function TravelPlans() {
                   onClick={() => (
                     setOpened(true),
                     console.log("item id is", items.id),
-                    setPlanID(items.id),
                     open_travel_plan(items.id)
                   )}
                 >
@@ -203,12 +218,11 @@ function TravelPlans() {
                   <ActionIcon
                     variant="transparent"
                     className="to-schedule-button"
-                    onClick={(e) => console.log(`${items.id}`)}
                   >
                     <IconSquareRoundedArrowRight size={28} color="black" />
                   </ActionIcon>
                 </Link>
-                <Menu className="delete-button" shadow="md">
+                <Menu shadow="md">
                   <Menu.Target>
                     <ActionIcon variant="subtle" c="red">
                       <IconX />
@@ -235,13 +249,6 @@ function TravelPlans() {
       : null;
   };
 
-  ///UpdatedTravelPlan Information in our API
-  const [updateTravelPlan, setUpdateTravelPlan] = useState({
-    uuid: "",
-    name: "",
-    date: [null, null],
-  });
-
   useEffect(() => {
     if (token) {
       fetch(`http://localhost:8080/travelPlan/get_all`, {
@@ -251,13 +258,13 @@ function TravelPlans() {
         },
       })
         .then((response) => response.json())
-        .then((data) => (setEvent(data), console.log("events are", data)))
+        .then((data) => setEvent(data))
         .catch((error) => console.log(error));
     }
   }, [token]);
 
   useEffect(() => {
-    console.log("Event updated:", event);
+    //console.log("Event updated:", event);
     // Optionally force a refresh here if the carousel supports it
   }, [event]);
 
@@ -273,34 +280,34 @@ function TravelPlans() {
     endDate: "",
   });
 
-  const [editTravelPlanModal, setEditTravelPlanModal] = useState({
+  const [editTravelPlanModal, setEditTravelPlanModal] = useState<ModalItem>({
     name: "",
     date: [],
   });
 
   const open_travel_plan = (planID: string) => {
     //find it from our event list
-    const tp = event.find((ev) => ev.id === planID);
+    const tp: EventType = event?.find((ev: EventType) => ev.id === planID);
     console.log("tp is", tp);
-    if (tp) {
-      const modalItem = {
-        name: tp.name,
-        date: [
-          moment(tp.travelStartDate).subtract(1, "month").toDate(),
-          moment(tp.travelEndDate).subtract(1, "month").toDate(),
-        ],
-      };
-      const travelItem = {
-        uuid: planID,
-        name: tp.name,
-        startDate: moment(tp.travelStartDate, "YYYY-MM-DD").format(
-          "YYYY-MM-DD"
-        ),
-        endDate: moment(tp.travelEndDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
-      };
-      setEditTravelPlanModal((p) => modalItem);
-      setEditTravelPlan((p) => travelItem);
+    if (!tp) {
+      throw new Error("No tp found with the given id");
     }
+
+    const modalItem: ModalItem = {
+      name: tp.name,
+      date: [
+        moment(tp.travelStartDate).subtract(1, "month").toDate(),
+        moment(tp.travelEndDate).subtract(1, "month").toDate(),
+      ],
+    };
+    const travelItem = {
+      uuid: planID,
+      name: tp.name,
+      startDate: moment(tp.travelStartDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+      endDate: moment(tp.travelEndDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+    };
+    setEditTravelPlanModal(modalItem);
+    setEditTravelPlan(travelItem);
   };
 
   const modify_travel_plan_date = (e) => {
@@ -329,13 +336,14 @@ function TravelPlans() {
           setEvent((p) => {
             const index = event.findIndex((item) => item.id === data.id);
             const currentItems = [...p];
+            console.log("curr items", currentItems);
             currentItems[index] = data;
             //console.log("index of item is", index);
             return currentItems;
           })
         )
       )
-      .catch((error) => console.log("error in modifying travel plan"));
+      .catch((error) => console.log("error in modifying travel plan", error));
 
     setOpened(false);
   };
@@ -434,6 +442,7 @@ function TravelPlans() {
                     type="submit"
                     onClick={(e) => {
                       console.log(travelPlanDetails);
+                      console.log(e);
                       submit_travel_plan();
                       setActiveTab("incomplete");
                     }}
@@ -472,7 +481,10 @@ function TravelPlans() {
               <CloseButton
                 aria-label="Clear Name"
                 size={23}
-                onClick={() => setUpdateTravelPlan((p) => ({ ...p, name: "" }))}
+                onClick={() => (
+                  setEditTravelPlanModal((p) => ({ ...p, name: "" })),
+                  setEditTravelPlan((p) => ({ ...p, name: "" }))
+                )}
               />
             }
             required
@@ -498,14 +510,7 @@ function TravelPlans() {
             color="green"
             variant="outline"
             type="submit"
-            onClick={(e) => {
-              update_travel_plan();
-              //console.log("submit update is ", updateTravelPlan);
-              //setOpened(false);
-              //e.preventDefault();
-              //console.log("e is from update button", e);
-              //submit_modify_travel_plan();
-            }}
+            onClick={update_travel_plan}
           >
             Update
           </Button>

@@ -66,12 +66,13 @@ function HomePage() {
 
   ///Explore Nearby Locations///
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [currentLocation, setCurrentLocation] = useState();
+  const [currentLocation, setCurrentLocation] = useState({});
   const mapRef = useRef<HTMLDivElement>(null);
 
   const googleMarker = new google.maps.Marker({
     map: map,
     title: "Current Pinned Location",
+    icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
   });
   //map initialization
   useEffect(() => {
@@ -90,8 +91,8 @@ function HomePage() {
 
   useEffect(() => {
     if (navigator.geolocation && map && googleMarker) {
-      console.log("successful geolocation");
       navigator.geolocation.getCurrentPosition((success) => {
+        console.log("successful geolocation");
         const currentLoc = {
           lat: success.coords.latitude,
           lng: success.coords.longitude,
@@ -137,10 +138,10 @@ function HomePage() {
     console.log("current location api", currentLocation);
     const request = {
       location: currentLocation as google.maps.LatLng,
-      radius: "500",
-      type: [type_to_find],
+      radius: 500,
+      type: type_to_find,
     };
-    return serviceOn.nearbySearch(request, (results, status) => {
+    return serviceOn?.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK) {
         //console.log("Results below");
         //console.log(results);

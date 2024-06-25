@@ -40,9 +40,9 @@ function GoogleMaps() {
   const [destPositionID, setDestPositionID] = useState<string>();
 
   const [directionsService, setDirectionsService] =
-    useState<google.maps.DirectionsService | null>();
+    useState<google.maps.DirectionsService | null>(null);
   const [directionsRenderer, setDirectionsRenderer] =
-    useState<google.maps.DirectionsRenderer | null>();
+    useState<google.maps.DirectionsRenderer | null>(null);
 
   //
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
@@ -58,8 +58,8 @@ function GoogleMaps() {
   //so can just directly reference to our component
   const mapRef = useRef<HTMLDivElement>(null);
   //
-  const placeAutoCompleteRef = useRef<HTMLInputElement>();
-  const placeAutoCompleteRefDest = useRef<HTMLInputElement>();
+  const placeAutoCompleteRef = useRef<HTMLInputElement>(null);
+  const placeAutoCompleteRefDest = useRef<HTMLInputElement>(null);
   //
 
   useEffect(() => {
@@ -135,8 +135,10 @@ function GoogleMaps() {
         }
 
         if (!searchedFilled) {
-          map.setCenter(position); //location given to center
-          map.setZoom(16);
+          if (map && position) {
+            map.setCenter(position); //location given to center
+            map.setZoom(16);
+          }
           setSearchFilled(!searchedFilled);
         }
       });
@@ -187,21 +189,24 @@ function GoogleMaps() {
     const originID = autoComplete?.getPlace().place_id;
     const destID = autoCompleteDest?.getPlace().place_id;
     const selectedMode = (document.getElementById("mode") as HTMLInputElement)
-      .value;
+      .value as keyof typeof google.maps.TravelMode;
     console.log(originID);
     var request = {
       origin: { placeId: originID },
       destination: { placeId: destID },
-      travelMode: google.maps.TravelMode[selectedMode],
+      travelMode: google.maps.TravelMode[
+        selectedMode
+      ] as google.maps.TravelMode,
       provideRouteAlternatives: true, //always set to TRUE
     };
     directionsService.route(request, function (result, status) {
       if (status == "OK") {
         directionsRenderer.setDirections(result);
-        console.log("routes");
-        console.log(result?.routes);
-        setRoutes(result?.routes);
-        console.log({ routes });
+        if (result?.routes) {
+          setRoutes(result.routes);
+        } else {
+          console.log("error getting route");
+        }
       }
     });
   }
@@ -220,7 +225,9 @@ function GoogleMaps() {
     if (originPositionID && destPositionID) {
       console.log(travelMethodString);
       console.log("Complete locations");
-      calculateRoute(directionsService, directionsRenderer);
+      if (directionsService && directionsRenderer) {
+        calculateRoute(directionsService, directionsRenderer);
+      }
     }
   }, [
     travelMethod,

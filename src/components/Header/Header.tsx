@@ -11,12 +11,6 @@ import "./Header.css";
 import { Link } from "react-router-dom";
 
 function Header() {
-  const links = [
-    { link: "", label: "Home" },
-    { link: "", label: "Routes" },
-    { link: "", label: "Planner" },
-  ];
-
   return (
     <header>
       <Container w={1700} size="1900" style={{ display: "flex" }}>

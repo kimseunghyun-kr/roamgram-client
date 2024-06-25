@@ -58,16 +58,11 @@ function LoginPage() {
 
   const [section, setSection] = useState(false);
   const [loginError, setLoginError] = useState(false);
-  const [success, setSuccess] = useState(false);
 
   // console.log("email is", form.getInputProps("email").defaultValue);
   //console.log({ ...form.getInputProps("email") });
 
   //console.log({ ...form.getInputProps("password") });
-  const exampleValues = {
-    username: "string",
-    password: "string",
-  };
 
   function continueLogIn(values: {}) {
     fetch(`http://localhost:8080/authentication/sign-in`, {
@@ -78,12 +73,7 @@ function LoginPage() {
       body: JSON.stringify(values),
     })
       .then((response) => response.json())
-      .then((data) => console.log(data))
-      .catch(
-        (error) => (
-          console.log("Error getting user authentication"), setLoginError(true)
-        )
-      );
+      .then((data) => console.log(data));
   }
 
   function createAccount(values: {}) {
@@ -95,8 +85,7 @@ function LoginPage() {
       body: JSON.stringify(values),
     })
       .then((response) => response.json())
-      .then((data) => console.log("Success Registering, data is", data))
-      .catch((error) => console.log("Error Signing Up"));
+      .then((data) => console.log("Success Registering, data is", data));
   }
 
   return (
