@@ -15,12 +15,16 @@ import {
   NativeSelect,
   Grid,
 } from "@mantine/core";
+import Header from "../components/Header/Header.tsx";
 
 const MapPage = () => {
   return (
-    <Grid>
-      <GoogleMaps></GoogleMaps>
-    </Grid>
+    <>
+      <Header></Header>
+      <Grid>
+        <GoogleMaps></GoogleMaps>
+      </Grid>
+    </>
   );
 };
 

@@ -37,9 +37,10 @@ import moment from "moment";
 import MyCalender from "./MyCalender.tsx";
 
 import TravelPage from "./TravelPage.tsx";
-import { Link, Navigate } from "react-router-dom";
+import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import "./SchedulePageMap.css";
 import { IconMapPin } from "@tabler/icons-react";
+import Header from "../Header/Header.tsx";
 
 //testing purposese but make sure to store the travelPlanID somewhere
 
@@ -311,6 +312,10 @@ function SchedulePageMap(props) {
   };
 
   //submit button//
+  //console.log("travelPlanId")
+  const { travelID } = useParams();
+  console.log(travelID);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log("schedule to api is", scheduleDetails);
@@ -318,7 +323,7 @@ function SchedulePageMap(props) {
     //create duplicate;
     //FETCH API HERE!
     fetch(
-      `http://localhost:8080/travelPlan/${travelPlanId}/schedule/create_schedule`,
+      `http://localhost:8080/travelPlan/${travelID}/schedule/create_schedule`,
       {
         method: "PUT",
         headers: {
@@ -356,7 +361,8 @@ function SchedulePageMap(props) {
   const [keepEnd, setKeepEnd] = useState(false);
 
   ////////////////testing purposes/////////////////////////
-  const travelPlanId = "d91cc99f-3f8c-44da-8747-08d16b08604c";
+  const travelPlanId = props.travelID;
+
   const getAllSchedule = () => {
     fetch(
       `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
@@ -398,6 +404,7 @@ function SchedulePageMap(props) {
   //console.log("events directly are", event);
   return (
     <>
+      <Header></Header>
       <Stack align="stretch" justify="space-between">
         <SimpleGrid cols={2}>
           <Center mt={30}>
@@ -405,7 +412,7 @@ function SchedulePageMap(props) {
               <Image
                 h={74}
                 w="auto"
-                src="src\assets\Create Schedule.png"
+                src="\src\assets\Create Schedule.png"
               ></Image>
               <Space h={20}></Space>
               <Input

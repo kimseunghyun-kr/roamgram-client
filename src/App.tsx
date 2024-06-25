@@ -9,22 +9,13 @@ import "./App.css";
 import "@bitnoi.se/react-scheduler/dist/style.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useJsApiLoader } from "@react-google-maps/api";
-import TravelPage from "../pages/TravelPage.tsx";
-import MyCalender from "../pages/MyCalender.tsx";
 import moment from "moment";
 import { Route, Routes } from "react-router-dom";
-import HomePage from "../pages/HomePage.tsx";
-import GoogleMaps from "./components/GoogleMaps/GoogleMaps.tsx";
 import MapPage from "./pages/MapPage.tsx";
-import GoogleTesting from "../pages/GoogleTesting.tsx";
-import TravelPlans from "../pages/TravelPlans.tsx";
-import WalletPage from "../pages/WalletPage.tsx";
-import LoginPage from "../pages/LoginPage.tsx";
-import CreatePage from "../pages/CreatePage.tsx";
-import Login from "./components/Login.tsx";
-import Header from "../pages/Header.tsx";
-import SchedulePageMap from "../pages/SchedulePageMap.tsx";
-import HomePageDupe from "../pages/HomePageDupe.tsx";
+import LoginPage from "./components/Login/LoginPage.tsx";
+import TravelPlans from "./components/travelPage/TravelPlans.tsx";
+import HomePage from "./pages/HomePage.tsx";
+import SchedulePageMap from "./components/schedulePage/SchedulePageMap.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -50,9 +41,13 @@ function App() {
         </Routes>
   */}
 
-        <body>
-          <TravelPlans></TravelPlans>
-        </body>
+        <Routes>
+          <Route path="/" element={<HomePage />}></Route>
+          <Route path="/login" element={<LoginPage />}></Route>
+          <Route path="/travelPage" element={<TravelPlans />}></Route>
+          <Route path="/schedulePage/:travelID" element={<SchedulePageMap />} />
+          <Route path="/planner" element={<MapPage />}></Route>
+        </Routes>
       </div>
     </>
   ) : (

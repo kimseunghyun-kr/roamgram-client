@@ -1,67 +1,59 @@
-import React from "react";
-import './styles.css'
-import { Autocomplete } from '@react-google-maps/api'
-import { FaSearch } from 'react-icons/fa'
+import {
+  Button,
+  Container,
+  Divider,
+  Group,
+  Image,
+  Space,
+  Tabs,
+  UnstyledButton,
+} from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
+import "./Header.css";
+import { Link } from "react-router-dom";
 
-function Header(){
-    return(
-        <header className = 'l-header top-header'>
-        <div className = 'l-header-left'>
-          <a className = 'l-header-logo' href = '#'>
-            <img height = '55' width = '100%' src = './src/assets/RoamGram Logo.png' alt = 'RoamGram'></img>
+function Header() {
+  const links = [
+    { link: "", label: "Home" },
+    { link: "", label: "Routes" },
+    { link: "", label: "Planner" },
+  ];
+
+  return (
+    <header>
+      <Container w={1700} size="1900" style={{ display: "flex" }}>
+        <Link to="/">
+          <a href="#">
+            <Image ml={120} w={220} src="\src\assets\RoamGram Logo.png"></Image>
           </a>
-        </div>
-        <nav className = 'l-header-menu'>
-          <ul className = 'l-header-menu-list'>
-            <li className = 'l-header-menu-list-child'>
-              <a href = 'Explore'>
-              Explore
-              </a>
-            </li>
-            <li className = 'l-header-menu-list-child'>
-              <a href = 'Travel Diary'>
-              Travel Diary
-              </a>
-            </li>
-            <li className = 'l-header-menu-list-child'>
-              <a href = 'Book'>
-                Booking
-              </a>
-            </li>
-            <div className = 'search-logo'>
-                <FaSearch className = 's-logo'>
-                </FaSearch>
-                <input type = 'string' placeholder="Search Places Here"></input>
-            </div>
-            <div className="headerBtn">
-                <button className = 'btn'>
-                        <a href = 'login' className = 'loginBtn'>
-                            Login
-                        </a>
-                    </button>
-                <button className = 'btn'>
-                        <a href = 'signup' className = 'signBtn'>
-                            Sign Up
-                        </a>
-                    </button>
-            </div>
-          </ul>
-        </nav>
-        <div className = 'l-header-right'>
-          <div className = 'header-language'>
-            <label className = 'header-language-label'> 
-              <select className = 'header-language-select' value = 'english'>
-                <option>
-                  ENG
-                </option>
-              </select> 
-              </label>
-          </div>
-        </div>
-  
-      </header>
-
-    );
+        </Link>
+        <Space w={400}></Space>
+        <Group gap="xl" ml={500} className="header-group">
+          <UnstyledButton className="header-button">Guide </UnstyledButton>
+          <Link to="/planner">
+            <UnstyledButton className="header-button">Routes</UnstyledButton>
+          </Link>
+          <Link to="/travelPage">
+            <UnstyledButton className="header-button">Planner</UnstyledButton>
+          </Link>
+          <Link to="/login">
+            <Button
+              className="header-login"
+              h={30}
+              w={140}
+              radius="xl"
+              color={"cyan"}
+              style={{ fontSize: "13px" }}
+            >
+              Login / Sign Up
+            </Button>
+          </Link>
+        </Group>
+      </Container>
+      <Divider></Divider>
+    </header>
+  );
 }
 
-export default Header
+export default Header;

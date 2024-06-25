@@ -21,7 +21,7 @@ import {
   UnstyledButton,
 } from "@mantine/core";
 import moment from "moment";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { DragDropContext, Droppable } from "@hello-pangea/dnd";
 import { Text } from "@mantine/core";
 import {
@@ -33,15 +33,17 @@ import {
   IconX,
 } from "@tabler/icons-react";
 import { v4 as uuid } from "uuid";
-import { DatePickerInput } from "@mantine/dates";
+import { DatePickerInput, DateValue } from "@mantine/dates";
 import "./TravelPlans.css";
 import { Carousel, CarouselSlide } from "@mantine/carousel";
+import Header from "../Header/Header.tsx";
+import { Link } from "react-router-dom";
 
-const data = [
-  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
-  { name: "Second", startDate: "2024-06-18", endDate: "2024-06-20" },
-  { name: "Third", startDate: "2024-06-18", endDate: "2024-06-31" },
-];
+//const data = [
+//  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
+//  { name: "Second", startDate: "2024-06-18", endDate: "2024-06-20" },
+//  { name: "Third", startDate: "2024-06-18", endDate: "2024-06-31" },
+//];
 
 function TravelPlans() {
   const [token, setToken] = useState();
@@ -81,8 +83,6 @@ function TravelPlans() {
     new Date(),
     null,
   ]);
-  const [startDate, setStartDate] = useState<Date>();
-  const [endDate, setEndDate] = useState<Date>();
 
   //function for formatting our start and endDate from mantine into YYYY-MM-DD Format
   function formatDate(_Date: Date) {
@@ -152,8 +152,6 @@ function TravelPlans() {
     //console.log("event is after adding", event);
   }, [itemToAdd]);
 
-  const [editModalOpen, setEditModalOpen] = useState(false);
-
   function deleteTravelPlan(id) {
     console.log(id);
     fetch(`http://localhost:8080/travelPlan/delete_travel_plan`, {
@@ -187,9 +185,14 @@ function TravelPlans() {
               <Stack align="center">
                 <Title>{items.name}</Title>
                 <Text style={{ fontSize: "15px" }}>
-                  From {moment(items.travelStartDate).format("MMM Do YY")} to{" "}
-                  {` `}
-                  {moment(items.travelEndDate).format("MMM Do YY")}
+                  From{" "}
+                  {moment(items.travelStartDate, "YYYY-MM-DD").format(
+                    "MMM Do YY"
+                  )}{" "}
+                  to {` `}
+                  {moment(items.travelEndDate, "YYYY-MM-DD").format(
+                    "MMM Do YY"
+                  )}
                 </Text>
                 <ActionIcon
                   className="edit-button"
@@ -199,17 +202,20 @@ function TravelPlans() {
                     setOpened(true),
                     console.log("item id is", items.id),
                     setPlanID(items.id),
-                    open_modifiy_travel_plan(items.id)
+                    open_travel_plan(items.id)
                   )}
                 >
                   <IconEdit />
                 </ActionIcon>
-                <ActionIcon
-                  variant="transparent"
-                  className="to-schedule-button"
-                >
-                  <IconSquareRoundedArrowRight size={28} color="black" />
-                </ActionIcon>
+                <Link to={`/schedulePage/${items.id}`}>
+                  <ActionIcon
+                    variant="transparent"
+                    className="to-schedule-button"
+                    onClick={(e) => console.log(`${items.id}`)}
+                  >
+                    <IconSquareRoundedArrowRight size={28} color="black" />
+                  </ActionIcon>
+                </Link>
                 <Menu className="delete-button" shadow="md">
                   <Menu.Target>
                     <ActionIcon variant="subtle" c="red">
@@ -236,95 +242,13 @@ function TravelPlans() {
         ))
       : null;
   };
-  ////getting the modal start and end date in the proper format
-  const modalDate = (idArray: Date[]) => {
-    if (idArray) {
-      const modalEventStart = moment(idArray.travelStartDate).toDate();
-      const modalEventEnd = moment(idArray.travelEndDate).toDate();
-      return [modalEventStart, modalEventEnd];
-    }
-  };
 
   ///UpdatedTravelPlan Information in our API
   const [updateTravelPlan, setUpdateTravelPlan] = useState({
     uuid: "",
     name: "",
-    date: [],
+    date: [null, null],
   });
-
-  const [updateFormattedTravelPlan, setUpdateFormattedTravelPlan] = useState({
-    uuid: "",
-    name: "",
-    startDate: "",
-    endDate: "",
-  });
-
-  ///UpdateTravelPlan info for our modal since its 1 month ahead always --> 0-based indexing for Date_pickker_input
-  const [updateTravelPlanModal, setUpdateTravelPlanModal] = useState([]);
-  //console.log("updateTravenPlanModal is", updateTravelPlanModal);
-
-  ///This is in unformatted --> Let updateButton handle the formatting of Start and EndDate;
-  const open_modifiy_travel_plan = (eventID: string) => {
-    const plan = event.find((ev) => ev.id === eventID);
-    if (plan) {
-      const unformattedPlan = {
-        uuid: plan.id,
-        name: plan.name,
-        date: [
-          moment(plan.travelStartDate).format("YYYY-MM-DD"),
-          moment(plan.travelEndDate).format("YYYY-MM-DD"),
-        ],
-      };
-      const formattedDateforModal = [
-        moment(plan.travelStartDate),
-        moment(plan.travelEndDate),
-      ];
-      setUpdateTravelPlan(unformattedPlan);
-      setUpdateTravelPlanModal(formattedDateforModal);
-    }
-    console.log("plan is from open_modify", plan);
-  };
-
-  const submit_modify_travel_plan = () => {
-    console.log(
-      "update start datre is",
-      moment(updateTravelPlan.date[0]).format("YYYY-MM-DD")
-    );
-
-    const formattedTravelPlan = {
-      uuid: updateTravelPlan.uuid,
-      name: updateTravelPlan.name,
-      startDate: moment(updateTravelPlan.date[0])
-        .subtract(1, "month")
-        .format("YYYY-MM-DD"),
-      endDate: moment(updateTravelPlan.date[1])
-        .subtract(1, "month")
-        .format("YYYY-MM-DD"),
-    };
-    //this is for the formatted//
-    setUpdateFormattedTravelPlan(formattedTravelPlan);
-    //this is for the api call////////////
-    fetch(`http://localhost:8080/travelPlan/modify_travel_plan`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(formattedTravelPlan),
-    })
-      .then((response) => response.json())
-      .then((data) =>
-        //console.log("Success in Modifying travel plan", data),
-        setEvent((p) => {
-          const index = event.findIndex((item) => item.id === data.id);
-          const currentItems = [...p];
-          currentItems[index] = data;
-          //console.log("index of item is", index);
-          return currentItems;
-        })
-      )
-      .catch((error) => console.log("Error in modifying plan", error));
-  };
 
   useEffect(() => {
     if (token) {
@@ -345,31 +269,87 @@ function TravelPlans() {
     // Optionally force a refresh here if the carousel supports it
   }, [event]);
 
-  /*
-  useEffect(() => {
-    fetch(`http://localhost:8080/travelPlan/get_all`, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
-      .then((response) => response.json())
-      .then((data) => (setEvent(data), console.log("events are", data)))
-      .catch((error) => console.log("error changing get all"));
-  }, [updateFormattedTravelPlan]);
-  */
-
   const [initialSlides, setInitialSlides] = useState(0);
 
   const [activeTab, setActiveTab] = useState<string | null>("incomplete");
 
-  const [dateTest, changeTestDate] = useState<[Date | null, Date | null]>([
-    null,
-    null,
-  ]);
+  //const [modalTravelPlan, setModalTravelPlan] = useState();
+  const [editTravelPlan, setEditTravelPlan] = useState({
+    uuid: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
 
+  const [editTravelPlanModal, setEditTravelPlanModal] = useState({
+    name: "",
+    date: [],
+  });
+
+  const open_travel_plan = (planID: string) => {
+    //find it from our event list
+    const tp = event.find((ev) => ev.id === planID);
+    console.log("tp is", tp);
+    if (tp) {
+      const modalItem = {
+        name: tp.name,
+        date: [
+          moment(tp.travelStartDate).subtract(1, "month").toDate(),
+          moment(tp.travelEndDate).subtract(1, "month").toDate(),
+        ],
+      };
+      const travelItem = {
+        uuid: planID,
+        name: tp.name,
+        startDate: moment(tp.travelStartDate, "YYYY-MM-DD").format(
+          "YYYY-MM-DD"
+        ),
+        endDate: moment(tp.travelEndDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+      };
+      setEditTravelPlanModal((p) => modalItem);
+      setEditTravelPlan((p) => travelItem);
+    }
+  };
+
+  const modify_travel_plan_date = (e) => {
+    setEditTravelPlanModal((p) => ({ ...p, date: e }));
+    console.log("e is", e[0], e[1]);
+    setEditTravelPlan((p) => ({
+      ...p,
+      startDate: moment(e[0]).format("YYYY-MM-DD"),
+      endDate: moment(e[1]).format("YYYY-MM-DD"),
+    }));
+  };
+
+  const update_travel_plan = () => {
+    fetch(`http://localhost:8080/travelPlan/modify_travel_plan`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(editTravelPlan),
+    })
+      .then((response) => response.json())
+      .then(
+        (data) => (
+          console.log("success in modifying travel plan"),
+          setEvent((p) => {
+            const index = event.findIndex((item) => item.id === data.id);
+            const currentItems = [...p];
+            currentItems[index] = data;
+            //console.log("index of item is", index);
+            return currentItems;
+          })
+        )
+      )
+      .catch((error) => console.log("error in modifying travel plan"));
+
+    setOpened(false);
+  };
   return (
     <>
+      <Header></Header>
       <Space h={85} />
       <Center>
         <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
@@ -488,11 +468,12 @@ function TravelPlans() {
           <TextInput
             w={350}
             //right hand side
-            value={updateTravelPlan.name}
-            onChange={(e) => (
-              setUpdateTravelPlan((p) => ({ ...p, name: e.target.value })),
-              console.log("upate button pressed")
-            )}
+            value={editTravelPlanModal.name}
+            onChange={(e) => {
+              console.log("name changed", e.target.value);
+              setEditTravelPlanModal((p) => ({ ...p, name: e.target.value }));
+              setEditTravelPlan((p) => ({ ...p, name: e.target.value }));
+            }}
             description="Name"
             rightSectionPointerEvents="all"
             rightSection={
@@ -511,31 +492,33 @@ function TravelPlans() {
             clearable
             type="range"
             placeholder="Choose Date"
-            value={updateTravelPlanModal}
+            value={editTravelPlanModal.date}
             //onChange={settingTravelPlanDetailsDate}
-            onChange={(e) => (
-              setUpdateTravelPlan((p) => ({ ...p, date: e })),
-              setUpdateTravelPlanModal(e),
-              console.log("e is", e)
-            )}
+            onChange={
+              (e) =>
+                //setUpdateTravelPlan((p) => ({ ...p, date: e })),
+                modify_travel_plan_date(e)
+              //setUpdateTravelPlanModal(e), console.log("e is", e)
+              //</Stack>setDateTest(e)
+            }
           ></DatePickerInput>
           <Button
             color="green"
             variant="outline"
             type="submit"
             onClick={(e) => {
+              update_travel_plan();
               //console.log("submit update is ", updateTravelPlan);
-              setOpened(false);
+              //setOpened(false);
               //e.preventDefault();
               //console.log("e is from update button", e);
-              submit_modify_travel_plan();
+              //submit_modify_travel_plan();
             }}
           >
             Update
           </Button>
         </Stack>
       </Modal>
-      <Button onClick={() => setOpened(true)}>Create New Travel Plan</Button>
     </>
   );
 }

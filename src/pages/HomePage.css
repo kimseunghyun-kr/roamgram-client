@@ -43,10 +43,3 @@
     transition: 150ms ease-in;
     background-color: orangered;
   }
-
-
-  .popup.description{
-    color: red;
-    outline: 3px red
-  
-  }
