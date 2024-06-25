@@ -12,14 +12,6 @@ import { TimeInput } from "@mantine/dates";
 import { useEffect, useRef, useState } from "react";
 
 function GoogleMaps() {
-  /*
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: "", //rmb to remove
-    libraries: ["places", "maps", "core", "marker", "routes"],
-    version: "weekly",
-  });
-  */
-  console.log("run loaded");
   //for origin textbox
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [autoComplete, setAutoComplete] =
@@ -109,15 +101,32 @@ function GoogleMaps() {
     //setDirectionsRenderer.setMap(mapContainer); //sets our directionRenderer to our map container instance
   }, []);
 
-  //runs after every rerender
-  const locations = { lat: 25, lng: 30 }; //change this eventually lol
+  // setting to current location general area //
+
+  const [locations, setLocations] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
-    const originMarker = new google.maps.Marker({
-      map: map,
-      position: locations, //change ty
-      title: "Origin",
-    });
+    if (map !== null) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const currentPos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          map.setCenter(currentPos);
+          map.setZoom(16);
+          //googleMarker.setPosition(currentPos);
+          //googleMarker.setVisible(false);
+          setLocations(currentPos);
+        });
+      }
+    }
+  }, [map]);
+
+  //runs after every rerender
+  //const locations = { lat: 25, lng: 30 }; //change this eventually lol
+
+  useEffect(() => {
     if (autoComplete) {
       //autocomplete not null(our search bar)
       autoComplete.addListener("place_changed", () => {
@@ -130,27 +139,19 @@ function GoogleMaps() {
 
         if (position) {
           //add marker is non-empty position
-          originMarker.setPosition(position);
+          //originMarker.setPosition(position);
           setOriginPositionID(place.place_id);
         }
 
         if (!searchedFilled) {
-          if (map && position) {
-            map.setCenter(position); //location given to center
-            map.setZoom(16);
-          }
+          //if (map && position) {
+          //map.setCenter(position); //location given to center
+          //map.setZoom(16);
+          //}
           setSearchFilled(!searchedFilled);
         }
       });
     }
-  });
-
-  useEffect(() => {
-    const destMarker = new google.maps.Marker({
-      map: map,
-      position: locations,
-      title: "Destination",
-    });
     if (autoCompleteDest) {
       autoCompleteDest.addListener("place_changed", () => {
         //remember its place_changed
@@ -163,21 +164,12 @@ function GoogleMaps() {
         const positionDest = dest.geometry?.location;
         if (positionDest) {
           //setMarkerDest(positionDest, dest.name!); //if dest.name is not null, we set a marker
-          destMarker.setPosition(positionDest);
+          //destMarker.setPosition(positionDest);
           setDestPositionID(dest.place_id);
           console.log("check here for placesID");
           console.log(autoCompleteDest?.getPlace().place_id);
           console.log(autoComplete?.getPlace().place_id);
         }
-        /*
-        if (!searchedFilled) {
-          console.log("CHECKER SEARCHED FILLED");
-          map.setCenter(positionDest); //location given to center
-          map.setZoom(16);
-          setSearchFilled(true);
-        }
-        */
-        //make some edits here
       });
     }
   });

@@ -19,7 +19,7 @@ function Header() {
             <Image
               ml={120}
               w={220}
-              src="public\assets\RoamGram Logo.png"
+              src="\public\assets\RoamGram Logo.png"
             ></Image>
           </a>
         </Link>

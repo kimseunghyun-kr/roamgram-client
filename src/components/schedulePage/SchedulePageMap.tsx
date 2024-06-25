@@ -401,7 +401,7 @@ function SchedulePageMap(
               <Image
                 h={74}
                 w="auto"
-                src="public\assets\Create Schedule.png"
+                src="\public\assets\Create Schedule.png"
               ></Image>
               <Space h={20}></Space>
               <Input

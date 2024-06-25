@@ -29,20 +29,15 @@ function App() {
       <div>
         {/*
         <Routes>
-          <Route path="/schedulePage" element={<SchedulePageMap />}></Route>
-          <Route path="" element={<HomePage />}></Route>
-          <Route path="/travelPage" element={<TravelPage />}></Route>
-          <Route path="/maps" element={<MapPage />}></Route>
-        </Routes>
-  */}
-
-        <Routes>
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/travelPage" element={<TravelPlans />}></Route>
           <Route path="/schedulePage/:travelID" element={<SchedulePageMap />} />
           <Route path="/planner" element={<MapPage />}></Route>
         </Routes>
+  */}
+
+        <MapPage></MapPage>
       </div>
     </>
   ) : (
