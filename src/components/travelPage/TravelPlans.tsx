@@ -1,29 +1,21 @@
+import { Carousel } from "@mantine/carousel";
 import {
   ActionIcon,
-  Burger,
   Button,
   Card,
   Center,
   CloseButton,
-  Container,
   Divider,
-  Flex,
-  Input,
   Menu,
   Modal,
-  Select,
   Space,
   Stack,
-  Table,
   Tabs,
+  Text,
   TextInput,
   Title,
-  UnstyledButton,
 } from "@mantine/core";
-import moment from "moment";
-import React, { useCallback, useContext, useEffect, useState } from "react";
-import { DragDropContext, Droppable } from "@hello-pangea/dnd";
-import { Text } from "@mantine/core";
+import { DatePickerInput } from "@mantine/dates";
 import {
   IconCheck,
   IconEdit,
@@ -32,12 +24,12 @@ import {
   IconTrash,
   IconX,
 } from "@tabler/icons-react";
-import { v4 as uuid } from "uuid";
-import { DatePickerInput, DateValue } from "@mantine/dates";
-import "./TravelPlans.css";
-import { Carousel, CarouselSlide } from "@mantine/carousel";
-import Header from "../Header/Header.tsx";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { v4 as uuid } from "uuid";
+import Header from "../Header/Header.tsx";
+import "./TravelPlans.css";
 
 //const data = [
 //  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },

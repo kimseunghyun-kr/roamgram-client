@@ -1,46 +1,31 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
-  ActionIcon,
-  Anchor,
-  AppShell,
-  AspectRatio,
   Box,
   Button,
   Center,
   Checkbox,
-  Container,
   Divider,
-  Grid,
   Group,
+  Image,
   Input,
-  NativeSelect,
   Popover,
   SimpleGrid,
+  Space,
   Stack,
   Text,
   Textarea,
   Tooltip,
-  Image,
-  Space,
 } from "@mantine/core";
-import { v4 as uuid } from "uuid";
-import {
-  DatePicker,
-  DatePickerInput,
-  DateTimePicker,
-  DateValue,
-  TimeInput,
-} from "@mantine/dates";
+import { DatePickerInput, TimeInput } from "@mantine/dates";
 import moment from "moment";
 
 import MyCalender from "./MyCalender.tsx";
 
-import TravelPage from "./TravelPage.tsx";
-import { Link, Navigate, useLocation, useParams } from "react-router-dom";
-import "./SchedulePageMap.css";
 import { IconMapPin } from "@tabler/icons-react";
+import { useParams } from "react-router-dom";
 import Header from "../Header/Header.tsx";
+import "./SchedulePageMap.css";
 
 //testing purposese but make sure to store the travelPlanID somewhere
 

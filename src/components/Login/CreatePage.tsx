@@ -1,27 +1,20 @@
 import {
+  ActionIcon,
+  Button,
   Card,
   CardSection,
-  Container,
-  Text,
-  Image,
-  TextInput,
-  PasswordInput,
-  Button,
-  Divider,
-  UnstyledButton,
-  SimpleGrid,
   Center,
-  Stack,
-  Space,
+  Container,
   Flex,
-  ActionIcon,
-  Box,
-  Transition,
+  Image,
+  PasswordInput,
+  SimpleGrid,
+  Stack,
+  Text,
+  TextInput,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft } from "@tabler/icons-react";
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
 
 function CreatePage(props) {
   const form = useForm({

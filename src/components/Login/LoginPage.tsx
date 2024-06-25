@@ -1,30 +1,27 @@
 import {
+  ActionIcon,
+  Button,
   Card,
   CardSection,
-  Container,
-  Text,
-  Image,
-  TextInput,
-  PasswordInput,
-  Button,
-  Divider,
-  UnstyledButton,
-  SimpleGrid,
   Center,
-  Stack,
-  Space,
+  Container,
+  Divider,
   Flex,
-  ActionIcon,
-  Transition,
+  Image,
+  PasswordInput,
   Popover,
   PopoverDropdown,
+  SimpleGrid,
+  Space,
+  Stack,
+  Text,
+  TextInput,
+  UnstyledButton,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
-import React, { useState } from "react";
-import { FcGoogle } from "react-icons/fc";
-import CreatePage from "./CreatePage.tsx";
 import { IconArrowLeft, IconUser } from "@tabler/icons-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
+import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
 function LoginPage() {

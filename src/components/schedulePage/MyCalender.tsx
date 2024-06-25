@@ -1,42 +1,28 @@
-import React, {
-  act,
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
-import "react-big-calendar/lib/css/react-big-calendar.css";
-import "./MyCalender.css";
-import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
-import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import {
   Button,
   Container,
+  Divider,
+  Image,
   Input,
-  InputDescription,
   Modal,
   NativeSelect,
+  Stack,
   Tabs,
   Text,
-  TextInput,
   Textarea,
-  UnstyledButton,
-  Image,
-  Stack,
-  Space,
-  Divider,
 } from "@mantine/core";
-import SchedulePageMap from "./SchedulePageMap_copy";
-import { useDisclosure } from "@mantine/hooks";
-import { useJsApiLoader } from "@react-google-maps/api";
 import {
   IconDirections,
   IconFileDescription,
   IconPencil,
 } from "@tabler/icons-react";
+import moment from "moment";
+import { useCallback, useEffect, useState } from "react";
+import { Calendar, momentLocalizer } from "react-big-calendar";
+import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
+import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import "./MyCalender.css";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
