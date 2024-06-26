@@ -15,11 +15,11 @@ import { useEffect, useState } from "react";
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
-    const authToken = localStorage.getItem(`authToken`);
+    const authToken = sessionStorage.getItem(`authToken`);
     if (authToken) {
       setIsLoggedIn(true);
     }
-    console.log("logged in?", isLoggedIn);
+    //console.log("logged in?", isLoggedIn);
   });
   return (
     <header>

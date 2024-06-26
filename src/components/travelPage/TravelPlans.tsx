@@ -16,6 +16,7 @@ import {
   TextInput,
   Title,
   Tooltip,
+  UnstyledButton,
 } from "@mantine/core";
 import { DatePickerInput } from "@mantine/dates";
 import {
@@ -78,7 +79,7 @@ function TravelPlans() {
   }, []);
 
   const [event, setEvent] = useState([]);
-  console.log("Event", event);
+  //console.log("Event", event);
 
   //Gets All Travel Plans
   /////////get_all/////////
@@ -186,6 +187,36 @@ function TravelPlans() {
     //EXTRA THINGS --> DELETE ALL SCHEDULES HERE
   }
 
+  const homePageItem = JSON.parse(sessionStorage.getItem("HomePageTravel"));
+  //console.log(
+  //  "homepageItem",
+  //  JSON.parse(sessionStorage.getItem("HomePageTravel"))
+  //);
+  const UnauthCardTravel = () => {
+    return (
+      <Center h={550}>
+        <Stack align="center">
+          <Title>{homePageItem.name}</Title>
+          <Text style={{ fontSize: "15px" }}>
+            From{" "}
+            {moment(homePageItem.dateRange[0], "YYYY-MM-DD").format(
+              "MMM Do YY"
+            )}{" "}
+            to {` `}
+            {moment(homePageItem.dateRange[1], "YYYY-MM-DD").format(
+              "MMM Do YY"
+            )}
+          </Text>
+          <Link to="/login">
+            <UnstyledButton c="red">
+              Sign In to access more options
+            </UnstyledButton>
+          </Link>
+        </Stack>
+      </Center>
+    );
+  };
+
   const cardTravel = () => {
     return event
       ? event.map((items: TravelPlan) => (
@@ -286,6 +317,67 @@ function TravelPlans() {
 
   const [activeTab, setActiveTab] = useState<string | null>("incomplete");
 
+  const [homePageItems, setHomePageItems] = useState(null);
+  const [authToken, setAuthToken] = useState(null);
+  const [homeItem, sethomeItem] = useState({
+    uuid: uuid(),
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  useEffect(() => {
+    //const token = sessionStorage.getItem(`authToken`);
+    const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
+    const tokens = sessionStorage.getItem(`authToken`);
+    console.log(tokens);
+    if (items && tokens) {
+      setAuthToken(tokens);
+      sethomeItem((p) => ({
+        ...p,
+        name: items.name,
+        startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
+        endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
+      }));
+    }
+    console.log(items);
+
+    /*
+    if (token && items) {
+      setAuthToken(token);
+      setHomePageItems((p) => ({
+        ...p,
+        name: items.name,
+        startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
+        endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
+      }));
+      console.log("tokken succes", token);
+    }
+    */
+  }, []);
+
+  useEffect(() => {
+    if (homeItem && authToken) {
+      console.log("fetch item simulator useEfefct");
+      console.log("fetch item homePage", homeItem);
+      console.log("authToken is", authToken);
+      fetch("http://localhost:8080/travelPlan/create_travel_plan", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(homeItem),
+      })
+        .then((response) => response.json())
+        .then((data) => console.log(data, "is data"))
+        .catch((error) => console.log("error adding"));
+    }
+  }, [homeItem]);
+
+  ///Essentially if we are authenticated and have created a homepageItem which is stored in our local storage --> we need to fetch this and add it into our planner
+  useEffect(() => {}, [authToken]);
+
   //const [modalTravelPlan, setModalTravelPlan] = useState();
   const [editTravelPlan, setEditTravelPlan] = useState({
     uuid: "",
@@ -363,6 +455,7 @@ function TravelPlans() {
   };
 
   const [createUnauth, setCreateUnauth] = useState(false);
+
   return (
     <>
       <Header></Header>
@@ -405,7 +498,9 @@ function TravelPlans() {
                 >
                   {cardTravel()}
                 </Carousel>
-              ) : null}
+              ) : (
+                UnauthCardTravel()
+              )}
             </Tabs.Panel>
             <Tabs.Panel value="create_travel">
               <Center h={500}>

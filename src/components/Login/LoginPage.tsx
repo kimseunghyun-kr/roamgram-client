@@ -80,10 +80,7 @@ function LoginPage() {
       .then(
         (data) => (
           console.log(data),
-          sessionStorage.setItem(
-            "authToken",
-            `${data.grantType} ${data.accessToken}`
-          ),
+          sessionStorage.setItem("authToken", `${data.accessToken}`),
           console.log(sessionStorage.getItem(`authToken`))
         )
       ); //history("/") goes back to homepage
