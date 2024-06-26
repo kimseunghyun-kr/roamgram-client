@@ -393,17 +393,19 @@ function TravelPlans() {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="incomplete">
-              <Carousel
-                initialSlide={initialSlides}
-                withIndicators
-                key={event.length}
-                withControls={event.length > 0}
-                styles={{
-                  indicator: { backgroundColor: "#A9ADB9", marginTop: "px" },
-                }}
-              >
-                {cardTravel()}
-              </Carousel>
+              {sessionStorage.getItem(`authToken`) ? (
+                <Carousel
+                  initialSlide={initialSlides}
+                  withIndicators
+                  key={event.length}
+                  withControls={event.length > 0}
+                  styles={{
+                    indicator: { backgroundColor: "#A9ADB9", marginTop: "px" },
+                  }}
+                >
+                  {cardTravel()}
+                </Carousel>
+              ) : null}
             </Tabs.Panel>
             <Tabs.Panel value="create_travel">
               <Center h={500}>
@@ -466,7 +468,6 @@ function TravelPlans() {
                             setActiveTab("incomplete");
                           } else {
                             setCreateUnauth(true);
-                            alert("ERror");
                           }
                         }}
                       >
@@ -474,7 +475,9 @@ function TravelPlans() {
                       </Button>
                     </Popover.Target>
                     <Popover.Dropdown>
-                      <Text c="red">Please Sign In to Create</Text>
+                      <Text c="red" size="17px">
+                        Please sign in to create extra plans
+                      </Text>
                     </Popover.Dropdown>
                   </Popover>
                 </Stack>
