@@ -81,9 +81,13 @@ function LoginPage() {
         (data) => (
           console.log(data),
           sessionStorage.setItem("authToken", `${data.accessToken}`),
-          console.log(sessionStorage.getItem(`authToken`))
+          console.log(sessionStorage.getItem(`authToken`)),
+          history(-1)
         )
-      ); //history("/") goes back to homepage
+      )
+      .catch((error) => {
+        console.log("error logging in", setLoginError(true));
+      }); //history("/") goes back to homepage
   }
 
   function createAccount(values: {}) {
@@ -136,9 +140,7 @@ function LoginPage() {
                 <form
                   onSubmit={form.onSubmit(
                     (values, event) => (
-                      console.log(values, event),
-                      continueLogIn(values),
-                      history(-1)
+                      console.log(values, event), continueLogIn(values)
                     )
                   )}
                 >
@@ -188,12 +190,10 @@ function LoginPage() {
                       ></PasswordInput>
                       <Center>
                         <Popover
-                          offset={10}
+                          arrowSize={12}
                           opened={loginError}
                           onChange={setLoginError}
                           withArrow
-                          shadow="sm"
-                          arrowSize={12}
                         >
                           <Popover.Target>
                             <Button
@@ -205,9 +205,11 @@ function LoginPage() {
                               Continue
                             </Button>
                           </Popover.Target>
-                          <PopoverDropdown>
-                            <Text size="xs">Error Logging In</Text>
-                          </PopoverDropdown>
+                          <Popover.Dropdown>
+                            <Text size={"13px"} c="red">
+                              Error. Please check username and password
+                            </Text>
+                          </Popover.Dropdown>
                         </Popover>
                       </Center>
                     </Stack>
