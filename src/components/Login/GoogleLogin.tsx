@@ -11,9 +11,10 @@ function GoogleLogin() {
 
   useEffect(() => {
     if (localStorage.getItem(`authToken`)) {
+      console.log("success googleLogin");
+      navigate("/");
     }
-    navigate("/");
-  }, [navigate]);
+  }, []);
 
   return (
     <>
