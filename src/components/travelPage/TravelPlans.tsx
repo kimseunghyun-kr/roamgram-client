@@ -64,20 +64,6 @@ interface ModalItem {
 }
 
 function TravelPlans() {
-  const [token, setToken] = useState();
-
-  useEffect(() => {
-    fetch(`http://localhost:8080/authentication/sign-in`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ username: "string", password: "string" }),
-    })
-      .then((response) => response.json())
-      .then((data) => setToken(data.accessToken));
-  }, []);
-
   const [event, setEvent] = useState([]);
   //console.log("Event", event);
 
@@ -127,22 +113,27 @@ function TravelPlans() {
   const [itemToAdd, setItemToAdd] = useState();
 
   const submit_travel_plan = () => {
-    fetch("http://localhost:8080/travelPlan/create_travel_plan", {
+    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify(travelPlanDetails),
     })
       .then((response) => response.json())
       .then((data) => {
-        fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
+        fetch(
+          `${
+            import.meta.env.VITE_APP_API_URL
+          }/travelPlan/get_by_id?planId=${data}`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        )
           .then((response) => response.json())
           .then((_data) => setItemToAdd(_data));
       });
@@ -167,11 +158,11 @@ function TravelPlans() {
 
   function deleteTravelPlan(id: string) {
     console.log(id);
-    fetch(`http://localhost:8080/travelPlan/delete_travel_plan`, {
+    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify([id]),
     })
@@ -304,20 +295,6 @@ function TravelPlans() {
   };
 
   useEffect(() => {
-    if (token) {
-      fetch(`http://localhost:8080/travelPlan/get_all`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setEvent(data))
-        .catch((error) => console.log(error));
-    }
-  }, [token]);
-
-  useEffect(() => {
     //console.log("Event updated:", event);
     // Optionally force a refresh here if the carousel supports it
   }, [event]);
@@ -335,6 +312,19 @@ function TravelPlans() {
     endDate: "",
   });
 
+  useEffect(() => {
+    if (authToken) {
+      fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setEvent(data))
+        .catch((error) => console.log(error));
+    }
+  }, [authToken]);
   const tokens = sessionStorage.getItem(`authToken`);
   useEffect(() => {
     //const token = sessionStorage.getItem(`authToken`);
@@ -370,22 +360,30 @@ function TravelPlans() {
       console.log("fetch item simulator useEfefct");
       console.log("fetch item homePage", homeItem);
       console.log("authToken is", authToken);
-      fetch("http://localhost:8080/travelPlan/create_travel_plan", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(homeItem),
-      })
+      fetch(
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(homeItem),
+        }
+      )
         .then((response) => response.json())
         .then((data) => {
-          fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
+          fetch(
+            `${
+              import.meta.env.VITE_APP_API_URL
+            }/travelPlan/get_by_id?planId=${data}`,
+            {
+              method: "GET",
+              headers: {
+                Authorization: `Bearer ${authToken}`,
+              },
+            }
+          )
             .then((response) => response.json())
             .then((_data) => setItemToAdd(_data));
         });
@@ -451,11 +449,11 @@ function TravelPlans() {
   };
 
   const update_travel_plan = () => {
-    fetch(`http://localhost:8080/travelPlan/modify_travel_plan`, {
+    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/modify_travel_plan`, {
       method: "PATCH",
       headers: {
         "Content-type": "application/json",
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify(editTravelPlan),
     })

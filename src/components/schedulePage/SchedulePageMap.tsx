@@ -311,7 +311,9 @@ function SchedulePageMap(
     //create duplicate;
     //FETCH API HERE!
     fetch(
-      `http://localhost:8080/travelPlan/${travelID}/schedule/create_schedule`,
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${travelID}/schedule/create_schedule`,
       {
         method: "PUT",
         headers: {
@@ -398,11 +400,7 @@ function SchedulePageMap(
         <SimpleGrid cols={2}>
           <Center mt={30}>
             <form style={{}} onSubmit={handleSubmit}>
-              <Image
-                h={74}
-                w="auto"
-                src="\public\assets\Create Schedule.png"
-              ></Image>
+              <Image h={74} w="auto" src="assets/Create Schedule.png"></Image>
               <Space h={20}></Space>
               <Input
                 mb={10}

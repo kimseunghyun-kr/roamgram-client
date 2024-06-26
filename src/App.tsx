@@ -9,9 +9,9 @@ import "./App.css";
 import LoginPage from "./components/Login/LoginPage.tsx";
 import SchedulePageMap from "./components/schedulePage/SchedulePageMap.tsx";
 import TravelPlans from "./components/travelPage/TravelPlans.tsx";
-import HomePage from "./pages/HomePage.tsx";
 import MapPage from "./pages/MapPage.tsx";
 import GoogleLogin from "./components/Login/GoogleLogin.tsx";
+import HomePage from "./pages/HomePage.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },

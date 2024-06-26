@@ -91,7 +91,7 @@ function LoginPage() {
   }
 
   function createAccount(values: {}) {
-    fetch(`http://localhost:8080/authentication/sign-up`, {
+    fetch(`${import.meta.env.VITE_APP_API_URL}/authentication/sign-up`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -111,8 +111,8 @@ function LoginPage() {
       );
   }
 
-  function test() {
-    fetch(`http://localhost:8080/h2-console`, { method: "GET" })
+  function googleSignIn() {
+    fetch(`${import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}`, { method: "GET" })
       .then((response) => response.json())
       .then((data) => console.log("data", data))
       .catch((error) => console.log("error", error));
@@ -159,7 +159,7 @@ function LoginPage() {
                       <Image
                         h={75}
                         w="auto"
-                        src="public\assets\roamgram logo only.png"
+                        src="assets/roamgram logo only.png"
                       ></Image>
                     </Center>
 
@@ -167,7 +167,7 @@ function LoginPage() {
                       <Image
                         h={85}
                         w="auto"
-                        src="public\assets\roamgram words only.png"
+                        src="assets/roamgram words only.png"
                       ></Image>
                     </Center>
                     <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
@@ -223,7 +223,7 @@ function LoginPage() {
                   component="a"
                   id="myLink"
                   href={import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}
-                  onClick={test}
+                  onClick={googleSignIn}
                   size={65}
                   variant="default"
                 >
@@ -271,7 +271,7 @@ function LoginPage() {
                       <Image
                         h={75}
                         w="auto"
-                        src="public\assets\roamgram logo only.png"
+                        src="assets/roamgram logo only.png"
                       ></Image>
                     </Center>
 
@@ -279,7 +279,7 @@ function LoginPage() {
                       <Image
                         h={85}
                         w="auto"
-                        src="public\assets\roamgram words only.png"
+                        src="assets/roamgram words only.png"
                       ></Image>
                     </Center>
                     <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
@@ -327,7 +327,7 @@ function LoginPage() {
             )}
 
             <CardSection>
-              <Image h={1000} src="public\assets\shibuya-crossing.png"></Image>
+              <Image h={1000} src="assets/shibuya-crossing.png"></Image>
             </CardSection>
           </SimpleGrid>
         </Card>

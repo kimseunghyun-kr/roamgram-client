@@ -31,7 +31,6 @@ import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
 import { IconSearch } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
-import { v4 as uuid } from "uuid";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -215,13 +214,6 @@ function HomePage() {
     console.log("logged in?", isLoggedIn);
   });
 
-  const [plan, setPlan] = useState({
-    uuid: uuid(),
-    name: "",
-    startDate: "",
-    endDate: "",
-  });
-
   const navigate = useNavigate();
 
   return (
@@ -240,7 +232,7 @@ function HomePage() {
               <Image
                 h={600}
                 style={{ minWidth: 1200 }}
-                fallbackSrc="public\assets\japan-background-digital-art.jpg"
+                fallbackSrc="assets/japan-background-digital-art.jpg"
               ></Image>
             </CarouselSlide>
             {/*slides*/}
@@ -311,7 +303,7 @@ function HomePage() {
               <Image
                 w="auto"
                 h="90px"
-                src="public\assets\roamgram with white.png"
+                src="assets/roamgram with white.png"
                 mb={20}
               ></Image>
             </Center>
@@ -397,7 +389,7 @@ function HomePage() {
           <Image
             h={79}
             w="auto"
-            src="public\assets\Explore Nearby.png"
+            src="assets/Explore Nearby.png"
             ml={250}
             mb={20}
           ></Image>
@@ -428,7 +420,7 @@ function HomePage() {
             <Image
               h={71}
               w="auto"
-              src="public\assets\Guide.png"
+              src="assets/Guide.png"
               ml={250}
               mb={20}
             ></Image>
@@ -467,7 +459,7 @@ function HomePage() {
         <Image
           h={71}
           w="auto"
-          src="public\assets\Itinerary.png"
+          src="assets/Itinerary.png"
           ml={250}
           mb={20}
         ></Image>

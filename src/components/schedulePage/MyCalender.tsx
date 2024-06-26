@@ -79,12 +79,14 @@ function MyCalender(props) {
       console.log("jsonfied", JSON.stringify(bodyData));
 
       fetch(
-        `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/update_schedule_metadata`,
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
+          props.travelPlanId
+        }/schedule/update_schedule_metadata`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+            Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
           },
           body: JSON.stringify(bodyData),
         }
@@ -123,12 +125,14 @@ function MyCalender(props) {
         ];
       });
       fetch(
-        `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/update_schedule_metadata`,
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
+          props.travelPlanId
+        }/schedule/update_schedule_metadata`,
         {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+            Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
           },
           body: JSON.stringify(bodyData),
         }
@@ -157,10 +161,14 @@ function MyCalender(props) {
     //console.log("event id to delete is", eventID);
 
     fetch(
-      `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/delete_schedule?scheduleId=${eventID}`,
+      `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
+        props.travelPlanId
+      }/schedule/delete_schedule?scheduleId=${eventID}`,
       {
         method: "DELETE",
-        headers: { Authorization: `Bearer ${import.meta.env.VITE_TOKEN}` },
+        headers: {
+          Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
+        },
       }
     )
       .then((response) => response.json())
@@ -286,11 +294,13 @@ function MyCalender(props) {
     });
 
     fetch(
-      `http://localhost:8080/travelPlan/${props.travelPlanId}/schedule/update_schedule_metadata`,
+      `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
+        props.travelPlanId
+      }/schedule/update_schedule_metadata`,
       {
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(bodyData),
@@ -314,30 +324,6 @@ function MyCalender(props) {
   if (props.event) {
     console.log("names of events", props.event.name);
   }
-
-  const events111 = [
-    {
-      uuid: "33213",
-      name: "2222222",
-      description: "",
-      place: {
-        id: "test",
-        googleMapsKeyId: "ChIJN1t_tDeuEmsRUsoyG83frY4",
-        name: "string",
-        country: "string",
-        visitedCount: 0,
-        Latitude: 0,
-        Longitude: 0,
-        longitude: 0,
-        latitude: 0,
-      },
-      isActuallyVisited: false,
-      travelStartTimeEstimate: moment("2024-06-21T10:00:00").toDate(),
-      travelDepartTimeEstimate: moment("2024-06-21T11:00:00").toDate(),
-      previousScheduleId: null,
-      nextScheduleId: null,
-    },
-  ];
 
   return (
     <>
