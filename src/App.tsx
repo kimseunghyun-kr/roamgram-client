@@ -11,6 +11,7 @@ import SchedulePageMap from "./components/schedulePage/SchedulePageMap.tsx";
 import TravelPlans from "./components/travelPage/TravelPlans.tsx";
 import HomePage from "./pages/HomePage.tsx";
 import MapPage from "./pages/MapPage.tsx";
+import GoogleLogin from "./components/Login/GoogleLogin.tsx";
 
 //const myEventsList = [
 //  { start: new Date(), end: new Date(), title: "special event" },
@@ -33,6 +34,7 @@ function App() {
           <Route path="/travelPage" element={<TravelPlans />}></Route>
           <Route path="/schedulePage/:travelID" element={<SchedulePageMap />} />
           <Route path="/planner" element={<MapPage />}></Route>
+          <Route path="/authSuccess" element={<GoogleLogin />}></Route>
         </Routes>
       </div>
     </>

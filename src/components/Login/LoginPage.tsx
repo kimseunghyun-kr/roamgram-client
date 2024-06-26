@@ -8,6 +8,7 @@ import {
   Divider,
   Flex,
   Image,
+  NavLink,
   PasswordInput,
   Popover,
   PopoverDropdown,
@@ -20,7 +21,7 @@ import {
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft, IconUser } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -109,6 +110,13 @@ function LoginPage() {
       );
   }
 
+  function test() {
+    fetch(`http://localhost:8080/h2-console`, { method: "GET" })
+      .then((response) => response.json())
+      .then((data) => console.log("data", data))
+      .catch((error) => console.log("error", error));
+  }
+
   return (
     <>
       <Center>
@@ -123,19 +131,19 @@ function LoginPage() {
         >
           <SimpleGrid cols={2}>
             {section === false ? (
-              <form
-                onSubmit={form.onSubmit(
-                  (values, event) => (
-                    console.log(values, event),
-                    continueLogIn(values),
-                    history(-1)
-                  )
-                )}
+              <div
+                style={{
+                  textAlign: "center",
+                }}
               >
-                <div
-                  style={{
-                    textAlign: "center",
-                  }}
+                <form
+                  onSubmit={form.onSubmit(
+                    (values, event) => (
+                      console.log(values, event),
+                      continueLogIn(values),
+                      history(-1)
+                    )
+                  )}
                 >
                   <Flex h={30} pt={15}>
                     <Link to="/">
@@ -210,24 +218,31 @@ function LoginPage() {
                   <Space h={15}></Space>
                   <Divider label="or" labelPosition="center"></Divider>
                   <Space h={15}></Space>
-                  <form action={import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}>
-                    <ActionIcon type="submit" size={65} variant="default">
-                      <FcGoogle size={45}></FcGoogle>
-                    </ActionIcon>
-                  </form>
-                  <Space h={100}></Space>
-                  <UnstyledButton style={{ color: "" }}>
-                    Forgot your password?
+                </form>
+
+                <ActionIcon
+                  component="a"
+                  id="myLink"
+                  href={import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}
+                  onClick={test}
+                  size={65}
+                  variant="default"
+                >
+                  <FcGoogle size={45}></FcGoogle>
+                </ActionIcon>
+
+                <Space h={100}></Space>
+                <UnstyledButton style={{ color: "" }}>
+                  Forgot your password?
+                </UnstyledButton>
+                <Space h={8}></Space>
+                <Flex gap="xs" justify="center">
+                  <Text c="gray">Don't have an account?</Text>
+                  <UnstyledButton c="green" onClick={() => setSection(true)}>
+                    Create Here
                   </UnstyledButton>
-                  <Space h={8}></Space>
-                  <Flex gap="xs" justify="center">
-                    <Text c="gray">Don't have an account?</Text>
-                    <UnstyledButton c="green" onClick={() => setSection(true)}>
-                      Create Here
-                    </UnstyledButton>
-                  </Flex>
-                </div>
-              </form>
+                </Flex>
+              </div>
             ) : (
               <form
                 onSubmit={formCreate.onSubmit(
