@@ -326,10 +326,10 @@ function TravelPlans() {
     endDate: "",
   });
 
+  const tokens = sessionStorage.getItem(`authToken`);
   useEffect(() => {
     //const token = sessionStorage.getItem(`authToken`);
     const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
-    const tokens = sessionStorage.getItem(`authToken`);
     console.log(tokens);
     if (items && tokens) {
       setAuthToken(tokens);
@@ -354,7 +354,7 @@ function TravelPlans() {
       console.log("tokken succes", token);
     }
     */
-  }, []);
+  }, [tokens]);
 
   useEffect(() => {
     if (homeItem && authToken) {
@@ -370,10 +370,25 @@ function TravelPlans() {
         body: JSON.stringify(homeItem),
       })
         .then((response) => response.json())
-        .then((data) => console.log(data, "is data"))
-        .catch((error) => console.log("error adding"));
+        .then((data) => {
+          fetch(`http://localhost:8080/travelPlan/get_by_id?planId=${data}`, {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+            .then((response) => response.json())
+            .then((_data) => setItemToAdd(_data));
+        });
+
+      setTravelPlanDetails({
+        uuid: uuid(), // Generate a new UUID for the next entry
+        startDate: "",
+        endDate: "",
+        name: "",
+      });
     }
-  }, [homeItem]);
+  }, [homeItem, authToken, tokens]);
 
   ///Essentially if we are authenticated and have created a homepageItem which is stored in our local storage --> we need to fetch this and add it into our planner
   useEffect(() => {}, [authToken]);
