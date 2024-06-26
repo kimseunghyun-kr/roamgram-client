@@ -394,6 +394,8 @@ function TravelPlans() {
         endDate: "",
         name: "",
       });
+
+      sessionStorage.removeItem(`HomePageTravel`);
     }
   }, [homeItem, authToken, tokens]);
 
