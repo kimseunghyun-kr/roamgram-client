@@ -191,27 +191,36 @@ function TravelPlans() {
   //console.log(
   //  "homepageItem",
   //  JSON.parse(sessionStorage.getItem("HomePageTravel"))
+
   //);
+
+  console.log("homepageitem", homePageItem);
   const UnauthCardTravel = () => {
     return (
       <Center h={550}>
         <Stack align="center">
-          <Title>{homePageItem.name}</Title>
-          <Text style={{ fontSize: "15px" }}>
-            From{" "}
-            {moment(homePageItem.dateRange[0], "YYYY-MM-DD").format(
-              "MMM Do YY"
-            )}{" "}
-            to {` `}
-            {moment(homePageItem.dateRange[1], "YYYY-MM-DD").format(
-              "MMM Do YY"
-            )}
-          </Text>
-          <Link to="/login">
-            <UnstyledButton c="red">
-              Sign In to access more options
-            </UnstyledButton>
-          </Link>
+          {homePageItem ? (
+            <>
+              <Title>{homePageItem?.name ?? null}</Title>
+
+              <Text style={{ fontSize: "15px" }}>
+                From{" "}
+                {moment(homePageItem.dateRange[0], "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}{" "}
+                to {` `}
+                {moment(homePageItem.dateRange[1], "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}
+              </Text>
+
+              <Link to="/login">
+                <UnstyledButton c="red">
+                  Sign In to access more options
+                </UnstyledButton>
+              </Link>
+            </>
+          ) : null}
         </Stack>
       </Center>
     );
