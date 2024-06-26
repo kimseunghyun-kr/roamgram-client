@@ -27,9 +27,11 @@ import { DatePickerInput } from "@mantine/dates";
 import "@mantine/dates/styles.css";
 import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
 import { IconSearch } from "@tabler/icons-react";
+import { useForm } from "@mantine/form";
+import { v4 as uuid } from "uuid";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -190,14 +192,37 @@ function HomePage() {
     }
   }, [map]);
 
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      name: "",
+      dateRange: [null, null],
+    },
+    validate: {
+      name: (value) => (value.length > 0 ? null : "Invalid Name"),
+      dateRange: (value) =>
+        value[0] !== null && value[1] !== null ? null : "Invalid Date",
+    },
+  });
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
-    const authToken = localStorage.getItem(`authToken`);
+    const authToken = sessionStorage.getItem(`authToken`);
     if (authToken) {
       setIsLoggedIn(true);
     }
     console.log("logged in?", isLoggedIn);
   });
+
+  const [plan, setPlan] = useState({
+    uuid: uuid(),
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  const navigate = useNavigate();
 
   return (
     <>
@@ -251,7 +276,15 @@ function HomePage() {
                       </Button>
                     </Link>
                   ) : (
-                    <Text style={{ fontSize: "18px" }}>Welcome Back!</Text>
+                    <Text
+                      style={{
+                        fontSize: "19px",
+                        fontWeight: "bold",
+                        color: "white",
+                      }}
+                    >
+                      Welcome Back!
+                    </Text>
                   )}
 
                   <Switch
@@ -287,49 +320,73 @@ function HomePage() {
               <Fieldset c="white" variant="filled" h={76} w={800} radius="lg">
                 {/* change to form eventually :) */}
 
-                <Flex justify="center" align="center" gap="lg">
-                  <TextInput
-                    placeholder="Input Name"
-                    description="PLAN NAME"
-                    variant="unstyled"
-                    styles={{
-                      input: { fontSize: "17px" },
-                      description: { height: "7px" },
-                    }}
-                  ></TextInput>
-                  <Divider
-                    orientation="vertical"
-                    h={50}
-                    color="steelblue"
-                  ></Divider>
-                  <DatePickerInput
-                    variant="unstyled"
-                    type="range"
-                    description="DATES"
-                    placeholder="Choose Date"
-                    w={300}
-                    styles={{
-                      input: { fontSize: "16px" },
-                      description: { height: "7px" },
-                    }}
-                  ></DatePickerInput>
-                  <Divider
-                    orientation="vertical"
-                    h={50}
-                    color="steelblue"
-                  ></Divider>
+                <form
+                  onSubmit={form.onSubmit(
+                    (values) => (
+                      console.log(values),
+                      navigate("/travelPage"),
+                      sessionStorage.setItem(
+                        "HomePageTravel",
+                        JSON.stringify(values)
+                      )
+                    )
+                  )}
+                >
+                  <Flex justify="center" align="center" gap="lg">
+                    <TextInput
+                      //value={planName}
+                      //onChange={(e) => {
+                      //  setPlanName(e.target.value);
+                      //}}
+                      key={form.key("name")}
+                      {...form.getInputProps("name")}
+                      placeholder="Input Name"
+                      description="PLAN NAME"
+                      variant="unstyled"
+                      styles={{
+                        input: { fontSize: "17px" },
+                        description: { height: "7px" },
+                      }}
+                    ></TextInput>
+                    <Divider
+                      orientation="vertical"
+                      h={50}
+                      color="steelblue"
+                    ></Divider>
+                    <DatePickerInput
+                      key={form.key("dateRange")}
+                      {...form.getInputProps("dateRange")}
+                      //value={dateRange}
+                      //onChange={(e) => (setDateRange(e), console.log(e))}
+                      variant="unstyled"
+                      type="range"
+                      description="DATES"
+                      placeholder="Choose Date"
+                      w={300}
+                      styles={{
+                        input: { fontSize: "16px" },
+                        description: { height: "7px" },
+                      }}
+                    ></DatePickerInput>
+                    <Divider
+                      orientation="vertical"
+                      h={50}
+                      color="steelblue"
+                    ></Divider>
 
-                  <Button
-                    variant="filled"
-                    mt={7}
-                    color="#487D2E"
-                    leftSection={<IconSearch size={24} />}
-                    style={{ fontSize: "16px" }}
-                    radius="md"
-                  >
-                    Enter
-                  </Button>
-                </Flex>
+                    <Button
+                      type="submit"
+                      variant="filled"
+                      mt={7}
+                      color="#487D2E"
+                      leftSection={<IconSearch size={24} />}
+                      style={{ fontSize: "16px" }}
+                      radius="md"
+                    >
+                      Enter
+                    </Button>
+                  </Flex>
+                </form>
               </Fieldset>
             </Center>
           </Flex>

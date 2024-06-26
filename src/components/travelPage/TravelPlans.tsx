@@ -8,6 +8,7 @@ import {
   Divider,
   Menu,
   Modal,
+  Popover,
   Space,
   Stack,
   Tabs,
@@ -215,7 +216,7 @@ function TravelPlans() {
                 >
                   <IconEdit />
                 </ActionIcon>
-                {localStorage.getItem(`authToken`) ? (
+                {sessionStorage.getItem(`authToken`) ? (
                   <Link to={`/schedulePage/${items.id}`}>
                     <ActionIcon
                       variant="transparent"
@@ -360,6 +361,8 @@ function TravelPlans() {
 
     setOpened(false);
   };
+
+  const [createUnauth, setCreateUnauth] = useState(false);
   return (
     <>
       <Header></Header>
@@ -448,20 +451,32 @@ function TravelPlans() {
                     value={dateRanges}
                     onChange={settingTravelPlanDetailsDate}
                   ></DatePickerInput>
-                  <Button
-                    mt={15}
-                    color="red"
-                    radius="lg"
-                    type="submit"
-                    onClick={(e) => {
-                      console.log(travelPlanDetails);
-                      console.log(e);
-                      submit_travel_plan();
-                      setActiveTab("incomplete");
-                    }}
-                  >
-                    Create
-                  </Button>
+                  <Popover opened={createUnauth} onChange={setCreateUnauth}>
+                    <Popover.Target>
+                      <Button
+                        mt={15}
+                        color="red"
+                        radius="lg"
+                        type="submit"
+                        onClick={(e) => {
+                          if (sessionStorage.getItem(`authToken`)) {
+                            console.log(travelPlanDetails);
+                            console.log(e);
+                            submit_travel_plan();
+                            setActiveTab("incomplete");
+                          } else {
+                            setCreateUnauth(true);
+                            alert("ERror");
+                          }
+                        }}
+                      >
+                        Create
+                      </Button>
+                    </Popover.Target>
+                    <Popover.Dropdown>
+                      <Text c="red">Please Sign In to Create</Text>
+                    </Popover.Dropdown>
+                  </Popover>
                 </Stack>
               </Center>
             </Tabs.Panel>

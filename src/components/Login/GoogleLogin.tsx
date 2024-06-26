@@ -7,10 +7,10 @@ function GoogleLogin() {
   const navigate = useNavigate();
 
   console.log(url);
-  localStorage.setItem(`authToken`, `Bearer ${urlParams.get("accessToken")}`);
+  sessionStorage.setItem(`authToken`, `Bearer ${urlParams.get("accessToken")}`);
 
   useEffect(() => {
-    if (localStorage.getItem(`authToken`)) {
+    if (sessionStorage.getItem(`authToken`)) {
       console.log("success googleLogin");
       navigate("/");
     }

@@ -80,11 +80,11 @@ function LoginPage() {
       .then(
         (data) => (
           console.log(data),
-          localStorage.setItem(
+          sessionStorage.setItem(
             "authToken",
             `${data.grantType} ${data.accessToken}`
           ),
-          console.log(localStorage.getItem(`authToken`))
+          console.log(sessionStorage.getItem(`authToken`))
         )
       ); //history("/") goes back to homepage
   }
