@@ -120,10 +120,6 @@ function HomePage() {
 
   const [markerArray, setMarkerArray] = useState<google.maps.Marker[]>([]);
 
-  //
-  const [opened, setOpened] = useState(false);
-  const [place, setPlace] = useState();
-
   function createMarker(place: google.maps.places.PlaceResult) {
     const marker = new google.maps.Marker({
       map,
@@ -133,15 +129,30 @@ function HomePage() {
     google.maps.event.addListener(marker, "click", () => {
       //console.log("is Info Window set?");
       infowindow.setContent(`
-      <div><img src=${place.photos[0].getUrl()}></img></div>
-      <div><Text size = 'xs'>Rating: ${place.rating}</Text> </div>
-      <div><Text size='xs'>${place.name}</Text></div>
-      <div> <Text>${
-        place.opening_hours?.open_now ? "Currently Open" : "Currently Closed"
-      }</Text> </div>
-      
-  
-     
+      <div style="text-align: center;">
+      <img src=${
+        place.photos && place.photos.length > 0
+          ? place.photos[0].getUrl()
+          : null
+      } style="width: 100px; height: auto;"></img>
+      <div>${
+        place.rating
+          ? '<text size="xs">Rating: ' + place.rating + "</text>"
+          : null
+      }</div>
+      <div>${
+        place.name ? '<text size="xs">' + place.name + "</text>" : ""
+      }</div>
+      <div>${
+        place.opening_hours
+          ? "<text>" +
+            (place.opening_hours.open_now
+              ? "Currently Open"
+              : "Currently Closed") +
+            "</text>"
+          : ""
+      }</div>
+    </div>
     `);
 
       infowindow.open(map, marker);
