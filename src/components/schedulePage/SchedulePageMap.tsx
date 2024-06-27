@@ -358,7 +358,7 @@ function SchedulePageMap(
 
   const [authToken, setAuthToken] = useState("");
 
-  //get Token if signed in --> only signed in people can access but this will be helpful for
+  //get Token if signed in --> only signed in people can access but this will be helpful for mounting
   useEffect(() => {
     const token = sessionStorage.getItem(`authToken`);
     if (token) {
@@ -366,14 +366,14 @@ function SchedulePageMap(
     }
   }, []);
 
-  console.log(
-    "fetch is",
-    `${
-      import.meta.env.VITE_APP_API_URL
-    }/travelPlan/${travelID}/schedule/search_all`
-  );
-
   const getAllSchedule = () => {
+    console.log(
+      "fetch is",
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${travelID}/schedule/search_all`
+    );
+
     fetch(
       `${
         import.meta.env.VITE_APP_API_URL
@@ -414,7 +414,7 @@ function SchedulePageMap(
     if (authToken) {
       getAllSchedule();
     }
-  }, [authToken, event]);
+  }, [authToken]);
 
   console.log("events", event);
 
