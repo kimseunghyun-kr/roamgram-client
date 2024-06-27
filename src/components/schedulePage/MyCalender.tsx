@@ -3,10 +3,12 @@ import {
   Center,
   Container,
   Divider,
+  Group,
   Image,
   Input,
   Modal,
   NativeSelect,
+  Space,
   Stack,
   Tabs,
   Text,
@@ -24,6 +26,7 @@ import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./MyCalender.css";
+import React from "react";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -304,11 +307,16 @@ function MyCalender(props) {
   //console.log(review);
 
   useEffect(() => {
+    const modeElement = document.getElementById(
+      "modalMode"
+    ) as HTMLInputElement;
+    if (!travelMethod || !modeElement) return; //ensures modeElement redenred before we open modal
     if (
       directionsService &&
       directionsRenderer &&
       opened &&
-      modalActivityDescription
+      modalActivityDescription &&
+      travelMethod
     ) {
       calculateRoute(directionsService, directionsRenderer);
     }
@@ -323,7 +331,7 @@ function MyCalender(props) {
 
   const showOpeningHours = () => {
     const opening_period = review.opening_period;
-    return opening_period.map((items) => {
+    return opening_period?.map((items) => {
       return <Text>{items}</Text>;
     });
   };
@@ -401,6 +409,10 @@ function MyCalender(props) {
   }
 
   const [currentLocation, setCurrentLocation] = useState({});
+  const [directionSteps, setDirectionSteps] =
+    useState<google.maps.DirectionsStep[]>();
+
+  const [route, setRoute] = useState<google.maps.DirectionsRoute[]>([]);
 
   useEffect(() => {
     if (navigator.geolocation) {
@@ -414,6 +426,7 @@ function MyCalender(props) {
     }
   }, []);
   /////
+
   function calculateRoute(
     directionsService: google.maps.DirectionsService,
     directionsRenderer: google.maps.DirectionsRenderer
@@ -435,7 +448,14 @@ function MyCalender(props) {
     directionsService.route(request, function (result, status) {
       if (status == "OK") {
         directionsRenderer.setDirections(result);
-        console.log("Its status is OK");
+        console.log("Its status is OK", result);
+        if (result?.routes) {
+          setRoute(result.routes);
+          const steps = result.routes[0]?.legs[0].steps;
+          if (steps) {
+            setDirectionSteps(steps);
+          }
+        }
       }
     });
   }
@@ -527,7 +547,9 @@ function MyCalender(props) {
             </Tabs.Panel>
 
             <Tabs.Panel mt={10} value="directions">
-              <Text>Get Method to go here from current location</Text>
+              <Text>
+                <b>Fastest</b> Route to this location from Current Position
+              </Text>
               <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="modalMode"
@@ -539,8 +561,37 @@ function MyCalender(props) {
                   { label: "Transit", value: "TRANSIT" },
                 ]}
               ></NativeSelect>
-              Directions tab content
+              <Space h={20}></Space>
               <Container h={300} w={400} ref={modalMapRef}></Container>
+              <Space h={20}></Space>
+              {route ? (
+                <>
+                  <Group>
+                    <Text>Distance: {route[0]?.legs[0]?.distance?.text}</Text>
+                    <Text>Duration: {route[0]?.legs[0]?.duration?.text}</Text>
+                  </Group>
+                  {directionSteps ? (
+                    directionSteps.map((item, index) => (
+                      <Stack key={index}>
+                        <Divider></Divider>
+                        <div
+                          dangerouslySetInnerHTML={{
+                            __html: item.instructions,
+                          }}
+                        ></div>
+                        <Group>
+                          <Text size="xs">{item.distance.text}</Text>
+                          <Text size="xs">{item.duration.text}</Text>
+                        </Group>
+                      </Stack>
+                    ))
+                  ) : (
+                    <Text>No directions available</Text>
+                  )}
+                </>
+              ) : (
+                <Text>No Information found</Text>
+              )}
             </Tabs.Panel>
 
             <Tabs.Panel mt={10} value="edit">
