@@ -64,6 +64,7 @@ function SchedulePageMap(
   const [originPositionID, setOriginPositionID] = useState<string>();
   const [destPositionID, setDestPositionID] = useState<string>();
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+  const [currentLocation, setCurrentLocation] = useState({});
   ////////////marker
   const [markerArray, setMarkerArray] = useState<google.maps.Marker[]>([]);
 
@@ -129,7 +130,9 @@ function SchedulePageMap(
       mapRef.current as HTMLDivElement,
       mapOptions
     );
+
     setMap(mapContainer);
+
     const _autoCompleteStart = new google.maps.places.Autocomplete(
       autoCompleteStartRef.current as HTMLInputElement,
       { fields: ["place_id", "name", "formatted_address", "geometry"] }
@@ -182,6 +185,7 @@ function SchedulePageMap(
               map.setCenter(currentPos);
               map.setZoom(16);
               googleMarker.setPosition(currentPos);
+              setCurrentLocation(currentPos);
             });
           }
         });
@@ -694,6 +698,7 @@ function SchedulePageMap(
             setEvents={setEvent}
             travelID={travelID}
             map={map}
+            currentLocation={currentLocation}
           ></MyCalender>
         </div>
       </Stack>

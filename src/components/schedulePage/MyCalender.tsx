@@ -18,7 +18,7 @@ import {
   IconPencil,
 } from "@tabler/icons-react";
 import moment from "moment";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Calendar, momentLocalizer } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
@@ -40,6 +40,12 @@ function MyCalender(props) {
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
   //console.log(props.event);
+
+  const [directionsService, setDirectionsService] =
+    useState<google.maps.DirectionsService | null>(null);
+  const [directionsRenderer, setDirectionsRenderer] =
+    useState<google.maps.DirectionsRenderer | null>(null);
+  const [travelMethod, setTravelMethod] = useState("DRIVING");
 
   const moveEvent = useCallback(
     ({ event, start, end }) => {
@@ -268,6 +274,26 @@ function MyCalender(props) {
       }
       console.log(activityEvent);
       console.log(modalActivityDescription);
+
+      if (opened && modalMapRef.current) {
+        const mapOptions = {
+          center: { lat: 25, lng: 30 },
+          zoom: 8,
+          mapId: import.meta.env.VITE_NEXT_PUBLIC_MAP_ID,
+        };
+        const mapContainer = new google.maps.Map(
+          modalMapRef.current,
+          mapOptions
+        );
+        const directionsServices = new google.maps.DirectionsService();
+        const directionsRenderers = new google.maps.DirectionsRenderer({
+          map: mapContainer,
+        });
+
+        setModalMap(mapContainer);
+        setDirectionsService(directionsServices);
+        setDirectionsRenderer(directionsRenderers);
+      }
     }
   }, [
     opened,
@@ -276,6 +302,23 @@ function MyCalender(props) {
     activityEvent,
   ]);
   //console.log(review);
+
+  useEffect(() => {
+    if (
+      directionsService &&
+      directionsRenderer &&
+      opened &&
+      modalActivityDescription
+    ) {
+      calculateRoute(directionsService, directionsRenderer);
+    }
+  }, [
+    opened,
+    directionsRenderer,
+    directionsService,
+    modalActivityDescription,
+    setModalActivityDescription,
+  ]);
 
   const showOpeningHours = () => {
     const opening_period = review.opening_period;
@@ -356,9 +399,50 @@ function MyCalender(props) {
     /* it was props.event*/
   }
 
-  if (props.event) {
-    console.log("names of events", props.event.name);
+  const [currentLocation, setCurrentLocation] = useState({});
+
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const currentPos = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        setCurrentLocation(currentPos);
+      });
+    }
+  }, []);
+  /////
+  function calculateRoute(
+    directionsService: google.maps.DirectionsService,
+    directionsRenderer: google.maps.DirectionsRenderer
+  ) {
+    console.log("calculate Route");
+    const currentLoc = currentLocation as google.maps.LatLng;
+    console.log("currentLoc", currentLoc);
+    const destID = modalActivityDescription.googleMapsKeyId;
+    const selectedMode = (
+      document.getElementById("modalMode") as HTMLInputElement
+    ).value as keyof typeof google.maps.TravelMode;
+    var request = {
+      origin: { location: currentLoc },
+      destination: { placeId: destID },
+      travelMode: google.maps.TravelMode[
+        selectedMode
+      ] as google.maps.TravelMode,
+    };
+    directionsService.route(request, function (result, status) {
+      if (status == "OK") {
+        directionsRenderer.setDirections(result);
+        console.log("Its status is OK");
+      }
+    });
   }
+
+  ///
+  const [modalMap, setModalMap] = useState<google.maps.Map | null>(null);
+  console.log("modalMap", modalMap);
+  const modalMapRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -400,7 +484,7 @@ function MyCalender(props) {
         withCloseButton={true}
       >
         <nav>
-          <Tabs defaultValue="description" keepMounted={false}>
+          <Tabs defaultValue="description" keepMounted={true}>
             <Tabs.List grow>
               <Tabs.Tab
                 value="description"
@@ -442,11 +526,20 @@ function MyCalender(props) {
             </Tabs.Panel>
 
             <Tabs.Panel mt={10} value="directions">
+              <Text>Get Method to go here from current location</Text>
               <NativeSelect
-                data={["Driving", "Walking", "Cycling"]}
+                onChange={(e) => setTravelMethod(e.target.value)}
+                id="modalMode"
+                description="Method of Travel"
+                data={[
+                  { label: "Driving", value: "DRIVING" },
+                  { label: "Walking", value: "WALKING" },
+                  { label: "Bicycling", value: "BICYCLING" },
+                  { label: "Transit", value: "TRANSIT" },
+                ]}
               ></NativeSelect>
               Directions tab content
-              <Container h="10em"></Container>
+              <Container h={300} w={400} ref={modalMapRef}></Container>
             </Tabs.Panel>
 
             <Tabs.Panel mt={10} value="edit">
