@@ -1,5 +1,6 @@
 import {
   Button,
+  Center,
   Container,
   Divider,
   Image,
@@ -286,15 +287,22 @@ function MyCalender(props) {
   /////
   const updateEvents = () => {
     var bodyData = {};
+    var formattedStart;
+    var formattedEnd;
     props.setEvents((p) => {
       const existing = p.find((ev) => ev.id == eventID);
       const filtered = p.filter((ev) => ev.id !== eventID);
+
+      console.log("existing", existing);
 
       const updatedExisting = {
         ...existing,
         name: modalActivityDescription.title,
         description: modalActivityDescription.description,
       };
+
+      console.log("updatedExisting", updatedExisting);
+
       bodyData = {
         scheduleId: existing.id,
         name: updatedExisting.name,
@@ -303,8 +311,23 @@ function MyCalender(props) {
         travelStartTimeEstimate: existing.travelStartTimeEstimate,
         isActuallyVisited: existing.isActuallyVisited,
       };
+      formattedStart = moment(existing.travelStartTimeEstimate).format(
+        "YYYY-MM-DDTHH:mm:ss.SSS[Z]"
+      );
+      formattedEnd = moment(existing.travelDepartTimeEstimate).format(
+        "YYYY-MM-DDTHH:mm:ss.SSS[Z]"
+      );
+
       return [...filtered, updatedExisting];
     });
+
+    //this is causing errors lol --> reconvert bodyData here for the travelDepartTime and travelStartTime
+    console.log("bodyData-nonJSON", bodyData);
+    bodyData = {
+      ...bodyData,
+      travelDepartTimeEstimate: formattedEnd,
+      travelStartTimeEstimate: formattedStart,
+    };
 
     fetch(
       `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
@@ -406,10 +429,15 @@ function MyCalender(props) {
               )}
             </Tabs.Panel>
             <Tabs.Panel mt={10} value="reviews">
-              <Image h={200} w="auto" src={review.photo} />
-              <Text>{review.isOpen}</Text>
-              <Text>{review.website}</Text>
-              <Text>{showOpeningHours()}</Text>
+              <Stack align="center">
+                <Image w={350} h="auto" src={review.photo} />
+                <Divider w={350} />
+                <Text>{review.isOpen}</Text>
+                <Divider w={350} />
+                <a href={review.website}>{review.website}</a>
+                <Divider w={350} />
+                <Text>{showOpeningHours()}</Text>
+              </Stack>
             </Tabs.Panel>
 
             <Tabs.Panel mt={10} value="directions">
