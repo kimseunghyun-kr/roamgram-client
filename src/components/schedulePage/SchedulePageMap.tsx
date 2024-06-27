@@ -327,7 +327,7 @@ function SchedulePageMap(
     ////////////
     ///////////////////////
 
-    //setEvent((p) => [...p, scheduleDetails]);
+    setEvent((p) => [...p, scheduleDetails]);
 
     //console.log("shecule aded");
     setScheduleDetails({
@@ -414,7 +414,7 @@ function SchedulePageMap(
     if (authToken) {
       getAllSchedule();
     }
-  }, [authToken]);
+  }, [authToken, event]);
 
   console.log("events", event);
 
