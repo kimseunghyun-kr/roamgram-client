@@ -8,6 +8,7 @@ import {
   Input,
   Modal,
   NativeSelect,
+  ScrollArea,
   Space,
   Stack,
   Tabs,
@@ -550,6 +551,7 @@ function MyCalender(props) {
               <Text>
                 <b>Fastest</b> Route to this location from Current Position
               </Text>
+
               <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="modalMode"
@@ -570,24 +572,26 @@ function MyCalender(props) {
                     <Text>Distance: {route[0]?.legs[0]?.distance?.text}</Text>
                     <Text>Duration: {route[0]?.legs[0]?.duration?.text}</Text>
                   </Group>
-                  {directionSteps ? (
-                    directionSteps.map((item, index) => (
-                      <Stack key={index}>
-                        <Divider></Divider>
-                        <div
-                          dangerouslySetInnerHTML={{
-                            __html: item.instructions,
-                          }}
-                        ></div>
-                        <Group>
-                          <Text size="xs">{item.distance.text}</Text>
-                          <Text size="xs">{item.duration.text}</Text>
-                        </Group>
-                      </Stack>
-                    ))
-                  ) : (
-                    <Text>No directions available</Text>
-                  )}
+                  <ScrollArea h={300}>
+                    {directionSteps ? (
+                      directionSteps.map((item, index) => (
+                        <Stack key={index}>
+                          <Divider></Divider>
+                          <div
+                            dangerouslySetInnerHTML={{
+                              __html: item.instructions,
+                            }}
+                          ></div>
+                          <Group>
+                            <Text size="xs">{item.distance.text}</Text>
+                            <Text size="xs">{item.duration.text}</Text>
+                          </Group>
+                        </Stack>
+                      ))
+                    ) : (
+                      <Text>No directions available</Text>
+                    )}
+                  </ScrollArea>
                 </>
               ) : (
                 <Text>No Information found</Text>
