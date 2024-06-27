@@ -229,6 +229,8 @@ function GoogleMaps() {
     directionsRenderer,
   ]);
 
+  //Get the general distance between the two locations
+
   useEffect(() => {
     if (!directionsRenderer) return; //early return
 

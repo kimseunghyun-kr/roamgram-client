@@ -6,14 +6,17 @@ import {
   Center,
   Checkbox,
   Divider,
+  Flex,
   Group,
   Image,
   Input,
+  NativeSelect,
   Popover,
   SimpleGrid,
   Space,
   Stack,
   Text,
+  TextInput,
   Textarea,
   Tooltip,
 } from "@mantine/core";
@@ -53,7 +56,16 @@ function SchedulePageMap(
     useState<google.maps.places.Autocomplete | null>(null);
   const autoCompleteStartRef = useRef<HTMLInputElement>();
   const autoCompleteEndRef = useRef<HTMLInputElement>();
-  ////////////
+  const [directionsService, setDirectionsService] =
+    useState<google.maps.DirectionsService | null>(null);
+  const [directionsRenderer, setDirectionsRenderer] =
+    useState<google.maps.DirectionsRenderer | null>(null);
+  const [travelMethod, setTravelMethod] = useState("DRIVING");
+  const [originPositionID, setOriginPositionID] = useState<string>();
+  const [destPositionID, setDestPositionID] = useState<string>();
+  const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
+  ////////////marker
+  const [markerArray, setMarkerArray] = useState<google.maps.Marker[]>([]);
 
   //////////schedule constants/////////
 
@@ -133,10 +145,22 @@ function SchedulePageMap(
     setAutoCompleteEnd(_autoCompleteEnd);
 
     //////////////
+    const directionsServices = new google.maps.DirectionsService();
+    const directionsRenderers = new google.maps.DirectionsRenderer();
+    setDirectionsService(directionsServices);
+    setDirectionsRenderer(directionsRenderers);
+    directionsRenderers.setMap(mapContainer);
   }, []);
 
   const locationButton = document.createElement("button");
 
+  function deleteMarker() {
+    markerArray.forEach((item) => {
+      item.setMap(null);
+    });
+    console.log("delete marker Array", markerArray);
+    setMarkerArray([]);
+  }
   useEffect(() => {
     locationButton.textContent = "Go to Current Location";
     //Style
@@ -181,6 +205,54 @@ function SchedulePageMap(
       latitude: 0,
     });
 
+  function calculateRoute(
+    directionsService: google.maps.DirectionsService,
+    directionsRenderer: google.maps.DirectionsRenderer
+  ) {
+    const originID = autoCompleteStart?.getPlace().place_id;
+    const destID = autoCompleteEnd?.getPlace().place_id;
+    const selectedMode = (document.getElementById("mode") as HTMLInputElement)
+      .value as keyof typeof google.maps.TravelMode;
+    console.log(originID);
+    var request = {
+      origin: { placeId: originID },
+      destination: { placeId: destID },
+      travelMode: google.maps.TravelMode[
+        selectedMode
+      ] as google.maps.TravelMode,
+      provideRouteAlternatives: true, //always set to TRUE
+    };
+    directionsService.route(request, function (result, status) {
+      if (status == "OK") {
+        directionsRenderer.setDirections(result);
+        if (result?.routes) {
+          setRoutes(result.routes);
+        } else {
+          console.log("error getting route");
+        }
+      }
+    });
+  }
+  //renders if there is directions to do
+  useEffect(() => {
+    if (originPositionID && destPositionID) {
+      console.log("Complete locations");
+
+      if (directionsService && directionsRenderer) {
+        calculateRoute(directionsService, directionsRenderer);
+        deleteMarker();
+      }
+    }
+  }, [
+    directionsService,
+    directionsRenderer,
+    travelMethod,
+    originPositionID,
+    destPositionID,
+  ]);
+
+  console.log("routes", routes);
+
   useEffect(() => {
     if (autoCompleteEnd) {
       autoCompleteEnd.addListener("place_changed", () => {
@@ -190,13 +262,18 @@ function SchedulePageMap(
         console.log("end is", autoCompleteEnd.getPlace());
         console.log("fields", autoCompleteEnd.getFields());
         if (position) {
+          const dependentMarker = new google.maps.Marker({
+            map: map,
+            position: position,
+          });
           console.log("check autocomplete");
-          googleMarker.setPosition(position);
+          setMarkerArray((p) => [...p, dependentMarker]);
           if (endPlace.place_id) {
+            setDestPositionID(endPlace.place_id);
             console.log("id", endPlace.place_id);
           }
           map.setCenter(position);
-          map?.setZoom(16);
+          map.setZoom(16);
           setScheduleGooglePlaces((p) => ({
             ...p,
             googleMapsKeyId: endPlace.place_id,
@@ -227,11 +304,24 @@ function SchedulePageMap(
     if (autoCompleteStart) {
       autoCompleteStart.addListener("place_changed", () => {
         //add Stuff here
+        const startPlace = autoCompleteStart.getPlace();
+        const startPosition = startPlace.geometry?.location;
+
+        if (startPosition) {
+          const dependentMarker = new google.maps.Marker({
+            map: map,
+            position: startPosition,
+          });
+          console.log("check autocomplete");
+          setMarkerArray((p) => [...p, dependentMarker]);
+          setOriginPositionID(startPlace.place_id);
+          map.setCenter(startPosition);
+          map.setZoom(16);
+          console.log("check here for placesID");
+        }
       });
     }
   });
-
-  //console.log("schedule google palces is", scheduleGooglePlaces);
 
   ////////////////////////FOR CREATING SCHEDULES////////////////////////////////////
   const [startTime, setStartTime] = useState<string>("");
@@ -427,7 +517,7 @@ function SchedulePageMap(
       <Header></Header>
       <Stack align="stretch" justify="space-between">
         <SimpleGrid cols={2}>
-          <Center mt={30}>
+          <Center mt={10}>
             <form style={{}} onSubmit={handleSubmit}>
               <Image h={74} w="auto" src="assets/Create Schedule.png"></Image>
               <Space h={20}></Space>
@@ -452,29 +542,7 @@ function SchedulePageMap(
                   //console.log(scheduleDescription);
                 }}
               />
-              <Group mb={10}>
-                <Input
-                  w={350}
-                  placeholder="Start Location --> Check Distance"
-                  ref={autoCompleteStartRef}
-                  disabled={keepStart}
-                  leftSection={
-                    <IconMapPin size={"15"} color="green"></IconMapPin>
-                  }
-                  rightSectionPointerEvents="all"
-                  rightSection={
-                    <Tooltip label="Press checkbox to Keep location on Map">
-                      <Checkbox
-                        checked={keepStart}
-                        onChange={(e) => {
-                          setKeepStart(e.currentTarget.checked);
-                          console.log(keepStart);
-                        }}
-                      />
-                    </Tooltip>
-                  }
-                ></Input>
-              </Group>
+              <Group mb={10}></Group>
               <Group mb={10}>
                 <Input
                   leftSection={
@@ -573,8 +641,50 @@ function SchedulePageMap(
               </Group>
             </form>
           </Center>
-
-          <Box ref={mapRef}></Box>
+          <Stack>
+            <Box h={400} ref={mapRef}></Box>
+            <Flex justify="flex-start" align="center" gap="sm">
+              <TextInput
+                description="Start Location"
+                w={350}
+                placeholder="Start Location --> Check Distance"
+                ref={autoCompleteStartRef}
+                disabled={keepStart}
+                leftSection={
+                  <IconMapPin size={"15"} color="green"></IconMapPin>
+                }
+                rightSectionPointerEvents="all"
+                rightSection={
+                  <Tooltip label="Press checkbox to Keep location on Map">
+                    <Checkbox
+                      checked={keepStart}
+                      onChange={(e) => {
+                        setKeepStart(e.currentTarget.checked);
+                        console.log(keepStart);
+                      }}
+                    />
+                  </Tooltip>
+                }
+              ></TextInput>
+              <NativeSelect
+                id="mode"
+                onChange={(e) => setTravelMethod(e.target.value)}
+                w={150}
+                description="Method of Travel"
+                data={[
+                  { label: "Driving", value: "DRIVING" },
+                  { label: "Walking", value: "WALKING" },
+                  { label: "Bicycling", value: "BICYCLING" },
+                  { label: "Transit", value: "TRANSIT" },
+                ]}
+              ></NativeSelect>
+              <SimpleGrid cols={3}>
+                <Text size="md">Information: </Text>
+                <Text>{routes[0]?.legs[0]?.distance?.text}</Text>
+                <Text>{routes[0]?.legs[0]?.duration?.text}</Text>
+              </SimpleGrid>
+            </Flex>
+          </Stack>
         </SimpleGrid>
         <Divider size="sm" color="lavender" mt={5}></Divider>
         <div>
