@@ -32,7 +32,7 @@ function App() {
           <Route path="/" element={<HomePage />}></Route>
           <Route path="/login" element={<LoginPage />}></Route>
           <Route path="/travelPage" element={<TravelPlans />}></Route>
-          <Route path="/schedulePage/:travelID" element={<SchedulePageMap />} />
+          <Route path="/schedulePage/travelID" element={<SchedulePageMap />} />
           <Route path="/planner" element={<MapPage />}></Route>
           <Route path="/authSuccess" element={<GoogleLogin />}></Route>
         </Routes>

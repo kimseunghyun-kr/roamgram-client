@@ -237,7 +237,7 @@ function SchedulePageMap(
   const [endTime, setEndTime] = useState<string>("");
   const [scheduleName, setScheduleName] = useState<string>("");
   const [scheduleDescription, setScheduleDescription] = useState<string>("");
-  //const [event, setEvent] = useState([]);
+  const [event, setEvent] = useState([]);
   const [travelDay, setTravelDay] = useState<Date | null>(null);
   const [endTimePop, setEndTimePop] = useState(false);
 
@@ -300,9 +300,6 @@ function SchedulePageMap(
   };
 
   //submit button//
-  //console.log("travelPlanId")
-  const { travelID } = useParams();
-  console.log(travelID);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -318,7 +315,7 @@ function SchedulePageMap(
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          Authorization: `Bearer ${authToken}`,
         },
         body: JSON.stringify(apiScheduleDetails),
       }
@@ -354,16 +351,38 @@ function SchedulePageMap(
 
   ////////////////testing purposes/////////////////////////
   //const travelPlanId = props.travelID;
+  const url = window.location.search;
+  const urlParams = new URLSearchParams(url);
+  const travelID = urlParams.get(`id`);
+  console.log("id travel is", travelID);
 
-  /*
+  const [authToken, setAuthToken] = useState("");
+
+  //get Token if signed in --> only signed in people can access but this will be helpful for
+  useEffect(() => {
+    const token = sessionStorage.getItem(`authToken`);
+    if (token) {
+      setAuthToken(token);
+    }
+  }, []);
+
+  console.log(
+    "fetch is",
+    `${
+      import.meta.env.VITE_APP_API_URL
+    }/travelPlan/${travelID}/schedule/search_all`
+  );
+
   const getAllSchedule = () => {
     fetch(
-      `http://localhost:8080/travelPlan/${travelPlanId}/schedule/search_all`,
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${travelID}/schedule/search_all`,
       {
         method: "GET",
         headers: {
           //Accept: "application/json", // Optional: Explicitly requests JSON responses
-          Authorization: `Bearer ${import.meta.env.VITE_TOKEN}`,
+          Authorization: `Bearer ${authToken}`,
         },
       }
     )
@@ -388,9 +407,17 @@ function SchedulePageMap(
           //console.log(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
         )
       )
-      .catch((error) => console.log(error));
+      .catch((error) => console.log(error, "error getting all schedules"));
   };
-  */
+
+  useEffect(() => {
+    if (authToken) {
+      getAllSchedule();
+    }
+  }, [authToken]);
+
+  console.log("events", event);
+
   //console.log(event);
   //console.log("events directly are", event);
   return (
@@ -549,7 +576,12 @@ function SchedulePageMap(
         </SimpleGrid>
         <Divider size="sm" color="lavender" mt={5}></Divider>
         <div>
-          <MyCalender h="auto"></MyCalender>
+          <MyCalender
+            h="auto"
+            event={event}
+            setEvents={setEvent}
+            travelID={travelID}
+          ></MyCalender>
         </div>
       </Stack>
     </>

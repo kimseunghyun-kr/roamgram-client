@@ -248,7 +248,7 @@ function TravelPlans() {
                   <IconEdit />
                 </ActionIcon>
                 {sessionStorage.getItem(`authToken`) ? (
-                  <Link to={`/schedulePage/${items.id}`}>
+                  <Link to={`/schedulePage/travelID?id=${items.id}`}>
                     <ActionIcon
                       variant="transparent"
                       className="to-schedule-button"

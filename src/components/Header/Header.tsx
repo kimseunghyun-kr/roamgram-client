@@ -23,6 +23,9 @@ function Header() {
   });
   return (
     <header>
+      <Link to="/schedulePage/travelID?id=4fe8f11a-f159-4625-8c8e-e6bcfdf860c2">
+        <Button>Test Schedules</Button>
+      </Link>
       <Container w={1700} size="1900" style={{ display: "flex" }}>
         <Link to="/">
           <a href="#">

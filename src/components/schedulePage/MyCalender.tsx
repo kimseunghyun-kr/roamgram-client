@@ -80,7 +80,7 @@ function MyCalender(props) {
 
       fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
-          props.travelPlanId
+          props.travelID
         }/schedule/update_schedule_metadata`,
         {
           method: "PATCH",
@@ -126,7 +126,7 @@ function MyCalender(props) {
       });
       fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
-          props.travelPlanId
+          props.travelID
         }/schedule/update_schedule_metadata`,
         {
           method: "PATCH",
@@ -140,8 +140,6 @@ function MyCalender(props) {
     },
     [props.setEvents]
   );
-
-  //console.log("travelPlanID", props.travelPlanId);
 
   const deleteEvent = useCallback(() => {
     props.setEvents((p) => {
@@ -162,7 +160,7 @@ function MyCalender(props) {
 
     fetch(
       `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
-        props.travelPlanId
+        props.travelID
       }/schedule/delete_schedule?scheduleId=${eventID}`,
       {
         method: "DELETE",
@@ -295,7 +293,7 @@ function MyCalender(props) {
 
     fetch(
       `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
-        props.travelPlanId
+        props.travelID
       }/schedule/update_schedule_metadata`,
       {
         method: "PATCH",
