@@ -325,17 +325,16 @@ function SchedulePageMap(
       .then((data) => {
         console.log("success in adding", data);
         console.log("data id is", data.id);
-        setScheduleDetails((p) => ({
-          ...p,
+        //this is async and may causes problems
+        const newSchedule = {
+          ...scheduleDetails,
           id: data.id,
           travelPlanId: data.travelPlanId,
-        }));
+        };
+        setScheduleDetails((p) => newSchedule);
+        setEvent((p) => [...p, newSchedule]);
       })
-      .then((e) => setEvent((p) => [...p, scheduleDetails]))
       .catch((error) => console.log("error in adding new schedule", error));
-
-    ////////////
-    ///////////////////////
 
     //console.log("shecule aded");
     setScheduleDetails({
