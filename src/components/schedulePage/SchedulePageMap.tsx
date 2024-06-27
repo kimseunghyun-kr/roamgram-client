@@ -23,7 +23,6 @@ import moment from "moment";
 import MyCalender from "./MyCalender.tsx";
 
 import { IconMapPin } from "@tabler/icons-react";
-import { useParams } from "react-router-dom";
 import Header from "../Header/Header.tsx";
 import "./SchedulePageMap.css";
 
@@ -303,8 +302,8 @@ function SchedulePageMap(
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("schedule to api is", scheduleDetails);
-    console.log("json version is", JSON.stringify(scheduleDetails));
+    //console.log("schedule to api is", scheduleDetails);
+    //console.log("json version is", JSON.stringify(scheduleDetails));
     //create duplicate;
     //FETCH API HERE!
     fetch(
@@ -354,7 +353,7 @@ function SchedulePageMap(
   const url = window.location.search;
   const urlParams = new URLSearchParams(url);
   const travelID = urlParams.get(`id`);
-  console.log("id travel is", travelID);
+  //console.log("id travel is", travelID);
 
   const [authToken, setAuthToken] = useState("");
 
@@ -367,13 +366,6 @@ function SchedulePageMap(
   }, []);
 
   const getAllSchedule = () => {
-    console.log(
-      "fetch is",
-      `${
-        import.meta.env.VITE_APP_API_URL
-      }/travelPlan/${travelID}/schedule/search_all`
-    );
-
     fetch(
       `${
         import.meta.env.VITE_APP_API_URL
@@ -581,6 +573,7 @@ function SchedulePageMap(
             event={event}
             setEvents={setEvent}
             travelID={travelID}
+            map={map}
           ></MyCalender>
         </div>
       </Stack>

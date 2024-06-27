@@ -90,7 +90,10 @@ function MyCalender(props) {
           },
           body: JSON.stringify(bodyData),
         }
-      ).then((response) => console.log("success in moving"));
+      )
+        .then((response) => console.log("success in moving"))
+        .then((data) => console.log("sucecss moving data"))
+        .catch((error) => console.log(error));
     },
     [props.setEvents]
   );
@@ -136,7 +139,10 @@ function MyCalender(props) {
           },
           body: JSON.stringify(bodyData),
         }
-      ).then((response) => console.log("success in resizing"));
+      )
+        .then((response) => console.log("success in resizing"))
+        .then((data) => console.log(data))
+        .catch((error) => console.log(error, "error resizing"));
     },
     [props.setEvents]
   );
@@ -224,32 +230,41 @@ function MyCalender(props) {
     photo: "",
   });
 
-  const service = new google.maps.places.PlacesService(props.map);
+  const [service, setService] =
+    useState<google.maps.places.PlacesService | null>(null);
+  useEffect(() => {
+    if (props.map) {
+      const svc = new google.maps.places.PlacesService(props.map);
+      setService(svc);
+    }
+  }, [props.map]);
 
   useEffect(() => {
-    if (opened) {
+    if (opened && service) {
       const googlePlaceID = modalActivityDescription.googleMapsKeyId;
+      //correct  googlePlaceID
       //console.log(googlePlaceID);
       const request = {
         placeId: modalActivityDescription.googleMapsKeyId,
         fields: ["opening_hours", "website", "business_status", "photo"],
       };
-
-      service.getDetails(request, (details, status) => {
-        if (status === "OK") {
-          console.log("Succesful Google Request");
-          setReview({
-            isOpen: details?.opening_hours?.open_now
-              ? "Currently Open"
-              : "Currently Closed",
-            opening_period: details?.opening_hours?.weekday_text,
-            website: details?.website,
-            photo: details?.photos[0].getUrl(),
-          });
-        } else {
-          console.log("Error getting google places of modal details");
-        }
-      });
+      if (googlePlaceID) {
+        service.getDetails(request, (details, status) => {
+          if (status === "OK") {
+            console.log("Succesful Google Request");
+            setReview({
+              isOpen: details?.opening_hours?.open_now
+                ? "Currently Open"
+                : "Currently Closed",
+              opening_period: details?.opening_hours?.weekday_text,
+              website: details?.website,
+              photo: details?.photos[0].getUrl(),
+            });
+          } else {
+            console.log("Error getting google places of modal details");
+          }
+        });
+      }
       console.log(activityEvent);
       console.log(modalActivityDescription);
     }
@@ -306,7 +321,6 @@ function MyCalender(props) {
     ).then((response) => console.log("success in updating information"));
   };
 
-  /*
   const showReviews = () => {
     const toShow = Object.values(review);
     return toShow.map((items) => {
@@ -314,7 +328,7 @@ function MyCalender(props) {
       return <Text>{items}</Text>;
     });
   };
-  */
+
   {
     /* it was props.event*/
   }
