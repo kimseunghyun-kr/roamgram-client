@@ -16,6 +16,7 @@ import {
   Overlay,
   SimpleGrid,
   Space,
+  Stack,
   Switch,
   Text,
   TextInput,
@@ -74,7 +75,7 @@ function HomePage() {
   const googleMarker = new google.maps.Marker({
     map: map,
     title: "Current Pinned Location",
-    icon: "http://maps.google.com/mapfiles/ms/icons/blue-dot.png",
+    icon: "http://maps.google.com/mapfiles/ms/icons/green-dot.png",
   });
   //map initialization
   useEffect(() => {
@@ -119,6 +120,10 @@ function HomePage() {
 
   const [markerArray, setMarkerArray] = useState<google.maps.Marker[]>([]);
 
+  //
+  const [opened, setOpened] = useState(false);
+  const [place, setPlace] = useState();
+
   function createMarker(place: google.maps.places.PlaceResult) {
     const marker = new google.maps.Marker({
       map,
@@ -126,10 +131,18 @@ function HomePage() {
     });
 
     google.maps.event.addListener(marker, "click", () => {
-      console.log("is Info Window set?");
-      infowindow.setContent(
-        `<img src = ${place.icon}></img> <text>${place.name}</text>`
-      );
+      //console.log("is Info Window set?");
+      infowindow.setContent(`
+      <div><img src=${place.photos[0].getUrl()}></img></div>
+      <div><Text size = 'xs'>Rating: ${place.rating}</Text> </div>
+      <div><Text size='xs'>${place.name}</Text></div>
+      <div> <Text>${
+        place.opening_hours?.open_now ? "Currently Open" : "Currently Closed"
+      }</Text> </div>
+      
+  
+     
+    `);
 
       infowindow.open(map, marker);
     });
@@ -140,7 +153,7 @@ function HomePage() {
     console.log("current location api", currentLocation);
     const request = {
       location: currentLocation as google.maps.LatLng,
-      radius: 500,
+      radius: 1000,
       type: type_to_find,
     };
     return serviceOn?.nearbySearch(request, (results, status) => {
@@ -401,13 +414,14 @@ function HomePage() {
             }}
           >
             <Group mt={35}>
-              <Chip value="food"> food </Chip>
-              <Chip value="shopping_mall">mall</Chip>
-              <Chip value="tourist_attraction">tourist attractions</Chip>
-              <Chip value="library">library</Chip>
-              <Chip value="no">hotels</Chip>
-              <Chip value="n2o">public transport</Chip>
-              <Chip value="n1o">parking</Chip>
+              <Chip value="food"> Food </Chip>
+              <Chip value="shopping_mall">Mall</Chip>
+              <Chip value="tourist_attraction">Tourist attractions</Chip>
+              <Chip value="restaurant">Restaurants</Chip>
+
+              <Chip value="supermarket">Supermarket</Chip>
+              <Chip value="parking">Parking</Chip>
+              <Chip value="ath">ATM</Chip>
             </Group>
           </Chip.Group>
         </SimpleGrid>
