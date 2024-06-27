@@ -384,6 +384,7 @@ function MyCalender(props) {
           setOpened(true);
           console.log("e is ", e);
           setEventID(e.id);
+          console.log("eventID is", e.id);
           //console.log("onSelectEventID");
           //console.log(eventID);
           //console.log("e id", e.id);

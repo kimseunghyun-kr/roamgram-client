@@ -65,6 +65,8 @@ function SchedulePageMap(
       longitude: 0,
       latitude: 0,
     },
+    id: "",
+    travelPlanId: "",
     name: "test",
     description: "",
     isActuallyVisited: false,
@@ -320,16 +322,25 @@ function SchedulePageMap(
       }
     )
       .then((response) => response.json())
-      .then((data) => console.log("success in adding", data))
+      .then((data) => {
+        console.log("success in adding", data);
+        console.log("data id is", data.id);
+        setScheduleDetails((p) => ({
+          ...p,
+          id: data.id,
+          travelPlanId: data.travelPlanId,
+        }));
+      })
+      .then((e) => setEvent((p) => [...p, scheduleDetails]))
       .catch((error) => console.log("error in adding new schedule", error));
 
     ////////////
     ///////////////////////
 
-    setEvent((p) => [...p, scheduleDetails]);
-
     //console.log("shecule aded");
     setScheduleDetails({
+      id: "",
+      travelPlanId: "",
       name: "",
       description: "",
       place: {
