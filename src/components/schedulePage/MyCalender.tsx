@@ -314,6 +314,7 @@ function MyCalender(props) {
     }
   }, [
     opened,
+    travelMethod,
     directionsRenderer,
     directionsService,
     modalActivityDescription,
