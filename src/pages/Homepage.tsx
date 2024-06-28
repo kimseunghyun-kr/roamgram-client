@@ -145,11 +145,11 @@ function HomePage() {
       }</div>
       <div>${
         place.opening_hours
-          ? "<text>"(
+          ? `<text>${
               place.opening_hours.open_now
                 ? "Currently Open"
                 : "Currently Closed"
-            ) + "</text>"
+            }</text>`
           : ""
       }</div>
     </div>

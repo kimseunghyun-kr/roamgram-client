@@ -113,6 +113,7 @@ function TravelPlans() {
   const [itemToAdd, setItemToAdd] = useState();
 
   const submit_travel_plan = () => {
+    console.log("jsontravel", JSON.stringify(travelPlanDetails));
     fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`, {
       method: "POST",
       headers: {
@@ -247,7 +248,7 @@ function TravelPlans() {
                 >
                   <IconEdit />
                 </ActionIcon>
-                {sessionStorage.getItem(`authToken`) ? (
+                {authToken ? (
                   <Link to={`/schedulePage/travelID?id=${items.id}`}>
                     <ActionIcon
                       variant="transparent"
@@ -312,8 +313,29 @@ function TravelPlans() {
     endDate: "",
   });
 
+  const tokens = sessionStorage.getItem(`authToken`);
+  useEffect(() => {
+    //const token = sessionStorage.getItem(`authToken`);
+    const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
+    console.log(tokens);
+    console.log("items", items);
+    if (tokens) {
+      setAuthToken(tokens);
+      if (items) {
+        sethomeItem((p) => ({
+          ...p,
+          name: items.name,
+          startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
+          endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
+        }));
+      }
+    }
+    console.log(items);
+  }, [tokens]);
+
   useEffect(() => {
     if (authToken) {
+      console.log("its getting all");
       fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`, {
         method: "GET",
         headers: {
@@ -325,35 +347,8 @@ function TravelPlans() {
         .catch((error) => console.log(error));
     }
   }, [authToken]);
-  const tokens = sessionStorage.getItem(`authToken`);
-  useEffect(() => {
-    //const token = sessionStorage.getItem(`authToken`);
-    const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
-    console.log(tokens);
-    if (items && tokens) {
-      setAuthToken(tokens);
-      sethomeItem((p) => ({
-        ...p,
-        name: items.name,
-        startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
-        endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
-      }));
-    }
-    console.log(items);
 
-    /*
-    if (token && items) {
-      setAuthToken(token);
-      setHomePageItems((p) => ({
-        ...p,
-        name: items.name,
-        startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
-        endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
-      }));
-      console.log("tokken succes", token);
-    }
-    */
-  }, [tokens]);
+  console.log("authTok", authToken);
 
   useEffect(() => {
     if (homeItem && authToken) {
@@ -397,7 +392,7 @@ function TravelPlans() {
 
       sessionStorage.removeItem(`HomePageTravel`);
     }
-  }, [homeItem, authToken, tokens]);
+  }, [homeItem, authToken]);
 
   ///Essentially if we are authenticated and have created a homepageItem which is stored in our local storage --> we need to fetch this and add it into our planner
   useEffect(() => {}, [authToken]);
@@ -510,7 +505,7 @@ function TravelPlans() {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="incomplete">
-              {sessionStorage.getItem(`authToken`) ? (
+              {authToken ? (
                 <Carousel
                   initialSlide={initialSlides}
                   withIndicators
