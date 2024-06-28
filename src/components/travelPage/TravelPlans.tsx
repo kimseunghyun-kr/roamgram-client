@@ -314,14 +314,15 @@ function TravelPlans() {
   });
 
   const tokens = sessionStorage.getItem(`authToken`);
+
   useEffect(() => {
     //const token = sessionStorage.getItem(`authToken`);
-    const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
     console.log(tokens);
-    console.log("items", items);
+
     if (tokens) {
       setAuthToken(tokens);
-      if (items) {
+      if (sessionStorage.getItem(`HomePageTravel`) !== null) {
+        const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
         sethomeItem((p) => ({
           ...p,
           name: items.name,
@@ -330,8 +331,7 @@ function TravelPlans() {
         }));
       }
     }
-    console.log(items);
-  }, [tokens]);
+  }, []);
 
   useEffect(() => {
     if (authToken) {
@@ -351,7 +351,7 @@ function TravelPlans() {
   console.log("authTok", authToken);
 
   useEffect(() => {
-    if (homeItem && authToken) {
+    if (homeItem?.name && authToken) {
       console.log("fetch item simulator useEfefct");
       console.log("fetch item homePage", homeItem);
       console.log("authToken is", authToken);
@@ -391,8 +391,9 @@ function TravelPlans() {
       });
 
       sessionStorage.removeItem(`HomePageTravel`);
+      sethomeItem(null);
     }
-  }, [homeItem, authToken]);
+  }, [authToken]);
 
   ///Essentially if we are authenticated and have created a homepageItem which is stored in our local storage --> we need to fetch this and add it into our planner
   useEffect(() => {}, [authToken]);
