@@ -305,10 +305,10 @@ function GoogleMaps() {
                   {" "}
                   <p>Distance: {leg.distance?.text}</p>
                   <p> Duration: {leg.duration?.text}</p>
-                  <p>Details</p>
+                  <p>Details: Click Here!</p>
                 </UnstyledButton>
                 <Collapse in={opened}>
-                  <ScrollArea>
+                  <ScrollArea h={300}>
                     <Stack>
                       {leg.steps.map((step) => (
                         <>
