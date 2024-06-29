@@ -397,10 +397,11 @@ function SchedulePageMap(
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    //console.log("schedule to api is", scheduleDetails);
+    console.log("schedule to api is", scheduleDetails);
     //console.log("json version is", JSON.stringify(scheduleDetails));
     //create duplicate;
     //FETCH API HERE!
+
     fetch(
       `${
         import.meta.env.VITE_APP_API_URL

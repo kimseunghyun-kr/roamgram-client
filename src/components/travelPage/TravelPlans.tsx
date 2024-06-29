@@ -314,14 +314,13 @@ function TravelPlans() {
   });
 
   const tokens = sessionStorage.getItem(`authToken`);
-
   useEffect(() => {
     //const token = sessionStorage.getItem(`authToken`);
     console.log(tokens);
-
+    console.log("itemshometravel", sessionStorage.getItem(`HomePageTravel`));
     if (tokens) {
       setAuthToken(tokens);
-      if (sessionStorage.getItem(`HomePageTravel`) !== null) {
+      if (sessionStorage.getItem(`HomePageTravel`)) {
         const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
         sethomeItem((p) => ({
           ...p,
@@ -331,9 +330,10 @@ function TravelPlans() {
         }));
       }
     }
-  }, []);
+  }, [tokens]);
 
   useEffect(() => {
+    console.log("authTok", authToken);
     if (authToken) {
       console.log("its getting all");
       fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`, {
@@ -347,8 +347,6 @@ function TravelPlans() {
         .catch((error) => console.log(error));
     }
   }, [authToken]);
-
-  console.log("authTok", authToken);
 
   useEffect(() => {
     if (homeItem?.name && authToken) {
@@ -394,9 +392,6 @@ function TravelPlans() {
       sethomeItem(null);
     }
   }, [authToken]);
-
-  ///Essentially if we are authenticated and have created a homepageItem which is stored in our local storage --> we need to fetch this and add it into our planner
-  useEffect(() => {}, [authToken]);
 
   //const [modalTravelPlan, setModalTravelPlan] = useState();
   const [editTravelPlan, setEditTravelPlan] = useState({

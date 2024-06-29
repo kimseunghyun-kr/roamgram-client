@@ -1,15 +1,20 @@
 import {
+  Collapse,
   Container,
   Divider,
   Grid,
   NativeSelect,
+  ScrollArea,
   SimpleGrid,
   Space,
   Stack,
   TextInput,
+  Text,
+  UnstyledButton,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
-import { useEffect, useRef, useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 function GoogleMaps() {
   //for origin textbox
@@ -196,6 +201,7 @@ function GoogleMaps() {
         directionsRenderer.setDirections(result);
         if (result?.routes) {
           setRoutes(result.routes);
+          console.log("resuts routes", result.routes);
         } else {
           console.log("error getting route");
         }
@@ -229,13 +235,22 @@ function GoogleMaps() {
     directionsRenderer,
   ]);
 
+  const showDetailedRoute = useCallback(() => {}, [routeIndex]);
+
   //Get the general distance between the two locations
 
-  useEffect(() => {
+  const setRouteCallback = useCallback(() => {
     if (!directionsRenderer) return; //early return
 
     directionsRenderer.setRouteIndex(routeIndex);
+    console.log(selected);
   }, [routeIndex, directionsRenderer]);
+
+  useEffect(() => {
+    setRouteCallback();
+  }, [setRouteCallback]);
+
+  const [opened, { toggle }] = useDisclosure(false);
 
   return (
     <>
@@ -282,33 +297,63 @@ function GoogleMaps() {
           <label>Destination: {selectedPlaceDest} </label>
         </Container>
         <Divider size="sm"></Divider>
-        {leg ? (
-          <>
-            <p>Distance: {leg.distance?.text}</p>
-            <p> Duration: {leg.duration?.text}</p>
-          </>
-        ) : (
-          ""
-        )}
-        <h3>Alternative Routes to Choose</h3>
-
-        <ul>
-          {routes.length > 1 ? (
-            <li>
-              {routes.map((route, index) => (
-                <li key={route.summary}>
-                  <button onClick={() => setRouteIndex(index)}>
-                    {route.summary}
-                  </button>
-                  <Space></Space>
-                  <Divider></Divider>
-                </li>
-              ))}
-            </li>
+        <Container>
+          {leg ? (
+            <>
+              <Stack>
+                <UnstyledButton onClick={toggle}>
+                  {" "}
+                  <p>Distance: {leg.distance?.text}</p>
+                  <p> Duration: {leg.duration?.text}</p>
+                  <p>Details</p>
+                </UnstyledButton>
+                <Collapse in={opened}>
+                  <ScrollArea>
+                    <Stack>
+                      {leg.steps.map((step) => (
+                        <>
+                          <Text size="xs">{step.duration.text}</Text>
+                          <Text size="xs">{step.distance.text}</Text>
+                          <Text
+                            size="xs"
+                            dangerouslySetInnerHTML={{
+                              __html: step.instructions,
+                            }}
+                          ></Text>
+                          <Divider></Divider>
+                        </>
+                      ))}
+                    </Stack>
+                  </ScrollArea>
+                </Collapse>
+              </Stack>
+            </>
           ) : (
-            <></>
+            ""
           )}
-        </ul>
+        </Container>
+        <Divider></Divider>
+        <Container>
+          <h3>Alternative Routes to Choose</h3>
+
+          <ul>
+            {routes.length > 1 ? (
+              <li>
+                {routes.map((route, index) => (
+                  <li key={route.summary}>
+                    <button onClick={() => setRouteIndex(index)}>
+                      {route.summary}
+                    </button>
+                    <Space></Space>
+                    <Divider></Divider>
+                  </li>
+                ))}
+              </li>
+            ) : (
+              <></>
+            )}
+          </ul>
+        </Container>
       </Grid.Col>
       <Grid.Col span={7}>
         <div style={{ height: "100vh" }} ref={mapRef}></div>

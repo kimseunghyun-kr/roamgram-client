@@ -22,6 +22,8 @@ function Header() {
     //console.log("logged in?", isLoggedIn);
   });
 
+  //this is for debugging purposes//
+
   const relogin = () => {
     fetch(`https://localhost/authentication/sign-in`, {
       method: "POST",
@@ -41,10 +43,12 @@ function Header() {
   };
   return (
     <header>
+      {/* debugging purposes
       <Link to="/schedulePage/travelID?id=4fe8f11a-f159-4625-8c8e-e6bcfdf860c2">
         <Button>Test Schedules</Button>
       </Link>
       <Button onClick={relogin}>Relogin refresh</Button>
+      */}
       <Container w={1700} size="1900" style={{ display: "flex" }}>
         <Link to="/">
           <a href="#">
