@@ -12,10 +12,10 @@ import TravelPlans from "./components/travelPage/TravelPlans.tsx";
 import MapPage from "./pages/MapPage.tsx";
 import GoogleLogin from "./components/Login/GoogleLogin.tsx";
 import HomePage from "./pages/HomePage.tsx";
-
-//const myEventsList = [
-//  { start: new Date(), end: new Date(), title: "special event" },
-//];
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+//reactQuery
+const queryClient = new QueryClient();
 
 function App() {
   const { isLoaded } = useJsApiLoader({
@@ -27,16 +27,22 @@ function App() {
 
   return isLoaded ? (
     <>
-      <div>
-        <Routes>
-          <Route path="/" element={<HomePage />}></Route>
-          <Route path="/login" element={<LoginPage />}></Route>
-          <Route path="/travelPage" element={<TravelPlans />}></Route>
-          <Route path="/schedulePage/travelID" element={<SchedulePageMap />} />
-          <Route path="/planner" element={<MapPage />}></Route>
-          <Route path="/authSuccess" element={<GoogleLogin />}></Route>
-        </Routes>
-      </div>
+      <QueryClientProvider client={queryClient}>
+        <div>
+          <Routes>
+            <Route path="/" element={<HomePage />}></Route>
+            <Route path="/login" element={<LoginPage />}></Route>
+            <Route path="/travelPage" element={<TravelPlans />}></Route>
+            <Route
+              path="/schedulePage/travelID"
+              element={<SchedulePageMap />}
+            />
+            <Route path="/planner" element={<MapPage />}></Route>
+            <Route path="/authSuccess" element={<GoogleLogin />}></Route>
+          </Routes>
+        </div>
+        <ReactQueryDevtools />
+      </QueryClientProvider>
     </>
   ) : (
     <></>

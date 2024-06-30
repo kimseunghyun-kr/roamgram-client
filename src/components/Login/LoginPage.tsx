@@ -25,6 +25,7 @@ import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 function LoginPage() {
   const history = useNavigate();
@@ -68,6 +69,30 @@ function LoginPage() {
 
   //console.log({ ...form.getInputProps("password") });
 
+  const queryClient = useQueryClient();
+
+  const { mutate, isPending, isError, isSuccess } = useMutation({
+    mutationKey: ["login"],
+    mutationFn: async (values: {}) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/authentication/sign-in`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      ).then((res) => res.json());
+      return response;
+    },
+    onSuccess: (data) => {
+      console.log("authToken is", data.accessToken);
+      sessionStorage.setItem("authToken", `${data.accessToken}`);
+      history(-1);
+    },
+  });
+
   function continueLogIn(values: {}) {
     fetch(`${import.meta.env.VITE_APP_API_URL}/authentication/sign-in`, {
       method: "POST",
@@ -75,19 +100,23 @@ function LoginPage() {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(values),
-    })
-      .then((response) => response.json())
+    }).then((response) => response.json());
+
+    {
+      /* 
       .then(
         (data) => (
           console.log(data),
           sessionStorage.setItem("authToken", `${data.accessToken}`),
           console.log(sessionStorage.getItem(`authToken`)),
-          history(-1)
+          
         )
       )
       .catch((error) => {
         console.log("error logging in", setLoginError(true));
       }); //history("/") goes back to homepage
+    */
+    }
   }
 
   function createAccount(values: {}) {
@@ -140,7 +169,8 @@ function LoginPage() {
                 <form
                   onSubmit={form.onSubmit(
                     (values, event) => (
-                      console.log(values, event), continueLogIn(values)
+                      console.log(values, event), mutate(values)
+                      //continueLogIn(values)
                     )
                   )}
                 >
