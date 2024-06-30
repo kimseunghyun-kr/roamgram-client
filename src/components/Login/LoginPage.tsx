@@ -103,7 +103,7 @@ function LoginPage() {
   const { mutate: createMutate, isPending: createLoading } = useMutation({
     mutationKey: ["create"],
     mutationFn: async (values: {}) => {
-      const res = await fetch(
+      await fetch(
         `${import.meta.env.VITE_APP_API_URL}/authentication/sign-up`,
         {
           method: "POST",
@@ -113,38 +113,16 @@ function LoginPage() {
           body: JSON.stringify(values),
         }
       );
-      return res.json();
     },
     onSuccess: (data) => {
       console.log("Success Registering, data is", data);
       setSection(false);
     },
-    onError: () => {
+    onError: (error) => {
       console.log("Error creating an account");
       setCreateError(true);
     },
   });
-
-  function createAccount(values: {}) {
-    fetch(`${import.meta.env.VITE_APP_API_URL}/authentication/sign-up`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    })
-      .then((response) => response.text())
-      .then((text) => {
-        console.log(text);
-        return JSON.parse(text);
-      })
-      .then(
-        (data) => (
-          console.log("Success Registering, data is", data),
-          console.log("create values are", values)
-        )
-      );
-  }
 
   function googleSignIn() {
     fetch(`${import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}`, { method: "GET" })

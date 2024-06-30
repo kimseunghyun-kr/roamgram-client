@@ -33,6 +33,7 @@ import { Link } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import Header from "../Header/Header.tsx";
 import "./TravelPlans.css";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 //const data = [
 //  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
@@ -219,8 +220,8 @@ function TravelPlans() {
   };
 
   const cardTravel = () => {
-    return event
-      ? event.map((items: TravelPlan) => (
+    return eventData
+      ? eventData.map((items: TravelPlan) => (
           //console.log("Rendering item", items.id),
           <Carousel.Slide key={items.id}>
             <Center h={550}>
@@ -295,11 +296,6 @@ function TravelPlans() {
       : null;
   };
 
-  useEffect(() => {
-    //console.log("Event updated:", event);
-    // Optionally force a refresh here if the carousel supports it
-  }, [event]);
-
   const [initialSlides, setInitialSlides] = useState(0);
 
   const [activeTab, setActiveTab] = useState<string | null>("incomplete");
@@ -331,6 +327,33 @@ function TravelPlans() {
       }
     }
   }, [tokens]);
+
+  //initial fetching of our eventList
+  const { data: eventData } = useQuery({
+    queryKey: ["queryEvent"],
+    queryFn: async () => {
+      if (authToken) {
+        const res = await fetch(
+          `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
+          {
+            method: "GET",
+            headers: {
+              Authorization: `Bearer ${authToken}`,
+            },
+          }
+        );
+
+        console.log("queryLog", res);
+        return res.json();
+      } else {
+        throw new Error("No token");
+      }
+    },
+  });
+
+  console.log("queryData is", eventData);
+
+  //mutations
 
   useEffect(() => {
     console.log("authTok", authToken);
