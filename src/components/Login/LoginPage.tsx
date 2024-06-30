@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Alert,
   Button,
   Card,
   CardSection,
@@ -8,6 +9,7 @@ import {
   Divider,
   Flex,
   Image,
+  Loader,
   NavLink,
   PasswordInput,
   Popover,
@@ -71,7 +73,7 @@ function LoginPage() {
 
   const queryClient = useQueryClient();
 
-  const { mutate, isPending, isError, isSuccess } = useMutation({
+  const { mutate: loginMutate, isPending: loginLoading } = useMutation({
     mutationKey: ["login"],
     mutationFn: async (values: {}) => {
       const response = await fetch(
@@ -83,41 +85,45 @@ function LoginPage() {
           },
           body: JSON.stringify(values),
         }
-      ).then((res) => res.json());
-      return response;
+      );
+      return response.json();
     },
     onSuccess: (data) => {
       console.log("authToken is", data.accessToken);
       sessionStorage.setItem("authToken", `${data.accessToken}`);
       history(-1);
     },
+    onError: () => {
+      setLoginError(true);
+    },
   });
 
-  function continueLogIn(values: {}) {
-    fetch(`${import.meta.env.VITE_APP_API_URL}/authentication/sign-in`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(values),
-    }).then((response) => response.json());
+  const [createError, setCreateError] = useState(false);
 
-    {
-      /* 
-      .then(
-        (data) => (
-          console.log(data),
-          sessionStorage.setItem("authToken", `${data.accessToken}`),
-          console.log(sessionStorage.getItem(`authToken`)),
-          
-        )
-      )
-      .catch((error) => {
-        console.log("error logging in", setLoginError(true));
-      }); //history("/") goes back to homepage
-    */
-    }
-  }
+  const { mutate: createMutate, isPending: createLoading } = useMutation({
+    mutationKey: ["create"],
+    mutationFn: async (values: {}) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/authentication/sign-up`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(values),
+        }
+      );
+      return res.json();
+    },
+    onSuccess: (data) => {
+      console.log("Success Registering, data is", data);
+      setSection(false);
+    },
+    onError: () => {
+      console.log("Error creating an account");
+      setCreateError(true);
+    },
+  });
 
   function createAccount(values: {}) {
     fetch(`${import.meta.env.VITE_APP_API_URL}/authentication/sign-up`, {
@@ -169,7 +175,7 @@ function LoginPage() {
                 <form
                   onSubmit={form.onSubmit(
                     (values, event) => (
-                      console.log(values, event), mutate(values)
+                      console.log(values, event), loginMutate(values)
                       //continueLogIn(values)
                     )
                   )}
@@ -226,14 +232,18 @@ function LoginPage() {
                           withArrow
                         >
                           <Popover.Target>
-                            <Button
-                              type="submit"
-                              variant="gradient"
-                              w={150}
-                              radius="lg"
-                            >
-                              Continue
-                            </Button>
+                            {!loginLoading ? (
+                              <Button
+                                type="submit"
+                                variant="gradient"
+                                w={150}
+                                radius="lg"
+                              >
+                                Continue
+                              </Button>
+                            ) : (
+                              <Loader size={30}></Loader>
+                            )}
                           </Popover.Target>
                           <Popover.Dropdown>
                             <Text size={"13px"} c="red">
@@ -276,9 +286,7 @@ function LoginPage() {
               <form
                 onSubmit={formCreate.onSubmit(
                   (values, event) => (
-                    console.log(values, event),
-                    createAccount(values),
-                    setSection(false)
+                    console.log(values, event), createMutate(values)
                   )
                 )}
               >
@@ -341,14 +349,25 @@ function LoginPage() {
                         {...formCreate.getInputProps("password")}
                       ></PasswordInput>
                       <Center>
-                        <Button
-                          type="submit"
-                          variant="gradient"
-                          w={150}
-                          radius="lg"
-                        >
-                          Create Account
-                        </Button>
+                        <Popover opened={createError} onChange={setCreateError}>
+                          <Popover.Target>
+                            {!createLoading ? (
+                              <Button
+                                type="submit"
+                                variant="gradient"
+                                w={150}
+                                radius="lg"
+                              >
+                                Create Account
+                              </Button>
+                            ) : (
+                              <Loader size={30}></Loader>
+                            )}
+                          </Popover.Target>
+                          <Popover.Dropdown c="red">
+                            Error creating an account
+                          </Popover.Dropdown>
+                        </Popover>
                       </Center>
                     </Stack>
                   </Container>
