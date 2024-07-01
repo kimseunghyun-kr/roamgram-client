@@ -24,3 +24,11 @@
     background-color: orange;
     transition: 200ms ease;
 }
+
+.header-logout{
+    transition: 150ms ease;
+}
+.header-logout:hover{
+    background-color: maroon;
+    transition: 200ms ease-in;
+}

@@ -130,6 +130,7 @@ function TravelPlans() {
         const res = await fetch(
           `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
           {
+            credentials: "include",
             method: "GET",
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -153,6 +154,7 @@ function TravelPlans() {
       await fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`,
         {
+          credentials: "include",
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -203,6 +205,7 @@ function TravelPlans() {
       await fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`,
         {
+          credentials: "include",
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
@@ -439,6 +442,7 @@ function TravelPlans() {
       const res = await fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/modify_travel_plan`,
         {
+          credentials: "include",
           method: "PATCH",
           headers: {
             "Content-type": "application/json",

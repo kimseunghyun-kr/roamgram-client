@@ -94,6 +94,7 @@ function MyCalender(props) {
           props.travelID
         }/schedule/update_schedule_metadata`,
         {
+          credentials: "include",
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -143,6 +144,7 @@ function MyCalender(props) {
           props.travelID
         }/schedule/update_schedule_metadata`,
         {
+          credentials: "include",
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -180,6 +182,7 @@ function MyCalender(props) {
         props.travelID
       }/schedule/delete_schedule?scheduleId=${eventID}`,
       {
+        credentials: "include",
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
@@ -388,6 +391,7 @@ function MyCalender(props) {
         props.travelID
       }/schedule/update_schedule_metadata`,
       {
+        credentials: "include",
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,

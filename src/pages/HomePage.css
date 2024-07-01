@@ -50,4 +50,6 @@
     transition: 700ms ease;
   }
            
- 
+ .footer{
+  margin-top: 120px;
+ }

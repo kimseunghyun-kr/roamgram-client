@@ -9,7 +9,7 @@ import {
   Text,
 } from "@mantine/core";
 import "./Header.css";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 function Header() {
@@ -23,6 +23,8 @@ function Header() {
   });
 
   //this is for debugging purposes//
+
+  const nav = useNavigate();
 
   const relogin = () => {
     fetch(`https://localhost/authentication/sign-in`, {
@@ -45,11 +47,11 @@ function Header() {
     <header>
       {/* debugging purposes
 
-       <Link to="/schedulePage/travelID?id=4fe8f11a-f159-4625-8c8e-e6bcfdf860c2">
-         <Button>Test Schedules</Button>
-       </Link>
-       <Button onClick={relogin}>Relogin refresh</Button>
-       */}
+      <Link to="/schedulePage/travelID?id=4fe8f11a-f159-4625-8c8e-e6bcfdf860c2">
+        <Button>Test Schedules</Button>
+      </Link>
+      <Button onClick={relogin}>Relogin refresh</Button>
+*/}
       <Container w={1700} size="1900" style={{ display: "flex" }}>
         <Link to="/">
           <a href="#">
@@ -79,15 +81,23 @@ function Header() {
               </Button>
             </Link>
           ) : (
-            <Text
-              style={{
-                fontSize: "15zpx",
-                fontFamily: "Arial",
-                color: "#4A5167",
-              }}
-            >
-              Welcome
-            </Text>
+            <>
+              <Button
+                className="header-logout"
+                h={30}
+                w={140}
+                radius="xl"
+                color={"cyan"}
+                style={{ fontSize: "13px" }}
+                onClick={() => {
+                  sessionStorage.removeItem(`authToken`);
+                  sessionStorage.removeItem(`refreshToken`);
+                  nav(0);
+                }}
+              >
+                Log Out
+              </Button>
+            </>
           )}
         </Group>
       </Container>

@@ -242,270 +242,282 @@ function HomePage() {
 
   return (
     <>
-      <Container fluid h={600} p="0">
-        <Container fluid h={400} p="0">
-          <Carousel
-            plugins={[autoplay.current]}
-            onMouseEnter={autoplay.current.stop}
-            onMouseLeave={autoplay.current.reset}
-            withControls={false}
-            draggable={false}
-            loop
-          >
-            <CarouselSlide>
-              <Image
-                h={600}
-                style={{ minWidth: 1200 }}
-                fallbackSrc="assets/japan-background-digital-art.jpg"
-              ></Image>
-            </CarouselSlide>
-            {/*slides*/}
-          </Carousel>
-        </Container>
-        <Overlay backgroundOpacity={0} h={600}>
-          <Container fluid>
-            <Grid overflow="hidden" grow pt="15" style={{ minWidth: 900 }}>
-              <Grid.Col span={6.8}>
-                <Group justify="flex-end" gap="5em">
-                  <li className="l-header-menu-list-child">
-                    <Link to="/planner">Routes</Link>
-                  </li>
-                  <li className="l-header-menu-list-child">
-                    <Link to="/travelPage">Travel Plans</Link>
-                  </li>
-                  <li className="l-header-menu-list-child">
-                    <Link to="#">Guide</Link>
-                  </li>
-                </Group>
-              </Grid.Col>
-              <Grid.Col span={4}>
-                <Group gap="xs" justify="flex-end">
-                  {!isLoggedIn ? (
-                    <Link to="/login">
-                      <Button
-                        className="buttons-login"
-                        w="11em"
-                        radius="xl"
-                        color="violet"
-                      >
-                        Login / Sign up
-                      </Button>
-                    </Link>
-                  ) : (
-                    <Text
-                      style={{
-                        fontSize: "19px",
-                        fontWeight: "bold",
-                        color: "white",
-                      }}
-                    >
-                      Welcome Back!
-                    </Text>
-                  )}
-
-                  <Switch
-                    size="lg"
-                    onLabel="Dark"
-                    offLabel="Light"
-                    color="dark.4"
-                  />
-                  <NativeSelect
-                    w={"4em"}
-                    data={["ENG", "KR", "JPN", "CHI", "ETC."]}
-                    styles={{
-                      input: { backgroundColor: "rgba(255, 255, 255, 0.5)" },
-                    }}
-                    variant="unstyled"
-                    className="language-button"
-                  ></NativeSelect>
-                </Group>
-              </Grid.Col>
-            </Grid>
+      <body>
+        <Container fluid h={600} p="0">
+          <Container fluid h={400} p="0">
+            <Carousel
+              plugins={[autoplay.current]}
+              onMouseEnter={autoplay.current.stop}
+              onMouseLeave={autoplay.current.reset}
+              withControls={false}
+              draggable={false}
+              loop
+            >
+              <CarouselSlide>
+                <Image
+                  h={600}
+                  style={{ minWidth: 1200 }}
+                  fallbackSrc="assets/japan-background-digital-art.jpg"
+                ></Image>
+              </CarouselSlide>
+              {/*slides*/}
+            </Carousel>
           </Container>
-          <Flex h={450} justify="flex-end" align="center" direction="column">
-            <Center>
-              <Image
-                w="auto"
-                h="90px"
-                src="assets/roamgram with white.png"
-                mb={20}
-              ></Image>
-            </Center>
-            <Space></Space>
-            <Center>
-              <Fieldset c="white" variant="filled" h={76} w={800} radius="lg">
-                {/* change to form eventually :) */}
+          <Overlay backgroundOpacity={0} h={600}>
+            <Container fluid>
+              <Grid overflow="hidden" grow pt="15" style={{ minWidth: 900 }}>
+                <Grid.Col span={6.8}>
+                  <Group justify="flex-end" gap="5em">
+                    <li className="l-header-menu-list-child">
+                      <Link to="/planner">Routes</Link>
+                    </li>
+                    <li className="l-header-menu-list-child">
+                      <Link to="/travelPage">Travel Plans</Link>
+                    </li>
+                    <li className="l-header-menu-list-child">
+                      <Link to="/reviews">Guide</Link>
+                    </li>
+                  </Group>
+                </Grid.Col>
+                <Grid.Col span={4}>
+                  <Group gap="xs" justify="flex-end">
+                    {!isLoggedIn ? (
+                      <Link to="/login">
+                        <Button
+                          className="buttons-login"
+                          w="11em"
+                          radius="xl"
+                          color="violet"
+                        >
+                          Login / Sign up
+                        </Button>
+                      </Link>
+                    ) : (
+                      <Button
+                        className="header-logout"
+                        radius="xl"
+                        color={"indigo"}
+                        style={{ fontSize: "13px" }}
+                        onClick={() => {
+                          sessionStorage.removeItem(`authToken`);
+                          sessionStorage.removeItem(`refreshToken`);
+                          navigate(0);
+                        }}
+                      >
+                        Log Out
+                      </Button>
+                    )}
 
-                <form
-                  onSubmit={form.onSubmit(
-                    (values) => (
-                      console.log(values),
-                      navigate("/travelPage"),
-                      sessionStorage.setItem(
-                        "HomePageTravel",
-                        JSON.stringify(values)
+                    <Switch
+                      size="lg"
+                      onLabel="Dark"
+                      offLabel="Light"
+                      color="dark.4"
+                    />
+                    <NativeSelect
+                      w={"4em"}
+                      data={["ENG", "KR", "JPN", "CHI", "ETC."]}
+                      styles={{
+                        input: { backgroundColor: "rgba(255, 255, 255, 0.5)" },
+                      }}
+                      variant="unstyled"
+                      className="language-button"
+                    ></NativeSelect>
+                  </Group>
+                </Grid.Col>
+              </Grid>
+            </Container>
+            <Flex h={450} justify="flex-end" align="center" direction="column">
+              <Center>
+                <Image
+                  w="auto"
+                  h="90px"
+                  src="assets/roamgram with white.png"
+                  mb={20}
+                ></Image>
+              </Center>
+              <Space></Space>
+              <Center>
+                <Fieldset c="white" variant="filled" h={76} w={800} radius="lg">
+                  {/* change to form eventually :) */}
+
+                  <form
+                    onSubmit={form.onSubmit(
+                      (values) => (
+                        console.log(values),
+                        navigate("/travelPage"),
+                        sessionStorage.setItem(
+                          "HomePageTravel",
+                          JSON.stringify(values)
+                        )
                       )
-                    )
-                  )}
-                >
-                  <Flex justify="center" align="center" gap="lg">
-                    <TextInput
-                      //value={planName}
-                      //onChange={(e) => {
-                      //  setPlanName(e.target.value);
-                      //}}
-                      key={form.key("name")}
-                      {...form.getInputProps("name")}
-                      placeholder="Input Name"
-                      description="PLAN NAME"
-                      variant="unstyled"
-                      styles={{
-                        input: { fontSize: "17px" },
-                        description: { height: "7px" },
-                      }}
-                    ></TextInput>
-                    <Divider
-                      orientation="vertical"
-                      h={50}
-                      color="steelblue"
-                    ></Divider>
-                    <DatePickerInput
-                      key={form.key("dateRange")}
-                      {...form.getInputProps("dateRange")}
-                      //value={dateRange}
-                      //onChange={(e) => (setDateRange(e), console.log(e))}
-                      variant="unstyled"
-                      type="range"
-                      description="DATES"
-                      placeholder="Choose Date"
-                      w={300}
-                      styles={{
-                        input: { fontSize: "16px" },
-                        description: { height: "7px" },
-                      }}
-                    ></DatePickerInput>
-                    <Divider
-                      orientation="vertical"
-                      h={50}
-                      color="steelblue"
-                    ></Divider>
+                    )}
+                  >
+                    <Flex justify="center" align="center" gap="lg">
+                      <TextInput
+                        //value={planName}
+                        //onChange={(e) => {
+                        //  setPlanName(e.target.value);
+                        //}}
+                        key={form.key("name")}
+                        {...form.getInputProps("name")}
+                        placeholder="Input Name"
+                        description="PLAN NAME"
+                        variant="unstyled"
+                        styles={{
+                          input: { fontSize: "17px" },
+                          description: { height: "7px" },
+                        }}
+                      ></TextInput>
+                      <Divider
+                        orientation="vertical"
+                        h={50}
+                        color="steelblue"
+                      ></Divider>
+                      <DatePickerInput
+                        key={form.key("dateRange")}
+                        {...form.getInputProps("dateRange")}
+                        //value={dateRange}
+                        //onChange={(e) => (setDateRange(e), console.log(e))}
+                        variant="unstyled"
+                        type="range"
+                        description="DATES"
+                        placeholder="Choose Date"
+                        w={300}
+                        styles={{
+                          input: { fontSize: "16px" },
+                          description: { height: "7px" },
+                        }}
+                      ></DatePickerInput>
+                      <Divider
+                        orientation="vertical"
+                        h={50}
+                        color="steelblue"
+                      ></Divider>
 
-                    <Button
-                      type="submit"
-                      variant="filled"
-                      mt={7}
-                      color="#487D2E"
-                      leftSection={<IconSearch size={24} />}
-                      style={{ fontSize: "16px" }}
-                      radius="md"
-                    >
-                      Enter
-                    </Button>
-                  </Flex>
-                </form>
-              </Fieldset>
-            </Center>
-          </Flex>
-        </Overlay>
-      </Container>
-      <Container fluid h={700} mt="50">
-        <SimpleGrid cols={2}>
-          <Image
-            h={79}
-            w="auto"
-            src="assets/Explore Nearby.png"
-            ml={250}
-            mb={20}
-          ></Image>
-          <Chip.Group
-            onChange={(e) => {
-              setType(e as string);
-              //deleteMarker();
-              //apiRequest(e as string);
-            }}
-          >
-            <Group mt={35}>
-              <Chip value="food"> Food </Chip>
-              <Chip value="shopping_mall">Mall</Chip>
-              <Chip value="tourist_attraction">Tourist attractions</Chip>
-              <Chip value="restaurant">Restaurants</Chip>
-
-              <Chip value="supermarket">Supermarket</Chip>
-              <Chip value="parking">Parking</Chip>
-              <Chip value="ath">ATM</Chip>
-            </Group>
-          </Chip.Group>
-        </SimpleGrid>
-        {/* Put Map Here*/}
-        <Container ref={mapRef} fluid h={500} w={1370}></Container>
-      </Container>
-      <Container fluid h={350}>
-        <Grid>
-          <Grid.Col span={3}>
+                      <Button
+                        type="submit"
+                        variant="filled"
+                        mt={7}
+                        color="#487D2E"
+                        leftSection={<IconSearch size={24} />}
+                        style={{ fontSize: "16px" }}
+                        radius="md"
+                      >
+                        Enter
+                      </Button>
+                    </Flex>
+                  </form>
+                </Fieldset>
+              </Center>
+            </Flex>
+          </Overlay>
+        </Container>
+        <Container fluid h={700} mt="50">
+          <SimpleGrid cols={2}>
             <Image
-              h={71}
+              h={79}
               w="auto"
-              src="assets/Guide.png"
+              src="assets/Explore Nearby.png"
               ml={250}
               mb={20}
             ></Image>
-          </Grid.Col>
-          <Grid.Col
-            span="content"
-            offset={3}
-            style={{ alignContent: "center" }}
-          >
-            <Group gap="5em" mt={20}>
-              <UnstyledButton>Nature</UnstyledButton>
-              <UnstyledButton>Shopping</UnstyledButton>
-              <UnstyledButton>Food</UnstyledButton>
-              <UnstyledButton>Nightlife</UnstyledButton>
-              <UnstyledButton>Travelling</UnstyledButton>
-            </Group>
-            <Divider mt={5} size="md" color="black"></Divider>
-          </Grid.Col>
-        </Grid>
-        <div style={{ minWidth: 1000 }}>
-          <Carousel
-            withIndicators
-            height={250}
-            slideSize="30%"
-            slideGap="sm"
-            loop
-            align="start"
-            slidesToScroll={3}
-            plugins={[autoplay.current]}
-          >
-            {slides}
-          </Carousel>
-        </div>
-      </Container>
-      <Container h={300} fluid mt="50">
-        <Image
-          h={71}
-          w="auto"
-          src="assets/Itinerary.png"
-          ml={250}
-          mb={20}
-        ></Image>
-        <Container fluid>
-          <Container fluid w={1400}>
+            <Chip.Group
+              onChange={(e) => {
+                setType(e as string);
+                //deleteMarker();
+                //apiRequest(e as string);
+              }}
+            >
+              <Group mt={35}>
+                <Chip value="food"> Food </Chip>
+                <Chip value="shopping_mall">Mall</Chip>
+                <Chip value="tourist_attraction">Tourist attractions</Chip>
+                <Chip value="restaurant">Restaurants</Chip>
+
+                <Chip value="supermarket">Supermarket</Chip>
+                <Chip value="parking">Parking</Chip>
+                <Chip value="ath">ATM</Chip>
+              </Group>
+            </Chip.Group>
+          </SimpleGrid>
+          {/* Put Map Here*/}
+          <Container ref={mapRef} fluid h={500} w={1370}></Container>
+        </Container>
+        <Container fluid h={350}>
+          <Grid>
+            <Grid.Col span={3}>
+              <Image
+                h={71}
+                w="auto"
+                src="assets/Guide.png"
+                ml={250}
+                mb={20}
+              ></Image>
+            </Grid.Col>
+            <Grid.Col
+              span="content"
+              offset={3}
+              style={{ alignContent: "center" }}
+            >
+              <Group gap="5em" mt={20}>
+                <UnstyledButton>Nature</UnstyledButton>
+                <UnstyledButton>Shopping</UnstyledButton>
+                <UnstyledButton>Food</UnstyledButton>
+                <UnstyledButton>Nightlife</UnstyledButton>
+                <UnstyledButton>Travelling</UnstyledButton>
+              </Group>
+              <Divider mt={5} size="md" color="black"></Divider>
+            </Grid.Col>
+          </Grid>
+          <div style={{ minWidth: 1000 }}>
             <Carousel
               withIndicators
-              height={300}
-              slideSize="15%"
+              height={250}
+              slideSize="30%"
               slideGap="sm"
               loop
               align="start"
               slidesToScroll={3}
               plugins={[autoplay.current]}
             >
-              {slides2}
+              {slides}
             </Carousel>
+          </div>
+        </Container>
+        <Container h={300} fluid mt="50">
+          <Image
+            h={71}
+            w="auto"
+            src="assets/Itinerary.png"
+            ml={250}
+            mb={20}
+          ></Image>
+          <Container fluid>
+            <Container fluid w={1400}>
+              <Carousel
+                withIndicators
+                height={300}
+                slideSize="15%"
+                slideGap="sm"
+                loop
+                align="start"
+                slidesToScroll={3}
+                plugins={[autoplay.current]}
+              >
+                {slides2}
+              </Carousel>
+            </Container>
           </Container>
         </Container>
-      </Container>
-      <Container></Container>
+      </body>
+      <footer className="footer">
+        <Divider></Divider>
+        <Container h={100} display="flex">
+          <Image h={60} w="auto" src="/assets/roamgram logo only.png"></Image>
+          <Text>By Alexandra and Kim</Text>
+        </Container>
+      </footer>
     </>
   );
 }

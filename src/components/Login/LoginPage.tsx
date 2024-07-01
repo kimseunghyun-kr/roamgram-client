@@ -92,6 +92,8 @@ function LoginPage() {
     onSuccess: (data) => {
       console.log("authToken is", data.accessToken);
       sessionStorage.setItem("authToken", `${data.accessToken}`);
+      sessionStorage.setItem("refreshToken", `${data.refreshToken}`);
+      console.log;
       history(-1);
     },
     onError: () => {
@@ -107,6 +109,7 @@ function LoginPage() {
       await fetch(
         `${import.meta.env.VITE_APP_API_URL}/authentication/sign-up`,
         {
+          credentials: "include",
           method: "POST",
           headers: {
             "Content-Type": "application/json",
