@@ -234,7 +234,7 @@ function TravelPlans() {
   //  "homepageItem",
   //  JSON.parse(sessionStorage.getItem("HomePageTravel"))
 
-  console.log("homepageitem", homePageItem);
+  //console.log("homepageitem", homePageItem);
   const UnauthCardTravel = () => {
     return (
       <Center h={550}>
@@ -401,7 +401,7 @@ function TravelPlans() {
 
   const open_travel_plan = (planID: string) => {
     //find it from our event list
-    const tp: EventType = event?.find((ev: EventType) => ev.id === planID);
+    const tp: EventType = eventData?.find((ev: EventType) => ev.id === planID);
     console.log("tp is", tp);
     if (!tp) {
       throw new Error("No tp found with the given id");
@@ -434,33 +434,31 @@ function TravelPlans() {
     }));
   };
 
-  const update_travel_plan = () => {
-    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/modify_travel_plan`, {
-      method: "PATCH",
-      headers: {
-        "Content-type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(editTravelPlan),
-    })
-      .then((response) => response.json())
-      .then(
-        (data) => (
-          console.log("success in modifying travel plan"),
-          setEvent((p) => {
-            const index = event.findIndex((item) => item.id === data.id);
-            const currentItems = [...p];
-            console.log("curr items", currentItems);
-            currentItems[index] = data;
-            //console.log("index of item is", index);
-            return currentItems;
-          })
-        )
-      )
-      .catch((error) => console.log("error in modifying travel plan", error));
-
-    setOpened(false);
-  };
+  const { mutateAsync: updateMutate } = useMutation({
+    mutationFn: async (updated_plan) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/modify_travel_plan`,
+        {
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(updated_plan),
+        }
+      );
+      return res.json();
+    },
+    onSuccess: (data) => {
+      console.log("data is", data);
+      const dataID = data.id;
+      const previousTodos = queryClient.getQueryData(["queryEvent"]);
+      const index = previousTodos.findIndex((item) => item.id === dataID);
+      previousTodos[index] = data;
+      queryClient.setQueryData(["queryEvent"], (old) => previousTodos);
+      setOpened(false);
+    },
+  });
 
   const [createUnauth, setCreateUnauth] = useState(false);
 
@@ -646,7 +644,7 @@ function TravelPlans() {
             color="green"
             variant="outline"
             type="submit"
-            onClick={update_travel_plan}
+            onClick={() => updateMutate(editTravelPlan)}
           >
             Update
           </Button>
