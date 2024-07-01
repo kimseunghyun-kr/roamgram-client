@@ -6,6 +6,7 @@ import {
   Center,
   CloseButton,
   Divider,
+  Loader,
   Menu,
   Modal,
   Popover,
@@ -33,7 +34,7 @@ import { Link } from "react-router-dom";
 import { v4 as uuid } from "uuid";
 import Header from "../Header/Header.tsx";
 import "./TravelPlans.css";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 //const data = [
 //  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
@@ -44,7 +45,14 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 type DatesRangeValue = [Date | null, Date | null];
 
 interface TravelPlan {
-  id: string;
+  uuid: string;
+  name: string;
+  startDate: string;
+  endDate: string;
+}
+
+interface TravelPlanDate {
+  uuid: string;
   name: string;
   travelStartDate: string;
   travelEndDate: string;
@@ -113,43 +121,74 @@ function TravelPlans() {
   //this is in the eventFormat(from our og response) rather than the submission format
   const [itemToAdd, setItemToAdd] = useState();
 
-  const submit_travel_plan = () => {
-    console.log("jsontravel", JSON.stringify(travelPlanDetails));
-    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(travelPlanDetails),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        fetch(
-          `${
-            import.meta.env.VITE_APP_API_URL
-          }/travelPlan/get_by_id?planId=${data}`,
+  const queryClient = useQueryClient();
+  //initial fetching of our eventList
+  const { data: eventData, error: eventError } = useQuery({
+    queryKey: ["queryEvent"],
+    queryFn: async () => {
+      if (authToken) {
+        const res = await fetch(
+          `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
           {
             method: "GET",
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
           }
-        )
-          .then((response) => response.json())
-          .then((_data) => setItemToAdd(_data));
+        );
+
+        console.log("fetching", res);
+        return res.json();
+      } else {
+        throw new Error("No token");
+      }
+    },
+  });
+
+  console.log("queryData is", eventData);
+
+  //mutations this works but now we need to edit the cache
+  const { mutateAsync: eventMutate, isPending: createPending } = useMutation({
+    mutationFn: async (travelPlan_content) => {
+      await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(travelPlan_content),
+        }
+      );
+    },
+    onMutate: async (travelPlan_content) => {
+      await queryClient.cancelQueries({ queryKey: ["queryEvent"] }); //cancel all-ongoing queries
+      const previousTodos = queryClient.getQueryData(["queryEvent"]);
+      queryClient.setQueryData(["queryEvent"], (old) => [
+        ...old,
+        travelPlan_content,
+      ]);
+      setTravelPlanDetails({
+        uuid: uuid(), // Generate a new UUID for the next entry
+        startDate: "",
+        endDate: "",
+        name: "",
       });
-
-    setTravelPlanDetails({
-      uuid: uuid(), // Generate a new UUID for the next entry
-      startDate: "",
-      endDate: "",
-      name: "",
-    });
-
-    setDateRanges([new Date(), null]);
-    setInitialSlides(event.length);
-  };
+      setDateRanges([new Date(), null]);
+      setInitialSlides(eventData.length);
+    },
+    onSuccess: (travelPlan_content) => {
+      console.log("travel-content", travelPlan_content);
+      console.log("ssuccess");
+    },
+    onError: () => {
+      console.log("Error in adding TP");
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
+    },
+  });
 
   useEffect(() => {
     if (itemToAdd) {
@@ -158,34 +197,42 @@ function TravelPlans() {
     //console.log("event is after adding", event);
   }, [itemToAdd]);
 
-  function deleteTravelPlan(id: string) {
-    console.log(id);
-    fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify([id]),
-    })
-      .then((response) => response.json())
-      .then(
-        (data) => (
-          console.log("successful in deleting travelPlan", data),
-          setEvent((p) => p.filter((ev: EventType) => ev.id !== id))
-        )
-      )
-      .catch((error) => console.log("error in deleting traevlPlan", error));
+  //this works
+  const { mutateAsync: deleteMutate } = useMutation({
+    mutationFn: async (id: string) => {
+      await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify([id]),
+        }
+      ).then((res) => res.json());
+    },
+    //optimistic mutate for immediate render
+    onMutate: async (id) => {
+      await queryClient.cancelQueries({ queryKey: ["queryEvent"] });
+      const previousTodos = queryClient.getQueryData(["queryEvent"]);
+      queryClient.setQueryData(["queryEvent"], (oldEvents) => {
+        const filtered = oldEvents.filter((ev) => ev.id !== id);
+        return filtered;
+      });
+      return previousTodos;
+    },
 
-    //EXTRA THINGS --> DELETE ALL SCHEDULES HERE
-  }
+    onError: () => console.log("Error Deleting TP"),
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
+    },
+  });
 
   const homePageItem = JSON.parse(sessionStorage.getItem("HomePageTravel"));
   //console.log(
   //  "homepageItem",
   //  JSON.parse(sessionStorage.getItem("HomePageTravel"))
-
-  //);
 
   console.log("homepageitem", homePageItem);
   const UnauthCardTravel = () => {
@@ -220,8 +267,11 @@ function TravelPlans() {
   };
 
   const cardTravel = () => {
+    if (!eventData) {
+      return null;
+    }
     return eventData
-      ? eventData.map((items: TravelPlan) => (
+      ? eventData.map((items) => (
           //console.log("Rendering item", items.id),
           <Carousel.Slide key={items.id}>
             <Center h={550}>
@@ -243,7 +293,7 @@ function TravelPlans() {
                   color="cyan"
                   onClick={() => (
                     setOpened(true),
-                    console.log("item id is", items.id),
+                    //console.log("item id is", items.id),
                     open_travel_plan(items.id)
                   )}
                 >
@@ -281,7 +331,7 @@ function TravelPlans() {
                     <Menu.Item
                       c="red"
                       onClick={(e) => (
-                        deleteTravelPlan(items.id), e.preventDefault()
+                        deleteMutate(items.id), e.preventDefault()
                       )}
                       leftSection={<IconTrash size={14} />}
                     >
@@ -312,8 +362,8 @@ function TravelPlans() {
   const tokens = sessionStorage.getItem(`authToken`);
   useEffect(() => {
     //const token = sessionStorage.getItem(`authToken`);
-    console.log(tokens);
-    console.log("itemshometravel", sessionStorage.getItem(`HomePageTravel`));
+    //console.log(tokens);
+    //console.log("itemshometravel", sessionStorage.getItem(`HomePageTravel`));
     if (tokens) {
       setAuthToken(tokens);
       if (sessionStorage.getItem(`HomePageTravel`)) {
@@ -328,89 +378,9 @@ function TravelPlans() {
     }
   }, [tokens]);
 
-  //initial fetching of our eventList
-  const { data: eventData } = useQuery({
-    queryKey: ["queryEvent"],
-    queryFn: async () => {
-      if (authToken) {
-        const res = await fetch(
-          `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
-          {
-            method: "GET",
-            headers: {
-              Authorization: `Bearer ${authToken}`,
-            },
-          }
-        );
-
-        console.log("queryLog", res);
-        return res.json();
-      } else {
-        throw new Error("No token");
-      }
-    },
-  });
-
-  console.log("queryData is", eventData);
-
-  //mutations
-
-  useEffect(() => {
-    console.log("authTok", authToken);
-    if (authToken) {
-      console.log("its getting all");
-      fetch(`${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      })
-        .then((response) => response.json())
-        .then((data) => setEvent(data))
-        .catch((error) => console.log(error));
-    }
-  }, [authToken]);
-
   useEffect(() => {
     if (homeItem?.name && authToken) {
-      console.log("fetch item simulator useEfefct");
-      console.log("fetch item homePage", homeItem);
-      console.log("authToken is", authToken);
-      fetch(
-        `${import.meta.env.VITE_APP_API_URL}/travelPlan/create_travel_plan`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${authToken}`,
-          },
-          body: JSON.stringify(homeItem),
-        }
-      )
-        .then((response) => response.json())
-        .then((data) => {
-          fetch(
-            `${
-              import.meta.env.VITE_APP_API_URL
-            }/travelPlan/get_by_id?planId=${data}`,
-            {
-              method: "GET",
-              headers: {
-                Authorization: `Bearer ${authToken}`,
-              },
-            }
-          )
-            .then((response) => response.json())
-            .then((_data) => setItemToAdd(_data));
-        });
-
-      setTravelPlanDetails({
-        uuid: uuid(), // Generate a new UUID for the next entry
-        startDate: "",
-        endDate: "",
-        name: "",
-      });
-
+      eventMutate(homeItem);
       sessionStorage.removeItem(`HomePageTravel`);
       sethomeItem(null);
     }
@@ -524,12 +494,12 @@ function TravelPlans() {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="incomplete">
-              {authToken ? (
+              {authToken && eventData ? (
                 <Carousel
                   initialSlide={initialSlides}
                   withIndicators
-                  key={event.length}
-                  withControls={event.length > 0}
+                  key={eventData.length}
+                  withControls={eventData.length > 0}
                   styles={{
                     indicator: { backgroundColor: "#A9ADB9", marginTop: "px" },
                   }}
@@ -588,24 +558,26 @@ function TravelPlans() {
                   ></DatePickerInput>
                   <Popover opened={createUnauth} onChange={setCreateUnauth}>
                     <Popover.Target>
-                      <Button
-                        mt={15}
-                        color="red"
-                        radius="lg"
-                        type="submit"
-                        onClick={(e) => {
-                          if (sessionStorage.getItem(`authToken`)) {
-                            console.log(travelPlanDetails);
-                            console.log(e);
-                            submit_travel_plan();
-                            setActiveTab("incomplete");
-                          } else {
-                            setCreateUnauth(true);
-                          }
-                        }}
-                      >
-                        Create
-                      </Button>
+                      {!createPending ? (
+                        <Button
+                          mt={15}
+                          color="red"
+                          radius="lg"
+                          type="submit"
+                          onClick={(e) => {
+                            if (authToken) {
+                              eventMutate(travelPlanDetails);
+                              setActiveTab("incomplete");
+                            } else {
+                              setCreateUnauth(true);
+                            }
+                          }}
+                        >
+                          Create
+                        </Button>
+                      ) : (
+                        <Loader size={30}></Loader>
+                      )}
                     </Popover.Target>
                     <Popover.Dropdown>
                       <Text c="red" size="17px">

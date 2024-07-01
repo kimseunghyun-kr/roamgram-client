@@ -22,6 +22,7 @@
     "@tabler/icons-react": "^3.5.0",
     "@tanstack/react-query": "^5.49.0",
     "@tanstack/react-query-devtools": "^5.49.0",
+    "cors": "^2.8.5",
     "dayjs": "^1.11.11",
     "embla-carousel-autoplay": "^7.1.0",
     "embla-carousel-react": "^7.1.0",
@@ -53,7 +54,8 @@
     "postcss-preset-mantine": "^1.15.0",
     "postcss-simple-vars": "^7.0.1",
     "typescript": "^5.2.2",
-    "vite": "^5.2.0"
+    "vite": "^5.2.0",
+    "vite-plugin-mkcert": "^1.17.5"
   },
   "proxy": "https://ec2-3-26-178-153.ap-southeast-2.compute.amazonaws.com"
 }

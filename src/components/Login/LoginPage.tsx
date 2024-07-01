@@ -80,6 +80,7 @@ function LoginPage() {
         `${import.meta.env.VITE_APP_API_URL}/authentication/sign-in`,
         {
           method: "POST",
+          credentials: "include",
           headers: {
             "Content-Type": "application/json",
           },
