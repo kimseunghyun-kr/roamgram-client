@@ -269,7 +269,8 @@ function MyCalender(props) {
                 : "Currently Closed",
               opening_period: details?.opening_hours?.weekday_text,
               website: details?.website,
-              photo: details?.photos[0].getUrl(),
+              photo:
+                details?.photos?.length > 0 ? details.photos[0].getUrl() : null,
             });
           } else {
             console.log("Error getting google places of modal details");
