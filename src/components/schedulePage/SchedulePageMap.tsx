@@ -459,15 +459,7 @@ function SchedulePageMap(
   const travelID = urlParams.get(`id`);
   //console.log("id travel is", travelID);
 
-  const [authToken, setAuthToken] = useState("");
-
-  //get Token if signed in --> only signed in people can access but this will be helpful for mounting
-  useEffect(() => {
-    const token = sessionStorage.getItem(`authToken`);
-    if (token) {
-      setAuthToken(token);
-    }
-  }, []);
+  const authToken = sessionStorage.getItem(`authToken`);
 
   const getAllSchedule = () => {
     fetch(

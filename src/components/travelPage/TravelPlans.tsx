@@ -35,6 +35,7 @@ import { v4 as uuid } from "uuid";
 import Header from "../Header/Header.tsx";
 import "./TravelPlans.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "../Login/AuthContext.tsx";
 
 //const data = [
 //  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
@@ -80,6 +81,7 @@ function TravelPlans() {
   /////////get_all/////////
 
   //console.log(event);
+  const authToken = sessionStorage.getItem(`authToken`);
 
   const [opened, setOpened] = useState(false); //for modal
 
@@ -126,6 +128,7 @@ function TravelPlans() {
   const { data: eventData, error: eventError } = useQuery({
     queryKey: ["queryEvent"],
     queryFn: async () => {
+      console.log("authb  bearer", authToken);
       if (authToken) {
         const res = await fetch(
           `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
@@ -187,9 +190,9 @@ function TravelPlans() {
     onError: () => {
       console.log("Error in adding TP");
     },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
-    },
+    // onSettled: () => {
+    //  queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
+    //},
   });
 
   useEffect(() => {
@@ -202,7 +205,8 @@ function TravelPlans() {
   //this works
   const { mutateAsync: deleteMutate } = useMutation({
     mutationFn: async (id: string) => {
-      await fetch(
+      console.log("authb  bearer", authToken);
+      return await fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`,
         {
           credentials: "include",
@@ -354,7 +358,7 @@ function TravelPlans() {
   const [activeTab, setActiveTab] = useState<string | null>("incomplete");
 
   const [homePageItems, setHomePageItems] = useState(null);
-  const [authToken, setAuthToken] = useState(null);
+
   const [homeItem, sethomeItem] = useState({
     uuid: uuid(),
     name: "",
@@ -362,24 +366,20 @@ function TravelPlans() {
     endDate: "",
   });
 
-  const tokens = sessionStorage.getItem(`authToken`);
   useEffect(() => {
     //const token = sessionStorage.getItem(`authToken`);
     //console.log(tokens);
     //console.log("itemshometravel", sessionStorage.getItem(`HomePageTravel`));
-    if (tokens) {
-      setAuthToken(tokens);
-      if (sessionStorage.getItem(`HomePageTravel`)) {
-        const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
-        sethomeItem((p) => ({
-          ...p,
-          name: items.name,
-          startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
-          endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
-        }));
-      }
+    if (sessionStorage.getItem(`HomePageTravel`)) {
+      const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
+      sethomeItem((p) => ({
+        ...p,
+        name: items.name,
+        startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
+        endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
+      }));
     }
-  }, [tokens]);
+  }, [authToken]);
 
   useEffect(() => {
     if (homeItem?.name && authToken) {

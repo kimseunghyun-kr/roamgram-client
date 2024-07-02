@@ -28,6 +28,7 @@ import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./MyCalender.css";
 import React from "react";
+import { useAuth } from "../Login/AuthContext";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -98,7 +99,7 @@ function MyCalender(props) {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
+            Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify(bodyData),
         }
@@ -148,7 +149,7 @@ function MyCalender(props) {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
+            Authorization: `Bearer ${authToken}`,
           },
           body: JSON.stringify(bodyData),
         }
@@ -185,7 +186,7 @@ function MyCalender(props) {
         credentials: "include",
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
+          Authorization: `Bearer ${authToken}`,
         },
       }
     )
@@ -252,6 +253,8 @@ function MyCalender(props) {
       setService(svc);
     }
   }, [props.map]);
+
+  const authToken = sessionStorage.getItem(`authToken`);
 
   useEffect(() => {
     if (opened && service) {
@@ -394,7 +397,7 @@ function MyCalender(props) {
         credentials: "include",
         method: "PATCH",
         headers: {
-          Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
+          Authorization: `Bearer ${authToken}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify(bodyData),

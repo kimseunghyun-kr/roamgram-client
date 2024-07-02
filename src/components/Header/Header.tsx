@@ -11,6 +11,8 @@ import {
 import "./Header.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { jwtDecode } from "jwt-decode";
+import { useAuth } from "../Login/AuthContext";
 
 function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -40,18 +42,28 @@ function Header() {
       .then((response) => response.json())
       .then((data) => {
         sessionStorage.setItem(`authToken`, data.accessToken);
-        console.log(data.accessToken);
+        const token = data.accessToken;
+        const decoded = jwtDecode(token as string);
+        console.log(decoded);
+
+        //console.log(data.accessToken);
       });
   };
+
+  const checkToken = () => {
+    const decoded = jwtDecode(sessionStorage.getItem(`authToken`));
+    console.log(decoded);
+  };
+
+  const { setRefreshToken } = useAuth();
+
   return (
     <header>
       {/* debugging purposes
 
-      <Link to="/schedulePage/travelID?id=4fe8f11a-f159-4625-8c8e-e6bcfdf860c2">
-        <Button>Test Schedules</Button>
-      </Link>
-      <Button onClick={relogin}>Relogin refresh</Button>
 */}
+      <Button onClick={checkToken}>Test</Button>
+      <Button onClick={relogin}>Relogin refresh</Button>
       <Container w={1700} size="1900" style={{ display: "flex" }}>
         <Link to="/">
           <a href="#">

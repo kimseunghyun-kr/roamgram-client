@@ -15,6 +15,7 @@ import HomePage from "./pages/HomePage.tsx";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ReviewsPage from "./components/ReviewsPage/ReviewsPage.tsx";
+import { AuthProvider } from "./components/Login/AuthContext.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -31,18 +32,20 @@ function App() {
     <>
       <QueryClientProvider client={queryClient}>
         <div>
-          <Routes>
-            <Route path="/" element={<HomePage />}></Route>
-            <Route path="/login" element={<LoginPage />}></Route>
-            <Route path="/travelPage" element={<TravelPlans />}></Route>
-            <Route
-              path="/schedulePage/travelID"
-              element={<SchedulePageMap />}
-            />
-            <Route path="/planner" element={<MapPage />}></Route>
-            <Route path="/authSuccess" element={<GoogleLogin />}></Route>
-            <Route path="/reviews" element={<ReviewsPage />}></Route>
-          </Routes>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<HomePage />}></Route>
+              <Route path="/login" element={<LoginPage />}></Route>
+              <Route path="/travelPage" element={<TravelPlans />}></Route>
+              <Route
+                path="/schedulePage/travelID"
+                element={<SchedulePageMap />}
+              />
+              <Route path="/planner" element={<MapPage />}></Route>
+              <Route path="/authSuccess" element={<GoogleLogin />}></Route>
+              <Route path="/reviews" element={<ReviewsPage />}></Route>
+            </Routes>
+          </AuthProvider>
         </div>
         <ReactQueryDevtools />
       </QueryClientProvider>

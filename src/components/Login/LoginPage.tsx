@@ -28,6 +28,9 @@ import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth } from "./AuthContext";
+import { AuthProvider } from "./AuthContext";
+import { useInterval } from "@mantine/hooks";
 
 function LoginPage() {
   const history = useNavigate();
@@ -71,8 +74,6 @@ function LoginPage() {
 
   //console.log({ ...form.getInputProps("password") });
 
-  const queryClient = useQueryClient();
-
   const { mutate: loginMutate, isPending: loginLoading } = useMutation({
     mutationKey: ["login"],
     mutationFn: async (values: {}) => {
@@ -89,12 +90,12 @@ function LoginPage() {
       );
       return response.json();
     },
+
     onSuccess: (data) => {
-      console.log("authToken is", data.accessToken);
       sessionStorage.setItem("authToken", `${data.accessToken}`);
       sessionStorage.setItem("refreshToken", `${data.refreshToken}`);
-      console.log;
       history(-1);
+      console.log("data", data);
     },
     onError: () => {
       setLoginError(true);
@@ -134,6 +135,8 @@ function LoginPage() {
       .then((data) => console.log("data", data))
       .catch((error) => console.log("error", error));
   }
+
+  const { isLoggedIn } = useAuth();
 
   return (
     <>
