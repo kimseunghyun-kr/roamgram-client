@@ -61,9 +61,9 @@ function Header() {
     <header>
       {/* debugging purposes
 
-*/}
       <Button onClick={checkToken}>Test</Button>
       <Button onClick={relogin}>Relogin refresh</Button>
+*/}
       <Container w={1700} size="1900" style={{ display: "flex" }}>
         <Link to="/">
           <a href="#">
