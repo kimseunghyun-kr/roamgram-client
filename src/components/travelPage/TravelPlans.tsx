@@ -167,24 +167,11 @@ function TravelPlans() {
         }
       );
     },
-    onMutate: async (travelPlan_content) => {
-      await queryClient.cancelQueries({ queryKey: ["queryEvent"] }); //cancel all-ongoing queries
-      const previousTodos = queryClient.getQueryData(["queryEvent"]);
-      queryClient.setQueryData(["queryEvent"], (old) => [
-        ...old,
-        travelPlan_content,
-      ]);
-      setTravelPlanDetails({
-        uuid: uuid(), // Generate a new UUID for the next entry
-        startDate: "",
-        endDate: "",
-        name: "",
-      });
-      setDateRanges([new Date(), null]);
-      setInitialSlides(eventData.length);
-    },
     onSuccess: (travelPlan_content) => {
       console.log("travel-content", travelPlan_content);
+      queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
+      setDateRanges([new Date(), null]);
+      setInitialSlides(eventData.length);
       console.log("ssuccess");
     },
     onError: () => {
@@ -229,7 +216,7 @@ function TravelPlans() {
       });
       return previousTodos;
     },
-
+    onSuccess: () => console.log("success delete bro"),
     onError: () => console.log("Error Deleting TP"),
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["queryEvent"] });

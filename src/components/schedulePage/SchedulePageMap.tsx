@@ -462,6 +462,7 @@ function SchedulePageMap(
   const authToken = sessionStorage.getItem(`authToken`);
 
   const getAllSchedule = () => {
+    console.log("authToken", authToken);
     fetch(
       `${
         import.meta.env.VITE_APP_API_URL

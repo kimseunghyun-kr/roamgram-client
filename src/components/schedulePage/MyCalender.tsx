@@ -8,6 +8,7 @@ import {
   Input,
   Modal,
   NativeSelect,
+  Rating,
   ScrollArea,
   Space,
   Stack,
@@ -552,6 +553,9 @@ function MyCalender(props) {
                 <a href={review.website}>{review.website}</a>
                 <Divider w={350} />
                 <Text>{showOpeningHours()}</Text>
+                <Text>Leave a review</Text>
+                <Rating />
+                <Textarea />
               </Stack>
             </Tabs.Panel>
 
