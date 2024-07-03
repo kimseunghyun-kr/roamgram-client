@@ -30,7 +30,7 @@ import Autoplay from "embla-carousel-autoplay";
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
-import { IconSearch } from "@tabler/icons-react";
+import { IconBrandGithub, IconSearch } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 
 const images = [
@@ -512,11 +512,28 @@ function HomePage() {
         </Container>
       </body>
       <footer className="footer">
-        <Divider></Divider>
-        <Container h={100} display="flex">
-          <Image h={60} w="auto" src="/assets/roamgram logo only.png"></Image>
-          <Text>By Alexandra and Kim</Text>
-        </Container>
+        <Divider
+          labelPosition="center"
+          label={
+            <>
+              <UnstyledButton
+                component="a"
+                href="https://github.com/kimseunghyun-kr/roamgram"
+              >
+                <img height="50" src="/assets/github-mark.png"></img>
+              </UnstyledButton>
+            </>
+          }
+        ></Divider>
+        <Stack align="center" mt={14}>
+          <Text size="xs" c="gray">
+            Tolentino Alexandra Morales and Kim Seung Hyun
+          </Text>
+          <Text size="xs" c="gray">
+            Orbital 2024
+          </Text>
+          <Space h={0}></Space>
+        </Stack>
       </footer>
     </>
   );

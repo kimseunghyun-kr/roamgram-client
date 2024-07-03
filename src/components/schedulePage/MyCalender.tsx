@@ -15,6 +15,7 @@ import {
   Tabs,
   Text,
   Textarea,
+  UnstyledButton,
 } from "@mantine/core";
 import {
   IconDirections,
@@ -30,6 +31,7 @@ import "react-big-calendar/lib/css/react-big-calendar.css";
 import "./MyCalender.css";
 import React from "react";
 import { useAuth } from "../Login/AuthContext";
+import { Link } from "react-router-dom";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -37,7 +39,7 @@ const DnDCalendar = withDragAndDrop(Calendar);
 function MyCalender(props) {
   const localizer = momentLocalizer(moment);
 
-  //console.log("prop events are", props.event);
+  //("prop events are", props.event);
 
   ////EventID for modal to keep track
   const [eventID, setEventID] = useState();
@@ -45,7 +47,7 @@ function MyCalender(props) {
   ///////////////modal////////////////////////
   //for our modals when we selet an Event
   const [opened, setOpened] = useState(false);
-  //console.log(props.event);
+  //(props.event);
 
   const [directionsService, setDirectionsService] =
     useState<google.maps.DirectionsService | null>(null);
@@ -57,7 +59,6 @@ function MyCalender(props) {
     ({ event, start, end }) => {
       var bodyData = {};
       props.setEvents((prev) => {
-        console.log("prev is", prev);
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
         bodyData = {
@@ -69,16 +70,14 @@ function MyCalender(props) {
           isActuallyVisited: existing.isActuallyVisited,
         };
 
-        console.log("existing is", existing);
-        console.log("filtered is", filtered);
-        console.log("returned is", [
+        [
           ...filtered,
           {
             ...existing,
             travelDepartTimeEstimate: end,
             travelStartTimeEstimate: start,
           },
-        ]);
+        ];
         return [
           ...filtered,
           {
@@ -88,8 +87,6 @@ function MyCalender(props) {
           },
         ];
       });
-      console.log("fetch resize is", bodyData);
-      console.log("jsonfied", JSON.stringify(bodyData));
 
       fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
@@ -105,9 +102,9 @@ function MyCalender(props) {
           body: JSON.stringify(bodyData),
         }
       )
-        .then((response) => console.log("success in moving"))
-        .then((data) => console.log("sucecss moving data"))
-        .catch((error) => console.log(error));
+        .then((response) => "success in moving")
+        .then((data) => "sucecss moving data")
+        .catch((error) => error);
     },
     [props.setEvents]
   );
@@ -116,8 +113,6 @@ function MyCalender(props) {
     ({ event, start, end }) => {
       var bodyData = {};
       props.setEvents((prev) => {
-        console.log("prev is", prev);
-
         const existing = prev.find((ev) => ev.id === event.id);
         const filtered = prev.filter((ev) => ev.id !== event.id);
         bodyData = {
@@ -129,9 +124,6 @@ function MyCalender(props) {
           isActuallyVisited: existing.isActuallyVisited,
         };
 
-        console.log("existing is", existing);
-        console.log("filtered is", filtered);
-        console.log("returned is", [...filtered, { ...existing, start, end }]);
         return [
           ...filtered,
           {
@@ -155,29 +147,28 @@ function MyCalender(props) {
           body: JSON.stringify(bodyData),
         }
       )
-        .then((response) => console.log("success in resizing"))
-        .then((data) => console.log(data))
-        .catch((error) => console.log(error, "error resizing"));
+        .then((response) => "success in resizing")
+        .then((data) => data)
+        .catch((error) => error);
     },
     [props.setEvents]
   );
 
   const deleteEvent = useCallback(() => {
     props.setEvents((p) => {
-      //console.log("p is ", p);
-      // console.log(eventID);
-      //console.log(p);
+      //("p is ", p);
+      // (eventID);
+      //(p);
       const existing = p.filter((ev) => ev.id === eventID);
-      console.log("existing to delete", existing);
       const filtered = p.filter((ev) => ev.id != eventID);
       setOpened(false); //turns off modal
-      //console.log("deleteEvent ID is", eventID);
-      //console.log("filtered events delete are", [...filtered]);
-      //console.log("EVENTID", eventID);
+      //("deleteEvent ID is", eventID);
+      //("filtered events delete are", [...filtered]);
+      //("EVENTID", eventID);
       //consol.log([...filtered]);
       return [...filtered];
     });
-    //console.log("event id to delete is", eventID);
+    //("event id to delete is", eventID);
 
     fetch(
       `${import.meta.env.VITE_APP_API_URL}/travelPlan/${
@@ -192,8 +183,8 @@ function MyCalender(props) {
       }
     )
       .then((response) => response.json())
-      .then((data) => console.log("success in deletion"))
-      .catch((error) => console.log("error in deleting"));
+      .then((data) => "success in deletion")
+      .catch((error) => "error in deleting");
     //delete in DataBase
   }, [props.setEvents, eventID]);
 
@@ -203,7 +194,7 @@ function MyCalender(props) {
     if (eventID && props.event) {
       const selected = props.event.find((ev) => ev.id === eventID);
       setActvityEvent(selected);
-      //console.log("selected is", selected);
+      //("selected is", selected);
     }
   }, [eventID, setEventID]);
 
@@ -211,8 +202,8 @@ function MyCalender(props) {
   //  ? props.event.find((ev) => ev.id == eventID)
   //  : null;
 
-  //console.log("Activity Event is", activityEvent);
-  //console.log("Event ID", eventID);
+  //("Activity Event is", activityEvent);
+  //("Event ID", eventID);
   //get Activity in modal functions
   const [modalActivityDescription, setModalActivityDescription] = useState({
     title: "",
@@ -221,7 +212,7 @@ function MyCalender(props) {
     //destination: ''
   });
 
-  //console.log("activityEvent", activityEvent);
+  //("activityEvent", activityEvent);
 
   useEffect(() => {
     if (activityEvent) {
@@ -231,10 +222,10 @@ function MyCalender(props) {
         description: activityEvent.description,
       });
     }
-    //console.log("modal activity description is");
-    //console.log(modalActivityDescription);
+    //("modal activity description is");
+    //(modalActivityDescription);
   }, [activityEvent, setActvityEvent]);
-  //console.log("Modal", modalActivityDescription);
+  //("Modal", modalActivityDescription);
 
   //map for directions
   //const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -261,7 +252,7 @@ function MyCalender(props) {
     if (opened && service) {
       const googlePlaceID = modalActivityDescription.googleMapsKeyId;
       //correct  googlePlaceID
-      //console.log(googlePlaceID);
+      //(googlePlaceID);
       const request = {
         placeId: modalActivityDescription.googleMapsKeyId,
         fields: ["opening_hours", "website", "business_status", "photo"],
@@ -269,7 +260,7 @@ function MyCalender(props) {
       if (googlePlaceID) {
         service.getDetails(request, (details, status) => {
           if (status === "OK") {
-            console.log("Succesful Google Request");
+            ("Succesful Google Request");
             setReview({
               isOpen: details?.opening_hours?.open_now
                 ? "Currently Open"
@@ -280,12 +271,12 @@ function MyCalender(props) {
                 details?.photos?.length > 0 ? details.photos[0].getUrl() : null,
             });
           } else {
-            console.log("Error getting google places of modal details");
+            ("Error getting google places of modal details");
           }
         });
       }
-      console.log(activityEvent);
-      console.log(modalActivityDescription);
+      activityEvent;
+      modalActivityDescription;
 
       if (opened && modalMapRef.current) {
         const mapOptions = {
@@ -313,7 +304,7 @@ function MyCalender(props) {
     setModalActivityDescription,
     activityEvent,
   ]);
-  //console.log(review);
+  //(review);
 
   useEffect(() => {
     const modeElement = document.getElementById(
@@ -354,15 +345,11 @@ function MyCalender(props) {
       const existing = p.find((ev) => ev.id == eventID);
       const filtered = p.filter((ev) => ev.id !== eventID);
 
-      console.log("existing", existing);
-
       const updatedExisting = {
         ...existing,
         name: modalActivityDescription.title,
         description: modalActivityDescription.description,
       };
-
-      console.log("updatedExisting", updatedExisting);
 
       bodyData = {
         scheduleId: existing.id,
@@ -383,7 +370,7 @@ function MyCalender(props) {
     });
 
     //this is causing errors lol --> reconvert bodyData here for the travelDepartTime and travelStartTime
-    console.log("bodyData-nonJSON", bodyData);
+
     bodyData = {
       ...bodyData,
       travelDepartTimeEstimate: formattedEnd,
@@ -403,13 +390,12 @@ function MyCalender(props) {
         },
         body: JSON.stringify(bodyData),
       }
-    ).then((response) => console.log("success in updating information"));
+    ).then((response) => "success in updating information");
   };
 
   const showReviews = () => {
     const toShow = Object.values(review);
     return toShow.map((items) => {
-      console.log("items", { items });
       return <Text>{items}</Text>;
     });
   };
@@ -441,9 +427,9 @@ function MyCalender(props) {
     directionsService: google.maps.DirectionsService,
     directionsRenderer: google.maps.DirectionsRenderer
   ) {
-    console.log("calculate Route");
+    ("calculate Route");
     const currentLoc = currentLocation as google.maps.LatLng;
-    console.log("currentLoc", currentLoc);
+
     const destID = modalActivityDescription.googleMapsKeyId;
     const selectedMode = (
       document.getElementById("modalMode") as HTMLInputElement
@@ -458,7 +444,7 @@ function MyCalender(props) {
     directionsService.route(request, function (result, status) {
       if (status == "OK") {
         directionsRenderer.setDirections(result);
-        console.log("Its status is OK", result);
+
         if (result?.routes) {
           setRoute(result.routes);
           const steps = result.routes[0]?.legs[0].steps;
@@ -472,7 +458,7 @@ function MyCalender(props) {
 
   ///
   const [modalMap, setModalMap] = useState<google.maps.Map | null>(null);
-  console.log("modalMap", modalMap);
+
   const modalMapRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -497,12 +483,11 @@ function MyCalender(props) {
         }}
         onSelectEvent={(e) => {
           setOpened(true);
-          console.log("e is ", e);
           setEventID(e.id);
-          console.log("eventID is", e.id);
-          //console.log("onSelectEventID");
-          //console.log(eventID);
-          //console.log("e id", e.id);
+
+          //("onSelectEventID");
+          //(eventID);
+          //("e id", e.id);
         }}
         //onDoubleClickEvent={deleteEvent}
       />
@@ -553,9 +538,14 @@ function MyCalender(props) {
                 <a href={review.website}>{review.website}</a>
                 <Divider w={350} />
                 <Text>{showOpeningHours()}</Text>
-                <Text>Leave a review</Text>
+                <Text>Leave a short review</Text>
                 <Rating />
                 <Textarea />
+                <Link to="/#">
+                  <UnstyledButton>
+                    Click here to give a detailed review
+                  </UnstyledButton>
+                </Link>
               </Stack>
             </Tabs.Panel>
 
@@ -633,8 +623,8 @@ function MyCalender(props) {
                       ...p,
                       description: e.target.value,
                     }));
-                    //console.log(e.currentTarget.value);
-                    //console.log("modal", modalActivityDescription);
+                    //(e.currentTarget.value);
+                    //("modal", modalActivityDescription);
                   }}
                 ></Textarea>
                 <Button

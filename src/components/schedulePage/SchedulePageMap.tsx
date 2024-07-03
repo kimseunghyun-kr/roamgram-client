@@ -161,7 +161,7 @@ function SchedulePageMap(
     markerArray.forEach((item) => {
       item.setMap(null);
     });
-    console.log("delete marker Array", markerArray);
+    markerArray;
     setMarkerArray([]);
   }
   useEffect(() => {
@@ -171,7 +171,7 @@ function SchedulePageMap(
     locationButton.style.marginTop = "10px";
     //
     if (map !== null) {
-      //console.log("current location button");
+      //("current location button");
       map.controls[google.maps.ControlPosition.TOP_CENTER].push(locationButton);
       if (locationButton) {
         locationButton.addEventListener("click", () => {
@@ -200,7 +200,7 @@ function SchedulePageMap(
   }, [map]);
 
   //autoComplete
-  //console.log(autoCompleteEnd); //this is the places in scheduleDetails that is Sent to our backend
+  //(autoCompleteEnd); //this is the places in scheduleDetails that is Sent to our backend
   const [scheduleGooglePlaces, setScheduleGooglePlaces] =
     useState<scheduleGoogle>({
       googleMapsKeyId: "",
@@ -216,7 +216,7 @@ function SchedulePageMap(
     const destID = autoCompleteEnd?.getPlace().place_id;
     const selectedMode = (document.getElementById("mode") as HTMLInputElement)
       .value as keyof typeof google.maps.TravelMode;
-    console.log(originID);
+    originID;
     var request = {
       origin: { placeId: originID },
       destination: { placeId: destID },
@@ -231,7 +231,7 @@ function SchedulePageMap(
         if (result?.routes) {
           setRoutes(result.routes);
         } else {
-          console.log("error getting route");
+          ("error getting route");
         }
       }
     });
@@ -239,7 +239,7 @@ function SchedulePageMap(
   //renders if there is directions to do
   useEffect(() => {
     if (originPositionID && destPositionID) {
-      console.log("Complete locations");
+      ("Complete locations");
 
       if (directionsService && directionsRenderer) {
         calculateRoute(directionsService, directionsRenderer);
@@ -254,26 +254,26 @@ function SchedulePageMap(
     destPositionID,
   ]);
 
-  console.log("routes", routes);
+  routes;
 
   useEffect(() => {
     if (autoCompleteEnd) {
       autoCompleteEnd.addListener("place_changed", () => {
         const endPlace = autoCompleteEnd.getPlace();
         const position = endPlace.geometry?.location;
-        console.log("position", position);
-        console.log("end is", autoCompleteEnd.getPlace());
-        console.log("fields", autoCompleteEnd.getFields());
+        position;
+        autoCompleteEnd.getPlace();
+        autoCompleteEnd.getFields();
         if (position) {
           const dependentMarker = new google.maps.Marker({
             map: map,
             position: position,
           });
-          console.log("check autocomplete");
+          ("check autocomplete");
           setMarkerArray((p) => [...p, dependentMarker]);
           if (endPlace.place_id) {
             setDestPositionID(endPlace.place_id);
-            console.log("id", endPlace.place_id);
+            endPlace.place_id;
           }
           map.setCenter(position);
           map.setZoom(16);
@@ -301,7 +301,7 @@ function SchedulePageMap(
             },
           }));
         }
-        console.log("schedule details checking", scheduleDetails);
+        scheduleDetails;
       });
     }
     if (autoCompleteStart) {
@@ -315,12 +315,12 @@ function SchedulePageMap(
             map: map,
             position: startPosition,
           });
-          console.log("check autocomplete");
+          ("check autocomplete");
           setMarkerArray((p) => [...p, dependentMarker]);
           setOriginPositionID(startPlace.place_id);
           map.setCenter(startPosition);
           map.setZoom(16);
-          console.log("check here for placesID");
+          ("check here for placesID");
         }
       });
     }
@@ -356,7 +356,7 @@ function SchedulePageMap(
     const endDate = endTime;
     /////Date format
     const chosenTravelday = moment(travelDay).format("YYYY-MM-DD");
-    console.log(chosenTravelday);
+    chosenTravelday;
     //Making startDate & endDate into format needed for event
     const startDateFormatted = moment(
       chosenTravelday + startDate,
@@ -367,8 +367,8 @@ function SchedulePageMap(
       chosenTravelday + endDate,
       "YYYY-MM-DD hh:mm"
     );
-    console.log(startDateFormatted);
-    console.log(endDateFormatted);
+    startDateFormatted;
+    endDateFormatted;
 
     setScheduleDetails((p) => ({
       ...p,
@@ -397,8 +397,8 @@ function SchedulePageMap(
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("schedule to api is", scheduleDetails);
-    //console.log("json version is", JSON.stringify(scheduleDetails));
+    scheduleDetails;
+    //("json version is", JSON.stringify(scheduleDetails));
     //create duplicate;
     //FETCH API HERE!
 
@@ -417,8 +417,8 @@ function SchedulePageMap(
     )
       .then((response) => response.json())
       .then((data) => {
-        console.log("success in adding", data);
-        console.log("data id is", data.id);
+        data;
+        data.id;
         //this is async and may causes problems
         const newSchedule = {
           ...scheduleDetails,
@@ -428,9 +428,9 @@ function SchedulePageMap(
         setScheduleDetails((p) => newSchedule);
         setEvent((p) => [...p, newSchedule]);
       })
-      .catch((error) => console.log("error in adding new schedule", error));
+      .catch((error) => error);
 
-    //console.log("shecule aded");
+    //("shecule aded");
     setScheduleDetails({
       id: "",
       travelPlanId: "",
@@ -457,12 +457,12 @@ function SchedulePageMap(
   const url = window.location.search;
   const urlParams = new URLSearchParams(url);
   const travelID = urlParams.get(`id`);
-  //console.log("id travel is", travelID);
+  //("id travel is", travelID);
 
   const authToken = sessionStorage.getItem(`authToken`);
 
   const getAllSchedule = () => {
-    console.log("authToken", authToken);
+    //("authToken", authToken); this works but the call has an error itself
     fetch(
       `${
         import.meta.env.VITE_APP_API_URL
@@ -478,7 +478,7 @@ function SchedulePageMap(
       .then((response) => response.json())
       .then(
         (data) => (
-          //console.log(data),
+          //(data),
           data.forEach((items) => {
             items.travelStartTimeEstimate[1] =
               items.travelStartTimeEstimate[1] - 1;
@@ -492,11 +492,11 @@ function SchedulePageMap(
             ).toDate();
           }),
           setEvent(data)
-          //console.log("events taken from api are", data)
-          //console.log(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
+          //("events taken from api are", data)
+          //(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
         )
       )
-      .catch((error) => console.log(error, "error getting all schedules"));
+      .catch((error) => error);
   };
 
   useEffect(() => {
@@ -505,10 +505,10 @@ function SchedulePageMap(
     }
   }, [authToken]);
 
-  console.log("events", event);
+  //("events", event);
 
-  //console.log(event);
-  //console.log("events directly are", event);
+  //(event);
+  //("events directly are", event);
   return (
     <>
       <Header></Header>
@@ -526,7 +526,7 @@ function SchedulePageMap(
                 required
                 onChange={(e) => {
                   setScheduleName(e.currentTarget.value);
-                  //console.log(e.currentTarget.value);
+                  //(e.currentTarget.value);
                 }}
               ></Input>
               <Textarea
@@ -536,7 +536,7 @@ function SchedulePageMap(
                 value={scheduleDescription}
                 onChange={(e) => {
                   setScheduleDescription(e.currentTarget.value);
-                  //console.log(scheduleDescription);
+                  //(scheduleDescription);
                 }}
               />
               <Group mb={10}></Group>
@@ -571,10 +571,7 @@ function SchedulePageMap(
                   required
                   id="startTime"
                   onChange={(e) => {
-                    console.log(
-                      "Start using currentTargetValue",
-                      e.currentTarget.value
-                    );
+                    e.currentTarget.value;
                     const startTarget = e.currentTarget.value;
                     setStartTime(startTarget);
                   }}
@@ -595,11 +592,10 @@ function SchedulePageMap(
                       id="endTime"
                       onChange={(e) => {
                         e.currentTarget.value < startTime
-                          ? (console.log("less than start"),
-                            setEndTimePop(true),
+                          ? (setEndTimePop(true),
                             setEndTime(e.currentTarget.value))
                           : (setEndTime(e.currentTarget.value),
-                            console.log("okie"),
+                            "okie",
                             setEndTimePop(false));
                       }}
                     />
@@ -657,7 +653,7 @@ function SchedulePageMap(
                       checked={keepStart}
                       onChange={(e) => {
                         setKeepStart(e.currentTarget.checked);
-                        console.log(keepStart);
+                        keepStart;
                       }}
                     />
                   </Tooltip>

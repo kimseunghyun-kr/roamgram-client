@@ -75,12 +75,10 @@ interface ModalItem {
 
 function TravelPlans() {
   const [event, setEvent] = useState([]);
-  //console.log("Event", event);
 
   //Gets All Travel Plans
   /////////get_all/////////
 
-  //console.log(event);
   const authToken = sessionStorage.getItem(`authToken`);
 
   const [opened, setOpened] = useState(false); //for modal
@@ -128,7 +126,6 @@ function TravelPlans() {
   const { data: eventData, error: eventError } = useQuery({
     queryKey: ["queryEvent"],
     queryFn: async () => {
-      console.log("authb  bearer", authToken);
       if (authToken) {
         const res = await fetch(
           `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
@@ -140,16 +137,12 @@ function TravelPlans() {
             },
           }
         );
-
-        console.log("fetching", res);
         return res.json();
       } else {
         throw new Error("No token");
       }
     },
   });
-
-  console.log("queryData is", eventData);
 
   //mutations this works but now we need to edit the cache
   const { mutateAsync: eventMutate, isPending: createPending } = useMutation({
@@ -168,15 +161,11 @@ function TravelPlans() {
       );
     },
     onSuccess: (travelPlan_content) => {
-      console.log("travel-content", travelPlan_content);
       queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
       setDateRanges([new Date(), null]);
       setInitialSlides(eventData.length);
-      console.log("ssuccess");
     },
-    onError: () => {
-      console.log("Error in adding TP");
-    },
+    onError: () => {},
     // onSettled: () => {
     //  queryClient.invalidateQueries({ queryKey: ["queryEvent"] });
     //},
@@ -192,7 +181,6 @@ function TravelPlans() {
   //this works
   const { mutateAsync: deleteMutate } = useMutation({
     mutationFn: async (id: string) => {
-      console.log("authb  bearer", authToken);
       return await fetch(
         `${import.meta.env.VITE_APP_API_URL}/travelPlan/delete_travel_plan`,
         {

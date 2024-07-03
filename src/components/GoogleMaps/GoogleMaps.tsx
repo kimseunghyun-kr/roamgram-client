@@ -11,9 +11,13 @@ import {
   TextInput,
   Text,
   UnstyledButton,
+  Group,
+  Center,
+  Title,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
+import { IconArrowRight } from "@tabler/icons-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function GoogleMaps() {
@@ -183,8 +187,8 @@ function GoogleMaps() {
     directionsService: google.maps.DirectionsService,
     directionsRenderer: google.maps.DirectionsRenderer
   ) {
-    const originID = autoComplete?.getPlace().place_id;
-    const destID = autoCompleteDest?.getPlace().place_id;
+    const originID = autoComplete?.getPlace()?.place_id;
+    const destID = autoCompleteDest?.getPlace()?.place_id;
     const selectedMode = (document.getElementById("mode") as HTMLInputElement)
       .value as keyof typeof google.maps.TravelMode;
     console.log(originID);
@@ -291,10 +295,23 @@ function GoogleMaps() {
         </Container>
         <Divider size="sm"></Divider>
         <Space h="md"></Space>
+
         <Container fluid>
-          <label>Origin: {selectedPlace}</label>
+          <Group justify="center">
+            <Text size="xl" fw="bold">
+              {selectedPlace}
+            </Text>
+            <IconArrowRight />
+            <Text size="xl" fw="bold">
+              {selectedPlaceDest}{" "}
+            </Text>
+          </Group>
+          <Center>
+            <Text c="gray" fs="italic">
+              Departing At: TESTITME
+            </Text>
+          </Center>
           <br></br>
-          <label>Destination: {selectedPlaceDest} </label>
         </Container>
         <Divider size="sm"></Divider>
         <Container>
@@ -302,25 +319,38 @@ function GoogleMaps() {
             <>
               <Stack>
                 <UnstyledButton onClick={toggle}>
-                  {" "}
-                  <p>Distance: {leg.distance?.text}</p>
-                  <p> Duration: {leg.duration?.text}</p>
-                  <p>Details: Click Here!</p>
+                  <Stack align="center" mt={30}>
+                    <Title> {leg.duration?.text}</Title>
+                    <Text style={{ fontSize: "25px" }}>
+                      {leg.distance?.text}
+                    </Text>
+                    <Text c="#585E72">Click Here for Route</Text>
+                  </Stack>
                 </UnstyledButton>
                 <Collapse in={opened}>
                   <ScrollArea h={300}>
                     <Stack>
+                      <Divider />
                       {leg.steps.map((step) => (
                         <>
-                          <Text size="xs">{step.duration.text}</Text>
-                          <Text size="xs">{step.distance.text}</Text>
                           <Text
-                            size="xs"
+                            pt={10}
+                            pl={"60"}
+                            size="md"
                             dangerouslySetInnerHTML={{
-                              __html: step.instructions,
+                              __html: `${step.instructions} in ${step.distance.text}`,
                             }}
                           ></Text>
-                          <Divider></Divider>
+                          <Divider
+                            pl={"40"}
+                            w={"95%"}
+                            label={
+                              <Text size="sm" fw="bold">
+                                {step.duration.text}
+                              </Text>
+                            }
+                            labelPosition="right"
+                          />
                         </>
                       ))}
                     </Stack>
@@ -334,7 +364,7 @@ function GoogleMaps() {
         </Container>
         <Divider></Divider>
         <Container>
-          <h3>Alternative Routes to Choose</h3>
+          <h1>Others</h1>
 
           <ul>
             {routes.length > 1 ? (
