@@ -484,12 +484,7 @@ function MyCalender(props) {
         onSelectEvent={(e) => {
           setOpened(true);
           setEventID(e.id);
-
-          //("onSelectEventID");
-          //(eventID);
-          //("e id", e.id);
         }}
-        //onDoubleClickEvent={deleteEvent}
       />
       <Modal
         size="auto"

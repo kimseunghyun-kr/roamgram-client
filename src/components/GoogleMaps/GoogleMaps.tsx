@@ -14,10 +14,12 @@ import {
   Group,
   Center,
   Title,
+  Button,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
 import { IconArrowRight } from "@tabler/icons-react";
+import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 
 function GoogleMaps() {
@@ -301,19 +303,22 @@ function GoogleMaps() {
             <Text size="xl" fw="bold">
               {selectedPlace}
             </Text>
-            <IconArrowRight />
+            {placeAutoCompleteRef?.current?.value !== "" &&
+            placeAutoCompleteRefDest?.current?.value !== "" ? (
+              <IconArrowRight />
+            ) : null}
             <Text size="xl" fw="bold">
               {selectedPlaceDest}{" "}
             </Text>
           </Group>
           <Center>
             <Text c="gray" fs="italic">
-              Departing At: TESTITME
+              Departing At: {new Date().toLocaleTimeString()}
             </Text>
           </Center>
           <br></br>
         </Container>
-        <Divider size="sm"></Divider>
+        <Divider />
         <Container>
           {leg ? (
             <>
@@ -364,25 +369,24 @@ function GoogleMaps() {
         </Container>
         <Divider></Divider>
         <Container>
-          <h1>Others</h1>
-
-          <ul>
-            {routes.length > 1 ? (
-              <li>
+          {routes.length > 1 ? (
+            <>
+              <Center>
+                <h1>Others</h1>
+              </Center>
+              <Group>
                 {routes.map((route, index) => (
-                  <li key={route.summary}>
-                    <button onClick={() => setRouteIndex(index)}>
-                      {route.summary}
-                    </button>
-                    <Space></Space>
-                    <Divider></Divider>
-                  </li>
+                  <Button
+                    variant="outline"
+                    key={route.summary}
+                    onClick={() => setRouteIndex(index)}
+                  >
+                    {route.summary}
+                  </Button>
                 ))}
-              </li>
-            ) : (
-              <></>
-            )}
-          </ul>
+              </Group>
+            </>
+          ) : null}
         </Container>
       </Grid.Col>
       <Grid.Col span={7}>
