@@ -10,6 +10,7 @@ import {
   Fieldset,
   Flex,
   Grid,
+  GridCol,
   Group,
   Image,
   NativeSelect,
@@ -257,7 +258,7 @@ function HomePage() {
                 <Image
                   h={600}
                   style={{ minWidth: 1200 }}
-                  fallbackSrc="assets/japan-background-digital-art.jpg"
+                  fallbackSrc="assets/japan-background-night.png"
                 ></Image>
               </CarouselSlide>
               {/*slides*/}
@@ -266,20 +267,24 @@ function HomePage() {
           <Overlay backgroundOpacity={0} h={600}>
             <Container fluid>
               <Grid overflow="hidden" grow pt="15" style={{ minWidth: 900 }}>
-                <Grid.Col span={6.8}>
-                  <Group justify="flex-end" gap="5em">
-                    <li className="l-header-menu-list-child">
-                      <Link to="/planner">Routes</Link>
-                    </li>
-                    <li className="l-header-menu-list-child">
-                      <Link to="/travelPage">Travel Plans</Link>
-                    </li>
-                    <li className="l-header-menu-list-child">
-                      <Link to="/reviews">Guide</Link>
-                    </li>
-                  </Group>
+                <GridCol span={1.5}></GridCol>
+                <Grid.Col span={6}>
+                  <Stack align="center">
+                    <Group gap="6em">
+                      <li className="l-header-menu-list-child">
+                        <Link to="/planner">Routes</Link>
+                      </li>
+                      <li className="l-header-menu-list-child">
+                        <Link to="/travelPage">Travel Plans</Link>
+                      </li>
+                      <li className="l-header-menu-list-child">
+                        <Link to="/reviews">Guide</Link>
+                      </li>
+                    </Group>
+                    <Divider w={950} size="sm" mt={-16} />
+                  </Stack>
                 </Grid.Col>
-                <Grid.Col span={4}>
+                <Grid.Col span={1.5}>
                   <Group gap="xs" justify="flex-end">
                     {!isLoggedIn ? (
                       <Link to="/login">
