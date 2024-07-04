@@ -212,9 +212,10 @@ function TravelPlans() {
   });
 
   const homePageItem = JSON.parse(sessionStorage.getItem("HomePageTravel"));
-  //console.log(
-  //  "homepageItem",
-  //  JSON.parse(sessionStorage.getItem("HomePageTravel"))
+  console.log(
+    "homepageItem",
+    JSON.parse(sessionStorage.getItem("HomePageTravel"))
+  );
 
   //console.log("homepageitem", homePageItem);
   const UnauthCardTravel = () => {
@@ -362,7 +363,7 @@ function TravelPlans() {
       sessionStorage.removeItem(`HomePageTravel`);
       sethomeItem(null);
     }
-  }, [authToken]);
+  });
 
   //const [modalTravelPlan, setModalTravelPlan] = useState();
   const [editTravelPlan, setEditTravelPlan] = useState({

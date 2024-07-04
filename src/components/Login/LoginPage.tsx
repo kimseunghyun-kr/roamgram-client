@@ -31,6 +31,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./AuthContext";
 import { AuthProvider } from "./AuthContext";
 import { useInterval } from "@mantine/hooks";
+import Header from "../Header/Header";
 
 function LoginPage() {
   const history = useNavigate();

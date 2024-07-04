@@ -1,6 +1,7 @@
 import { Carousel, CarouselSlide } from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
 import {
+  Box,
   Button,
   Card,
   Center,
@@ -42,6 +43,7 @@ const images = [
   "https://placehold.co/600x400?text=Placeholder",
   "https://placehold.co/600x400?text=Placeholder",
   "https://placehold.co/600x400?text=Placeholder",
+  "https://placehold.co/600x400?text=Placeholder",
 ];
 
 function HomePage() {
@@ -54,9 +56,9 @@ function HomePage() {
 
   const slides2 = images.map((url, index) => (
     <Carousel.Slide key={index}>
-      <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <Card shadow="sm" padding="lg" radius="md" withBorder w={470}>
         <Card.Section>
-          <Image src={url} height={150}></Image>
+          <Image src={url} height={160}></Image>
         </Card.Section>
         <Text style={{ textAlign: "center" }}>Title</Text>
         <Text style={{ textAlign: "center" }}>Descripton</Text>
@@ -456,47 +458,23 @@ function HomePage() {
                 <UnstyledButton>Nightlife</UnstyledButton>
                 <UnstyledButton>Travelling</UnstyledButton>
               </Group>
-              <Divider mt={5} size="md" color="black"></Divider>
+              <Divider mt={5} size="sm" color="black"></Divider>
             </Grid.Col>
           </Grid>
-          <div style={{ minWidth: 1000 }}>
+
+          <Container w={1950} fluid mt="25">
             <Carousel
               withIndicators
-              height={250}
-              slideSize="30%"
+              height={260}
+              slideSize="23.5%"
               slideGap="sm"
               loop
               align="start"
-              slidesToScroll={3}
+              slidesToScroll={4}
               plugins={[autoplay.current]}
             >
-              {slides}
+              {slides2}
             </Carousel>
-          </div>
-        </Container>
-        <Container h={300} fluid mt="50">
-          <Image
-            h={71}
-            w="auto"
-            src="assets/Itinerary.png"
-            ml={250}
-            mb={20}
-          ></Image>
-          <Container fluid>
-            <Container fluid w={1400}>
-              <Carousel
-                withIndicators
-                height={300}
-                slideSize="15%"
-                slideGap="sm"
-                loop
-                align="start"
-                slidesToScroll={3}
-                plugins={[autoplay.current]}
-              >
-                {slides2}
-              </Carousel>
-            </Container>
           </Container>
         </Container>
       </body>

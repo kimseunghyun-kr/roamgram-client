@@ -16,6 +16,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ReviewsPage from "./components/ReviewsPage/ReviewsPage.tsx";
 import { AuthProvider } from "./components/Login/AuthContext.tsx";
+import DetailedReview from "./components/ReviewsPage/DetailedReview.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -44,6 +45,10 @@ function App() {
               <Route path="/planner" element={<MapPage />}></Route>
               <Route path="/authSuccess" element={<GoogleLogin />}></Route>
               <Route path="/reviews" element={<ReviewsPage />}></Route>
+              <Route
+                path="/reviews/detailed_review"
+                element={<DetailedReview />}
+              ></Route>
             </Routes>
           </AuthProvider>
         </div>

@@ -461,6 +461,7 @@ function MyCalender(props) {
 
   const modalMapRef = useRef<HTMLDivElement>(null);
 
+  const [rating, setRating] = useState(null);
   return (
     <>
       <DnDCalendar
@@ -491,6 +492,7 @@ function MyCalender(props) {
         opened={opened}
         onClose={() => {
           setOpened(false);
+          setRating(null);
         }}
         withCloseButton={true}
       >
@@ -526,18 +528,37 @@ function MyCalender(props) {
             </Tabs.Panel>
             <Tabs.Panel mt={10} value="reviews">
               <Stack align="center">
-                <Image w={350} h="auto" src={review.photo} />
+                {review ? (
+                  <>
+                    <Image w={350} h="auto" src={review.photo} />
+                    <Divider w={350} />
+                    <Text>{review.isOpen}</Text>
+                    <Divider w={350} />
+                    <a href={review.website}>{review.website}</a>
+                    <Divider w={350} />
+                    <Text>{showOpeningHours()}</Text>
+                  </>
+                ) : null}
                 <Divider w={350} />
-                <Text>{review.isOpen}</Text>
-                <Divider w={350} />
-                <a href={review.website}>{review.website}</a>
-                <Divider w={350} />
-                <Text>{showOpeningHours()}</Text>
                 <Text>Leave a short review</Text>
-                <Rating />
-                <Textarea />
-                <Link to="/#">
-                  <UnstyledButton>
+                <Rating
+                  value={rating}
+                  onChange={(e) => {
+                    setRating(e);
+                    console.log(rating);
+                  }}
+                />
+                <Textarea autosize w={350} />
+                <Button
+                  onClick={() => {
+                    console.log(rating);
+                  }}
+                >
+                  Submit Review
+                </Button>
+                <Divider c="gray" w={250} />
+                <Link to="/reviews/detailed_review">
+                  <UnstyledButton c="purple">
                     Click here to give a detailed review
                   </UnstyledButton>
                 </Link>
@@ -618,8 +639,6 @@ function MyCalender(props) {
                       ...p,
                       description: e.target.value,
                     }));
-                    //(e.currentTarget.value);
-                    //("modal", modalActivityDescription);
                   }}
                 ></Textarea>
                 <Button
@@ -629,19 +648,6 @@ function MyCalender(props) {
                   onClick={() => {
                     setOpened(false);
                     updateEvents();
-                    /*
-                  props.setEvents((p) => {
-                    const existing = p.find((ev) => ev.id == eventID);
-                    const filtered = p.filter((ev) => ev.id !== eventID);
-
-                    const updatedExisting = {
-                      ...existing,
-                      name: modalActivityDescription.title,
-                      description: modalActivityDescription.description,
-                    };
-                    return [...filtered, updatedExisting];
-                  });
-                  */
                   }}
                 >
                   Update Content
