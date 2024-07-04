@@ -285,14 +285,14 @@ function HomePage() {
                   </Stack>
                 </Grid.Col>
                 <Grid.Col span={1.5}>
-                  <Group gap="xs" justify="flex-end">
+                  <Group gap="xs" justify="center">
                     {!isLoggedIn ? (
                       <Link to="/login">
                         <Button
                           className="buttons-login"
                           w="11em"
                           radius="xl"
-                          color="violet"
+                          color="orange"
                         >
                           Login / Sign up
                         </Button>
@@ -301,7 +301,7 @@ function HomePage() {
                       <Button
                         className="header-logout"
                         radius="xl"
-                        color={"indigo"}
+                        color={"orange"}
                         style={{ fontSize: "13px" }}
                         onClick={() => {
                           sessionStorage.removeItem(`authToken`);
@@ -312,22 +312,6 @@ function HomePage() {
                         Log Out
                       </Button>
                     )}
-
-                    <Switch
-                      size="lg"
-                      onLabel="Dark"
-                      offLabel="Light"
-                      color="dark.4"
-                    />
-                    <NativeSelect
-                      w={"4em"}
-                      data={["ENG", "KR", "JPN", "CHI", "ETC."]}
-                      styles={{
-                        input: { backgroundColor: "rgba(255, 255, 255, 0.5)" },
-                      }}
-                      variant="unstyled"
-                      className="language-button"
-                    ></NativeSelect>
                   </Group>
                 </Grid.Col>
               </Grid>
