@@ -335,7 +335,7 @@ function HomePage() {
                   <form
                     onSubmit={form.onSubmit(
                       (values) => (
-                        console.log(values),
+                        console.log(values, "values are"),
                         navigate("/travelPage"),
                         sessionStorage.setItem(
                           "HomePageTravel",

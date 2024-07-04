@@ -21,9 +21,11 @@ import {
 } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
 
 function ReviewsPage() {
   const searchRef = useRef(null);
+  const navigate = useNavigate();
   return (
     <>
       <header>
@@ -49,7 +51,11 @@ function ReviewsPage() {
                 w={350}
               ></TextInput>
               <Space w={700}></Space>
-              <Button color="red" leftSection={<IconPencil />}>
+              <Button
+                color="red"
+                leftSection={<IconPencil />}
+                onClick={() => navigate("/reviews/detailed_review")}
+              >
                 Write a Review
               </Button>
             </Container>
