@@ -2,7 +2,14 @@ import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import Header from "../Header/Header";
 import { useEffect, useRef, useState } from "react";
-import { Button, Card, Container, ScrollArea, Image } from "@mantine/core";
+import {
+  Button,
+  Card,
+  Container,
+  ScrollArea,
+  Image,
+  Center,
+} from "@mantine/core";
 
 export function DetailedReview() {
   const [value, setValue] = useState("");
@@ -34,6 +41,8 @@ export function DetailedReview() {
     "size",
     "font",
     "color",
+    "background",
+    "align",
     "header",
     "bold",
     "italic",
@@ -56,23 +65,26 @@ export function DetailedReview() {
         <Header></Header>
       </header>
       <body>
-        <Image src="/assets/Create Review.png" w="auto" mt={35} />
-        <Card withBorder w={1200}>
-          <ScrollArea h={800}>
-            <Container fluid w={1100} h="auto">
-              <ReactQuill
-                ref={quilRef}
-                theme="snow"
-                modules={modules}
-                formats={formats}
-                value={value}
-                onChange={setValue}
-              />
-            </Container>
-          </ScrollArea>
-        </Card>
+        <Image src="/assets/Create Review.png" w="auto" mt={35} ml={175} />
+        <Center>
+          <Card withBorder w={1200} mt={20}>
+            <ScrollArea h={650}>
+              <Container fluid w={1100} h="auto">
+                <ReactQuill
+                  ref={quilRef}
+                  theme="snow"
+                  modules={modules}
+                  formats={formats}
+                  value={value}
+                  onChange={setValue}
+                />
+              </Container>
+            </ScrollArea>
+          </Card>
+        </Center>
         <Button
-          ml={1300}
+          mt={10}
+          ml={1200}
           variant="outline"
           onClick={() => {
             console.log(quilRef.current.value);

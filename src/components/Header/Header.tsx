@@ -67,7 +67,7 @@ function Header() {
       <Container w={1700} size="1900" style={{ display: "flex" }}>
         <Link to="/">
           <a href="#">
-            <Image ml={120} w={220} src="assets/RoamGram Logo.png"></Image>
+            <Image ml={120} w={220} src="/assets/RoamGram Logo.png"></Image>
           </a>
         </Link>
         <Space w={400}></Space>
