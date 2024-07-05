@@ -14,8 +14,10 @@ import {
   GridCol,
   Group,
   Image,
+  Input,
   NativeSelect,
   Overlay,
+  Paper,
   SimpleGrid,
   Space,
   Stack,
@@ -34,6 +36,8 @@ import { Link, useNavigate } from "react-router-dom";
 import "./HomePage.css";
 import { IconBrandGithub, IconSearch } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
+import Header from "../components/Header/Header";
+import HeaderHome from "../components/Header/HeaderHome";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -56,9 +60,9 @@ function HomePage() {
 
   const slides2 = images.map((url, index) => (
     <Carousel.Slide key={index}>
-      <Card shadow="sm" padding="lg" radius="md" withBorder w={470}>
+      <Card shadow="sm" padding="lg" radius="lg" withBorder w={450}>
         <Card.Section>
-          <Image src={url} height={160}></Image>
+          <Image src={url} height={150}></Image>
         </Card.Section>
         <Text style={{ textAlign: "center" }}>Title</Text>
         <Text style={{ textAlign: "center" }}>Descripton</Text>
@@ -246,161 +250,142 @@ function HomePage() {
   return (
     <>
       <body>
-        <Container fluid h={600} p="0">
-          <Container fluid h={400} p="0">
-            <Carousel
-              plugins={[autoplay.current]}
-              onMouseEnter={autoplay.current.stop}
-              onMouseLeave={autoplay.current.reset}
-              withControls={false}
-              draggable={false}
-              loop
+        <Container fluid h={700} p="0">
+          <Image
+            h={700}
+            style={{ minWidth: 1200 }}
+            fallbackSrc="assets/japan-background-night.png"
+          ></Image>
+          <Overlay backgroundOpacity={0.35} h={700}>
+            <HeaderHome />
+            <Flex
+              h={450}
+              justify="flex-end"
+              align="center"
+              direction="column"
+              mt={50}
             >
-              <CarouselSlide>
-                <Image
-                  h={600}
-                  style={{ minWidth: 1200 }}
-                  fallbackSrc="assets/japan-background-night.png"
-                ></Image>
-              </CarouselSlide>
-              {/*slides*/}
-            </Carousel>
-          </Container>
-          <Overlay backgroundOpacity={0} h={600}>
-            <Container fluid>
-              <Grid overflow="hidden" grow pt="15" style={{ minWidth: 900 }}>
-                <GridCol span={1.5}></GridCol>
-                <Grid.Col span={6}>
-                  <Stack align="center">
-                    <Group gap="6em">
-                      <li className="l-header-menu-list-child">
-                        <Link to="/planner">Routes</Link>
-                      </li>
-                      <li className="l-header-menu-list-child">
-                        <Link to="/travelPage">Travel Plans</Link>
-                      </li>
-                      <li className="l-header-menu-list-child">
-                        <Link to="/reviews">Guide</Link>
-                      </li>
-                    </Group>
-                    <Divider w={950} size="sm" mt={-16} />
-                  </Stack>
-                </Grid.Col>
-                <Grid.Col span={1.5}>
-                  <Group gap="xs" justify="center">
-                    {!isLoggedIn ? (
-                      <Link to="/login">
-                        <Button
-                          className="buttons-login"
-                          w="11em"
-                          radius="xl"
-                          color="orange"
-                        >
-                          Login / Sign up
-                        </Button>
-                      </Link>
-                    ) : (
-                      <Button
-                        className="header-logout"
-                        radius="xl"
-                        color={"orange"}
-                        style={{ fontSize: "13px" }}
-                        onClick={() => {
-                          sessionStorage.removeItem(`authToken`);
-                          sessionStorage.removeItem(`refreshToken`);
-                          navigate(0);
-                        }}
-                      >
-                        Log Out
-                      </Button>
-                    )}
-                  </Group>
-                </Grid.Col>
-              </Grid>
-            </Container>
-            <Flex h={450} justify="flex-end" align="center" direction="column">
-              <Center>
-                <Image
-                  w="auto"
-                  h="90px"
-                  src="assets/roamgram with white.png"
-                  mb={20}
-                ></Image>
+              <Center w={800} ml={27}>
+                <Text
+                  fw="bold"
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "50px",
+                    textShadow: "1.5px 2px 2px black",
+                  }}
+                  c="orange"
+                >
+                  Explore the World
+                </Text>
+                <Text
+                  mt={6}
+                  style={{ fontFamily: "Roboto", fontSize: "50px" }}
+                  c="white"
+                  ml={13}
+                >
+                  with RoamGram.
+                </Text>
               </Center>
-              <Space></Space>
-              <Center>
-                <Fieldset c="white" variant="filled" h={76} w={800} radius="lg">
-                  {/* change to form eventually :) */}
-
-                  <form
-                    onSubmit={form.onSubmit(
-                      (values) => (
-                        console.log(values, "values are"),
-                        navigate("/travelPage"),
-                        sessionStorage.setItem(
-                          "HomePageTravel",
-                          JSON.stringify(values)
-                        )
-                      )
-                    )}
+              <Text
+                c="white"
+                style={{
+                  fontFamily: "monospace",
+                  border: "2px white double",
+                  fontStyle: "bold",
+                  padding: "7px",
+                  fontSize: "17px",
+                }}
+              >
+                Your All-in-One Travel Website
+              </Text>
+              <Space h="60"></Space>
+              <Container>
+                <Stack align="center">
+                  <Text
+                    c="white"
+                    style={{
+                      fontSize: "18px",
+                      fontFamily: "sans-serif",
+                      backgroundColor: "rgba(192, 191, 192, 0.15)",
+                      borderRadius: "300px",
+                      padding: "3px",
+                      paddingInline: "35px",
+                      backdropFilter: "blur(2px)",
+                    }}
                   >
-                    <Flex justify="center" align="center" gap="lg">
-                      <TextInput
-                        //value={planName}
-                        //onChange={(e) => {
-                        //  setPlanName(e.target.value);
-                        //}}
-                        key={form.key("name")}
-                        {...form.getInputProps("name")}
-                        placeholder="Input Name"
-                        description="PLAN NAME"
-                        variant="unstyled"
-                        styles={{
-                          input: { fontSize: "17px" },
-                          description: { height: "7px" },
-                        }}
-                      ></TextInput>
-                      <Divider
-                        orientation="vertical"
-                        h={50}
-                        color="steelblue"
-                      ></Divider>
-                      <DatePickerInput
-                        key={form.key("dateRange")}
-                        {...form.getInputProps("dateRange")}
-                        //value={dateRange}
-                        //onChange={(e) => (setDateRange(e), console.log(e))}
-                        variant="unstyled"
-                        type="range"
-                        description="DATES"
-                        placeholder="Choose Date"
-                        w={300}
-                        styles={{
-                          input: { fontSize: "16px" },
-                          description: { height: "7px" },
-                        }}
-                      ></DatePickerInput>
-                      <Divider
-                        orientation="vertical"
-                        h={50}
-                        color="steelblue"
-                      ></Divider>
+                    Create Your Journey
+                  </Text>
+                </Stack>
+                <Center>
+                  <Paper
+                    c="white"
+                    h={55}
+                    w={800}
+                    radius="lg"
+                    shadow="xs"
+                    mt={10}
+                    mb={-20}
+                  >
+                    <form
+                      onSubmit={form.onSubmit(
+                        (values) => (
+                          console.log(values, "values are"),
+                          navigate("/travelPage"),
+                          sessionStorage.setItem(
+                            "HomePageTravel",
+                            JSON.stringify(values)
+                          )
+                        )
+                      )}
+                    >
+                      <Group align="center" justify="center" pt={8.5} pl={5}>
+                        <TextInput
+                          key={form.key("name")}
+                          {...form.getInputProps("name")}
+                          placeholder="Input Plan name"
+                          variant="unstyled"
+                          styles={{
+                            input: { fontSize: "16px" },
+                          }}
+                          h="auto"
+                          w={255}
+                        ></TextInput>
+                        <Divider
+                          mt={6}
+                          orientation="vertical"
+                          h={30}
+                          color="steelblue"
+                        ></Divider>
+                        <DatePickerInput
+                          key={form.key("dateRange")}
+                          {...form.getInputProps("dateRange")}
+                          variant="unstyled"
+                          type="range"
+                          placeholder="Input Date"
+                          w={300}
+                          h="auto"
+                          styles={{
+                            input: { fontSize: "16px" },
+                          }}
+                        ></DatePickerInput>
 
-                      <Button
-                        type="submit"
-                        variant="filled"
-                        mt={7}
-                        color="#487D2E"
-                        leftSection={<IconSearch size={24} />}
-                        style={{ fontSize: "16px" }}
-                        radius="md"
-                      >
-                        Enter
-                      </Button>
-                    </Flex>
-                  </form>
-                </Fieldset>
-              </Center>
+                        <Box>
+                          <Button
+                            className="home-submit"
+                            type="submit"
+                            variant="filled"
+                            color="indigo"
+                            style={{ fontSize: "16px", width: "147px" }}
+                            radius="md"
+                          >
+                            Submit
+                          </Button>
+                        </Box>
+                      </Group>
+                    </form>
+                  </Paper>
+                </Center>
+              </Container>
             </Flex>
           </Overlay>
         </Container>
@@ -462,11 +447,10 @@ function HomePage() {
             </Grid.Col>
           </Grid>
 
-          <Container w={1950} fluid mt="25">
+          <Container w={2000} fluid mt="25">
             <Carousel
               withIndicators
-              height={260}
-              slideSize="23.5%"
+              slideSize="25%"
               slideGap="sm"
               loop
               align="start"
@@ -497,7 +481,7 @@ function HomePage() {
             Tolentino Alexandra Morales and Kim Seung Hyun
           </Text>
           <Text size="xs" c="gray">
-            Orbital 2024
+            Orbital 2024 - National University of Singapore
           </Text>
           <Space h={0}></Space>
         </Stack>

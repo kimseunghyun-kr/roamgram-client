@@ -9,6 +9,10 @@ import {
   ScrollArea,
   Image,
   Center,
+  TextInput,
+  Space,
+  Group,
+  Rating,
 } from "@mantine/core";
 
 export function DetailedReview() {
@@ -31,7 +35,6 @@ export function DetailedReview() {
         { indent: "-1" },
         { indent: "+1" },
       ],
-      [{ script: "sub" }, { script: "super" }],
       ["link", "image"],
       ["clean"],
     ],
@@ -65,11 +68,20 @@ export function DetailedReview() {
         <Header></Header>
       </header>
       <body>
-        <Image src="/assets/Create Review.png" w="auto" mt={35} ml={175} />
+        <Image src="/assets/Create Review.png" w="auto" mt={35} ml={360} />
         <Center>
           <Card withBorder w={1200} mt={20}>
             <ScrollArea h={650}>
               <Container fluid w={1100} h="auto">
+                <Group>
+                  <TextInput
+                    id="review-location"
+                    description="Location"
+                    w={350}
+                  />
+                  <Rating fractions={2} pt={20} />
+                </Group>
+                <Space h={30} />
                 <ReactQuill
                   ref={quilRef}
                   theme="snow"

@@ -10,28 +10,16 @@
 
 
   .l-header-menu-list-child a{
-    font-size: 22px;
+    font-size: 17px;
     text-decoration: none;
     color:  whitesmoke;
-    font-weight: bold;
-    text-transform: uppercase;
-
-   
+    font-weight: bold;   
   
   }
   
-.l-header-menu-list-child a:after{    
-    background: none repeat scroll 0 0 transparent;
-    bottom: 0;
-    content: "";
-    display: block;
-    height: 3px;
-    left: 50%;
-    position: relative;
-    background: rgba(174, 16, 16, 0.707);
-    transition: width 0.25s ease 0s, left 0.3s ease 0s;
-    width: 0;
-    -webkit-text-fill-color: transparent;
+.l-header-menu-list-child a:hover{    
+    transition: 300ms ease;
+    color: orange;
     
   }
 
@@ -53,4 +41,13 @@
            
  .footer{
   margin-top: 120px;
+ }
+
+ .home-submit:hover{
+  transition: 200ms ease-in;
+  background-color: green;
+ }
+
+ .home-submit{
+  transition: 150ms ease;
  }

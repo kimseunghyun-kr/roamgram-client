@@ -542,6 +542,7 @@ function MyCalender(props) {
                 <Divider w={350} />
                 <Text>Leave a short review</Text>
                 <Rating
+                  fractions={2}
                   value={rating}
                   onChange={(e) => {
                     setRating(e);

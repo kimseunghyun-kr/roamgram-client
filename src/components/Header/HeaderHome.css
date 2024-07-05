@@ -1,0 +1,36 @@
+* {
+    font-family: 'Roboto', 'sans-serif';
+    
+}
+
+.header-button-home{
+    font-size: 13px;
+    color: white;
+    font-weight: 500;
+    letter-spacing: 1px;
+    transition: 150ms ease
+}
+
+.header-button-home:hover{
+    background-color: rgba(255, 255, 255, 0.867);
+    color:orangered;
+    padding: 10px;
+    transition: 200ms ease;
+    transform: scale(1.1);
+    font-weight: 600;
+    border-radius: 15px;
+}
+
+.header-login-home:hover{
+    background-color: orange;
+    transition: 250ms ease;
+    border-color: transparent;
+}
+
+.header-logout-home{
+    transition: 150ms ease;
+}
+.header-logout-home:hover{
+    background-color: maroon;
+    transition: 200ms ease-in;
+}

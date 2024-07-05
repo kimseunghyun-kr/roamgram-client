@@ -21,6 +21,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconArrowRight } from "@tabler/icons-react";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
+import parse from "parse-duration";
 
 function GoogleMaps() {
   //for origin textbox
@@ -63,8 +64,12 @@ function GoogleMaps() {
   //
   const placeAutoCompleteRef = useRef<HTMLInputElement>(null);
   const placeAutoCompleteRefDest = useRef<HTMLInputElement>(null);
-  //
 
+  //
+  const [time, setTime] = useState(
+    `${new Date().getHours()}:${new Date().getMinutes()}`
+  );
+  const [arrivalTime, setArrivalTime] = useState(null);
   useEffect(() => {
     //mounts only if isLoaded is true
     const mapOptions = {
@@ -256,6 +261,16 @@ function GoogleMaps() {
     setRouteCallback();
   }, [setRouteCallback]);
 
+  function getArrivalTime() {
+    const departureTime = moment(time);
+  }
+
+  useEffect(() => {
+    const departureTime = moment(time, "HH:mm");
+    const timeTaken = leg?.duration?.value; //in seconds
+    const arrival = departureTime.add(timeTaken, "seconds");
+    setArrivalTime(arrival);
+  }, [leg, time]);
   const [opened, { toggle }] = useDisclosure(false);
 
   return (
@@ -286,16 +301,16 @@ function GoogleMaps() {
                   { label: "Transit", value: "TRANSIT" },
                 ]}
               ></NativeSelect>
-
               <TimeInput
                 mt={19}
                 w={150}
-                value={`${new Date().getHours()}:${new Date().getMinutes()}`}
+                value={time}
+                onChange={(e) => setTime(e.currentTarget.value)}
               ></TimeInput>
             </SimpleGrid>
           </Stack>
         </Container>
-        <Divider size="sm"></Divider>
+        <Divider size="xs"></Divider>
         <Space h="md"></Space>
 
         <Container fluid>
@@ -312,9 +327,14 @@ function GoogleMaps() {
             </Text>
           </Group>
           <Center>
-            <Text c="gray" fs="italic">
-              Departing At: {new Date().toLocaleTimeString()}
-            </Text>
+            <Group>
+              <Text c="gray" fs="italic">
+                Departing at: {time}
+              </Text>
+              <Text c="gray" fs="italic">
+                Arrival at: {moment(arrivalTime).format("HH:mm")}
+              </Text>
+            </Group>
           </Center>
           <br></br>
         </Container>
@@ -363,9 +383,7 @@ function GoogleMaps() {
                 </Collapse>
               </Stack>
             </>
-          ) : (
-            ""
-          )}
+          ) : null}
         </Container>
         <Divider></Divider>
         <Container>

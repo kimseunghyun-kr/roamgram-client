@@ -2,34 +2,4 @@
     font-family: sans-serif
 }  
 
-  .l-header-menu-list-child{
-    list-style: none;
-  }
-  .l-header-menu-list-child a{
-    font-size: 20px;
-    text-decoration: none;
-    color: rgba(255, 255, 255, 1);
-    font-weight: bold;
-    text-transform: uppercase;
-    text-shadow: 1px 1px hsla(0, 0%, 0%, 0.386);
-  }
-  
-
-.l-header-menu-list-child a:after{    
-    background: none repeat scroll 0 0 transparent;
-    bottom: 0;
-    content: "";
-    display: block;
-    height: 2px;
-    left: 50%;
-    position: relative;
-    background: rgb(236, 110, 110);
-    transition: width 0.3s ease 0s, left 0.3s ease 0s;
-    width: 0;
-  }
-
-  .l-header-menu-list-child a:hover:after { 
-    width: 100%; 
-    left: 0; 
-  }
 
