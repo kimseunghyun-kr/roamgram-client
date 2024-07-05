@@ -10,6 +10,7 @@ import {
   Menu,
   Modal,
   Popover,
+  ScrollArea,
   Space,
   Stack,
   Tabs,

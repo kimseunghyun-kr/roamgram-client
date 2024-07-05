@@ -279,7 +279,11 @@ function HomePage() {
                 </Text>
                 <Text
                   mt={6}
-                  style={{ fontFamily: "Roboto", fontSize: "50px" }}
+                  style={{
+                    fontFamily: "Roboto",
+                    fontSize: "50px",
+                    textShadow: "1px 1px 1px black",
+                  }}
                   c="white"
                   ml={13}
                 >

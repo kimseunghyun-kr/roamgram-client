@@ -516,7 +516,7 @@ function SchedulePageMap(
         <SimpleGrid cols={2}>
           <Center mt={10}>
             <form style={{}} onSubmit={handleSubmit}>
-              <Image h={74} w="auto" src="assets/Create Schedule.png"></Image>
+              <Image h={74} w="auto" src="/assets/Create Schedule.png"></Image>
               <Space h={20}></Space>
               <Input
                 mb={10}

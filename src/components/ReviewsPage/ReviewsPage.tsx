@@ -18,6 +18,7 @@ import {
   Title,
   Button,
   Pagination,
+  Center,
 } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -54,64 +55,75 @@ function ReviewsPage() {
               <Button
                 color="red"
                 leftSection={<IconPencil />}
-                onClick={() => navigate("/reviews/detailed_review")}
+                onClick={() => {
+                  sessionStorage.getItem(`authToken`)
+                    ? navigate("/reviews/detailed_review")
+                    : alert("Not Signed In");
+                }}
               >
                 Write a Review
               </Button>
             </Container>
             <Group mt={50} gap="md">
-              <Card withBorder>
-                <Image
-                  h={200}
-                  src="https://placehold.co/600x400?text=Placeholder"
-                />
-                <Divider />
+              <Card
+                withBorder
+                radius="xl"
+                w={285}
+                style={{ backgroundColor: "gray" }}
+              >
+                <Divider mt={10} />
+                <Space h={10} />
                 <Rating readOnly />
-                <Title> Review Title</Title>
+                <h2> Review Title</h2>
                 <p>Review Body</p>
                 <p>Reviewer Name</p>
                 <p>Date</p>
               </Card>
-              <Card withBorder>
+              <Card withBorder radius="xl" w={285}>
                 <Image
                   h={200}
                   src="https://placehold.co/600x400?text=Placeholder"
                 />
-                <Divider />
+                <Divider mt={10} />
+                <Space h={10} />
                 <Rating readOnly />
-                <Title> Review Title</Title>
+                <h2> Review Title</h2>
                 <p>Review Body</p>
                 <p>Reviewer Name</p>
                 <p>Date</p>
               </Card>
-              <Card withBorder>
+              <Card withBorder radius="xl" w={285}>
                 <Image
                   h={200}
                   src="https://placehold.co/600x400?text=Placeholder"
                 />
-                <Divider />
+                <Divider mt={10} />
+                <Space h={10} />
                 <Rating readOnly />
-                <Title> Review Title</Title>
+                <h2> Review Title</h2>
                 <p>Review Body</p>
                 <p>Reviewer Name</p>
                 <p>Date</p>
               </Card>
-              <Card withBorder>
+              <Card withBorder radius="xl" w={285}>
                 <Image
                   h={200}
                   src="https://placehold.co/600x400?text=Placeholder"
                 />
-                <Divider />
+                <Divider mt={10} />
+                <Space h={10} />
                 <Rating readOnly />
-                <Title> Review Title</Title>
+                <h2> Review Title</h2>
                 <p>Review Body</p>
                 <p>Reviewer Name</p>
                 <p>Date</p>
               </Card>
             </Group>
-            <Pagination total={10}></Pagination>
           </Grid.Col>
         </Grid>
+        <Center mt={80}>
+          <Pagination total={10}></Pagination>
+        </Center>
       </body>
     </>
   );
