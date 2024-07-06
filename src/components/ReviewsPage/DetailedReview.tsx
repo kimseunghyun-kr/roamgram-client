@@ -15,6 +15,30 @@ import {
   Rating,
 } from "@mantine/core";
 
+interface uploadFile {
+  objectKey: string;
+  size: Number;
+}
+
+interface review {
+  fileList: [
+    {
+      id: string;
+      review: string;
+      sizeBytes: Number;
+      contentType: string;
+      originalFileName: string;
+      s3Key: string;
+      mediaFileStatus: string;
+    }
+  ];
+  fileLocation: {
+    additionalProp1: Number;
+  };
+  userDescription: string;
+  rating: Number;
+}
+
 export function DetailedReview() {
   const [value, setValue] = useState("");
 
@@ -43,6 +67,13 @@ export function DetailedReview() {
   const quilRef = useRef(null);
   const [ratingValue, setRatingValue] = useState(null);
 
+  const [completeUploadState, setCompleteUploadState] = useState<uploadFile>({
+    objectKey: "",
+    size: 0,
+  });
+
+  {
+    /*  cloudinary backup
   async function cloudinaryImageUpload(file) {
     const formData = new FormData();
     formData.append("file", file);
@@ -54,7 +85,7 @@ export function DetailedReview() {
       }/image/upload`,
       {
         method: "POST",
-        body: formData,
+        body: formData, 
       }
     ).then((res) => res.json());
     const url = res.url;
@@ -62,6 +93,8 @@ export function DetailedReview() {
     console.log(res);
 
     return url;
+  }
+*/
   }
 
   const authToken = sessionStorage.getItem(`authToken`);
@@ -101,7 +134,6 @@ export function DetailedReview() {
       },
     });
     console.log(res, "success in adding to s3 server!s");
-    console.log(res.url, "res url is"); //this contains our objectKey that we need to extract
     const objectKey = getObjectKey(res.url);
     return objectKey;
   }, []);
@@ -122,7 +154,21 @@ export function DetailedReview() {
     return get_url; //this is the s3 url we will get
   };
 
-  //makeshift scheduleID
+  const completeUpload = async (uploadState) => {
+    await fetch(
+      `${import.meta.env.VITE_APP_API_URL}/media-file/complete-upload`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(uploadState),
+      }
+    ).then((res) => console.log("completed upload"));
+  };
+
+  //////////////////////makeshift scheduleID
   const scheduleId = "3eb1f5e8-ed0b-49ec-b709-662f0ed104c6"; //we will append this to our url when creating review instead
 
   ///////////////////////////
@@ -134,12 +180,10 @@ export function DetailedReview() {
     imageInput.setAttribute("type", "file"); //file types only
     imageInput.setAttribute("accept", "image/*"); //accepts images
     imageInput.click(); //mimicks click
-    console.log(quilSelection, "quillSelection");
 
     imageInput.onchange = async () => {
       if (imageInput !== null && imageInput.files !== null) {
         const file = imageInput.files[0];
-
         const fileSize = file.size;
         const fileName = file.name;
         const contentLocation = quilSelection.index;
@@ -151,12 +195,10 @@ export function DetailedReview() {
         };
         //getPresignedURL(s3Body);
         const objKey = await uploadAmazonS3(file, s3Body);
-        console.log(objKey);
         const s3_url = await getFroms3(objKey);
-        console.log(s3_url);
-        //const url = cloudinaryImageUpload(file);
-        //const imgPlaceHolder = "https://placehold.co/600x400?text=Placeholder";
         quilEditor.insertEmbed(quilSelection, "image", s3_url);
+        completeUpload({ objectKey: objKey, size: fileSize });
+        console.log("yyyyyyyyyy");
       }
     };
   }, []);
@@ -188,13 +230,9 @@ export function DetailedReview() {
     []
   );
 
-  const testParse = () => {
-    const url = `https://nus-orbital-roamgram.s3.ap-southeast-2.amazonaws.com/uploads/d52df994-0c45-437f-bb32-5806409f405d/booking.png/image/png/3eb1f5e8-ed0b-49ec-b709-662f0ed104c6/633451c3b593fb89caaf818a0c721087?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240706T174952Z&X-Amz-SignedHeaders=content-length%3Bcontent-type%3Bhost&X-Amz-Credential=AKIA4MTWIDUWB4UVOPQO%2F20240706%2Fap-southeast-2%2Fs3%2Faws4_request&X-Amz-Expires=1800&X-Amz-Signature=d2d3e8d7c479f0d9d1bcda40d0a1e2ab7742b13fda6f6ecaef61fdd07510b96d`;
-    const newurl = new URL(url);
-    console.log("new url", newurl);
-    var urlParts = newurl.pathname;
-    urlParts = urlParts.substring(1);
-    console.log(urlParts);
+  const uploadReview = async (fileList) => {
+    const rating = ratingValue;
+    const userDescription = quilRef.current.value; //stores it in html format
   };
 
   return (
@@ -203,7 +241,6 @@ export function DetailedReview() {
         <Header></Header>
       </header>
       <body>
-        <Button onClick={testParse}></Button>
         <Image src="/assets/Create Review.png" w="auto" mt={35} ml={360} />
         <Center>
           <Card withBorder w={1200} mt={20}>
@@ -243,7 +280,6 @@ export function DetailedReview() {
           onClick={() => {
             console.log(quilRef.current.value);
             console.log(ratingValue);
-            getSelection();
           }}
         >
           Submit Review
