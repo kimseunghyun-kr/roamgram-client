@@ -67,58 +67,64 @@ export function DetailedReview() {
   const authToken = sessionStorage.getItem(`authToken`);
 
   const getPresignedURL = useCallback(async (s3Body) => {
-    const res = await fetch(`https://localhost/media-file/upload-file-small`, {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify(s3Body),
-    }).then((res) => res.json());
+    const res = await fetch(
+      `${import.meta.env.VITE_APP_API_URL}/media-file/upload-file-small`,
+      {
+        method: "POST",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(s3Body),
+      }
+    ).then((res) => res.json());
     return res;
   }, []);
 
-  const uploadAmazonS3 = async (file, s3Body) => {
-    const presigned_url = await getPresignedURL(s3Body);
-    console.log("presign", presigned_url);
+  const getObjectKey = (url) => {
+    const parsed_url = new URL(url);
+    var url_pathname = parsed_url.pathname; //remove the trailing aslash
+    url_pathname = url_pathname.substring(1).trim();
 
-    const formData = new FormData();
-    formData.append("upload", file);
-    console.log(`${presigned_url}`);
-    console.log(file.type);
-    const res = await fetch(`${presigned_url}`, {
-      method: "PUT",
-      body: file,
-      headers: {
-        "Content-Type": file.type,
-      },
-    });
-
-    console.log(res);
+    return url_pathname;
   };
 
-  const getFroms3 = async (objectKey) => {
-    const get_url = fetch(`https://localhost/media-file/get-file`, {
-      method: "POST",
+  const uploadAmazonS3 = useCallback(async (file, s3Body) => {
+    const presigned_url = await getPresignedURL(s3Body);
+    const res = await fetch(`${presigned_url}`, {
+      method: "PUT",
+
+      body: file,
       headers: {
-        "Content-Type": "application/json",
+        "Content-Type": `${file.type}`,
       },
-      body: JSON.stringify(objectKey),
-    }).then((res) => res.json());
+    });
+    console.log(res, "success in adding to s3 server!s");
+    console.log(res.url, "res url is"); //this contains our objectKey that we need to extract
+    const objectKey = getObjectKey(res.url);
+    return objectKey;
+  }, []);
+
+  const getFroms3 = async (objectKey) => {
+    const get_url = await fetch(
+      `${import.meta.env.VITE_APP_API_URL}/media-file/get-file`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: objectKey,
+      }
+    ).then((res) => res.json());
 
     return get_url; //this is the s3 url we will get
   };
 
+  //makeshift scheduleID
   const scheduleId = "3eb1f5e8-ed0b-49ec-b709-662f0ed104c6"; //we will append this to our url when creating review instead
 
-  //async update so we shall not use this!
-  const [fileBody, setFileBody] = useState({
-    scheduleId: scheduleId,
-    fileSize: 0,
-    originalFileName: "",
-    contentLocation: 0,
-  });
   ///////////////////////////
 
   const imageHandler = useCallback(() => {
@@ -128,20 +134,15 @@ export function DetailedReview() {
     imageInput.setAttribute("type", "file"); //file types only
     imageInput.setAttribute("accept", "image/*"); //accepts images
     imageInput.click(); //mimicks click
-    console.log(imageInput);
     console.log(quilSelection, "quillSelection");
-    //if we have a file uploaded to reactQuill editor
 
-    const reader = new FileReader();
     imageInput.onchange = async () => {
       if (imageInput !== null && imageInput.files !== null) {
-        console.log(imageInput.files);
         const file = imageInput.files[0];
 
         const fileSize = file.size;
         const fileName = file.name;
         const contentLocation = quilSelection.index;
-        console.log("file is", file);
         const s3Body = {
           scheduleId: scheduleId,
           fileSize: fileSize,
@@ -149,10 +150,13 @@ export function DetailedReview() {
           contentLocation: contentLocation,
         };
         //getPresignedURL(s3Body);
-        uploadAmazonS3(file, s3Body);
+        const objKey = await uploadAmazonS3(file, s3Body);
+        console.log(objKey);
+        const s3_url = await getFroms3(objKey);
+        console.log(s3_url);
         //const url = cloudinaryImageUpload(file);
         //const imgPlaceHolder = "https://placehold.co/600x400?text=Placeholder";
-        //quilEditor.insertEmbed(quilSelection, "image", imgPlaceHolder);
+        quilEditor.insertEmbed(quilSelection, "image", s3_url);
       }
     };
   }, []);
@@ -184,12 +188,22 @@ export function DetailedReview() {
     []
   );
 
+  const testParse = () => {
+    const url = `https://nus-orbital-roamgram.s3.ap-southeast-2.amazonaws.com/uploads/d52df994-0c45-437f-bb32-5806409f405d/booking.png/image/png/3eb1f5e8-ed0b-49ec-b709-662f0ed104c6/633451c3b593fb89caaf818a0c721087?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20240706T174952Z&X-Amz-SignedHeaders=content-length%3Bcontent-type%3Bhost&X-Amz-Credential=AKIA4MTWIDUWB4UVOPQO%2F20240706%2Fap-southeast-2%2Fs3%2Faws4_request&X-Amz-Expires=1800&X-Amz-Signature=d2d3e8d7c479f0d9d1bcda40d0a1e2ab7742b13fda6f6ecaef61fdd07510b96d`;
+    const newurl = new URL(url);
+    console.log("new url", newurl);
+    var urlParts = newurl.pathname;
+    urlParts = urlParts.substring(1);
+    console.log(urlParts);
+  };
+
   return (
     <>
       <header>
         <Header></Header>
       </header>
       <body>
+        <Button onClick={testParse}></Button>
         <Image src="/assets/Create Review.png" w="auto" mt={35} ml={360} />
         <Center>
           <Card withBorder w={1200} mt={20}>
