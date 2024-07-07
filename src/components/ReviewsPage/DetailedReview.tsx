@@ -14,6 +14,7 @@ import {
   Group,
   Rating,
 } from "@mantine/core";
+import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 
 interface uploadFile {
   objectKey: string;
@@ -150,10 +151,10 @@ export function DetailedReview() {
         body: objectKey,
       }
     ).then((res) => res.json());
-
     return get_url; //this is the s3 url we will get
   };
 
+  //COMPLETE ONLY!! WHEN WE FORM SUBMIT THEN THIS IS CALLED!
   const completeUpload = async (uploadState) => {
     await fetch(
       `${import.meta.env.VITE_APP_API_URL}/media-file/complete-upload`,
@@ -168,11 +169,45 @@ export function DetailedReview() {
     ).then((res) => console.log("completed upload"));
   };
 
+  //can't use this as no delete properties for reactquill
+  const deleteImage = async (objectKey) => {
+    return await fetch(
+      `${import.meta.env.VITE_APP_API_URL}/media-file/delete-file`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: objectKey,
+      }
+    ).then((res) => res.json());
+  };
+
+  //^
+  const abortUpload = async (uploadState) => {
+    return await fetch(
+      `${import.meta.env.VITE_APP_API_URL}/media-file/abort-upload`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(uploadState),
+      }
+    ).then((res) => console.log("aborted upload"));
+  };
+
+  //files not in the html url should not be uploaded during form submission
+  const [allObjKeys, setAllObjKeys] = useState([]);
+
   //////////////////////makeshift scheduleID
   const scheduleId = "3eb1f5e8-ed0b-49ec-b709-662f0ed104c6"; //we will append this to our url when creating review instead
 
-  ///////////////////////////
+  const queryClient = useQueryClient();
 
+  //solution -> just store
   const imageHandler = useCallback(() => {
     const quilEditor = quilRef.current.getEditor();
     const quilSelection = quilEditor.getSelection(); //gets the current location users curser is at
@@ -182,6 +217,7 @@ export function DetailedReview() {
     imageInput.click(); //mimicks click
 
     imageInput.onchange = async () => {
+      //for file upload//
       if (imageInput !== null && imageInput.files !== null) {
         const file = imageInput.files[0];
         const fileSize = file.size;
@@ -194,11 +230,13 @@ export function DetailedReview() {
           contentLocation: contentLocation,
         };
         //getPresignedURL(s3Body);
-        const objKey = await uploadAmazonS3(file, s3Body);
-        const s3_url = await getFroms3(objKey);
-        quilEditor.insertEmbed(quilSelection, "image", s3_url);
-        completeUpload({ objectKey: objKey, size: fileSize });
-        console.log("yyyyyyyyyy");
+        const objKey = await uploadAmazonS3(file, s3Body); //uploads to cloud
+        const s3_url = await getFroms3(objKey); //get file after we upload
+        quilEditor.insertEmbed(quilSelection, "image", s3_url); //encoded differently in HTML so we need to make edits
+        setAllObjKeys((p) => [...p, objKey]);
+        console.log("s3 url is", s3_url);
+        console.log("obj key is", objKey);
+        //completeUpload({ objectKey: s3_url, size: fileSize }); -> don't complete yet until we do form submission
       }
     };
   }, []);
@@ -230,11 +268,39 @@ export function DetailedReview() {
     []
   );
 
+  //do url extraction from quil.ref --> and compare the links
   const uploadReview = async (fileList) => {
     const rating = ratingValue;
     const userDescription = quilRef.current.value; //stores it in html format
   };
 
+  ///replace amp
+  const replaceAmp = (url) => {
+    const new_url = url.replace(/&amp;/g, "&");
+    return new_url;
+  };
+
+  ///////////////////////////ALL URL of our possible obj keys////////////
+  const getAllUrlsFromObjKeys = useQueries({
+    queries: allObjKeys.map((objKey) => ({
+      queryKey: [objKey],
+      queryFn: async () => {
+        return await getFroms3(objKey);
+      },
+    })),
+    combine: (results) => {
+      return {
+        data: results.map((result) => result),
+      };
+    },
+  });
+
+  const getInputSrc = () => {
+    const htmlString = quilRef.current.value;
+  };
+
+  const problem =
+    "https://nus-orbital-roamgram.s3.ap-southeast-2.amazonaws.com/uploads/d52df994-0c45-437f-bb32-5806409f405d/booking.png/image/png/3eb1f5e8-ed0b-49ec-b709-662f0ed104c6/633451c3b593fb89caaf818a0c721087?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20240707T180859Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Credential=AKIA4MTWIDUWB4UVOPQO%2F20240707%2Fap-southeast-2%2Fs3%2Faws4_request&amp;X-Amz-Expires=1800&amp;X-Amz-Signature=863116f61592cbd059a44150ccc21619d82ae46d70e205963f5024993e665fcf";
   return (
     <>
       <header>
@@ -280,9 +346,19 @@ export function DetailedReview() {
           onClick={() => {
             console.log(quilRef.current.value);
             console.log(ratingValue);
+            console.log("allObjKeys", allObjKeys);
+            console.log(getAllUrlsFromObjKeys);
           }}
         >
           Submit Review
+        </Button>
+        <Button
+          onClick={() => {
+            var dd = problem.replace(/&amp;/g, "&");
+            console.log("replaced", dd);
+          }}
+        >
+          Test Parser
         </Button>
       </body>
     </>
