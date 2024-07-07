@@ -280,7 +280,7 @@ export function DetailedReview() {
     return new_url;
   };
 
-  ///////////////////////////ALL URL of our possible obj keys////////////
+  ///////////////////////////ALL URL of our possible obj keys --> this has no Amp itself////////////
   const getAllUrlsFromObjKeys = useQueries({
     queries: allObjKeys.map((objKey) => ({
       queryKey: [objKey],
@@ -290,12 +290,12 @@ export function DetailedReview() {
     })),
     combine: (results) => {
       return {
-        data: results.map((result) => result),
+        data: results.map((result) => result.data),
       };
     },
   });
 
-  const getInputSrc = () => {
+  const getAllInputSrc = () => {
     const htmlString = quilRef.current.value;
   };
 
@@ -343,11 +343,15 @@ export function DetailedReview() {
           mt={10}
           ml={1200}
           variant="outline"
-          onClick={() => {
+          onClick={async () => {
             console.log(quilRef.current.value);
             console.log(ratingValue);
             console.log("allObjKeys", allObjKeys);
             console.log(getAllUrlsFromObjKeys);
+            const item = new DOMParser();
+            const n = item.parseFromString(quilRef.current.value, "text/html");
+            const imgsArray = Array.from(n.getElementsByTagName("img")); // this is a shallow copy
+            await imgsArray.map((items) => console.log(replaceAmp(items.src)));
           }}
         >
           Submit Review
