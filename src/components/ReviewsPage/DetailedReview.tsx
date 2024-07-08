@@ -407,7 +407,7 @@ export function DetailedReview() {
     await checkKeysandDelete(allObjKeys, availableObjKeys); //
   };
 
-  const test = "<html>YfdsES<html>";
+  const test = "<html>YfdsES<html>"; // we can directly use this to value in quilRef to set up
 
   return (
     <>
@@ -440,7 +440,7 @@ export function DetailedReview() {
                   theme="snow"
                   modules={modules}
                   formats={formats}
-                  value={test}
+                  value={value}
                   onChange={setValue}
                 />
               </Container>

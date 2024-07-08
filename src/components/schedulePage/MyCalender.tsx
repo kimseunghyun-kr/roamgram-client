@@ -197,6 +197,7 @@ function MyCalender(props) {
       //("selected is", selected);
     }
   }, [eventID, setEventID]);
+  console.log(eventID, "eventID");
 
   // const activityEvent = Array.isArray(props.event)
   //  ? props.event.find((ev) => ev.id == eventID)
@@ -558,7 +559,9 @@ function MyCalender(props) {
                   Submit Review
                 </Button>
                 <Divider c="gray" w={250} />
-                <Link to="/reviews/detailed_review">
+                <Link
+                  to={`/reviews/id?travelId=${props.travelID}&scheduleId=${eventID}`}
+                >
                   <UnstyledButton c="purple">
                     Click here to give a detailed review
                   </UnstyledButton>

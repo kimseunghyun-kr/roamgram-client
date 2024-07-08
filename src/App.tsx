@@ -48,10 +48,7 @@ function App() {
               <Route path="/authSuccess" element={<GoogleLogin />}></Route>
               <Route path="/loginSuccess" element={<ConfirmEmail />}></Route>
               <Route path="/reviews" element={<ReviewsPage />}></Route>
-              <Route
-                path="/reviews/detailed_review"
-                element={<DetailedReview />}
-              ></Route>
+              <Route path="/reviews/id" element={<DetailedReview />}></Route>
             </Routes>
           </AuthProvider>
         </div>
