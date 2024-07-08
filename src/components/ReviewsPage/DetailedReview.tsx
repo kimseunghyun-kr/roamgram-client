@@ -171,6 +171,7 @@ export function DetailedReview() {
 
   //can't use this as no delete properties for reactquill
   const deleteImage = async (objectKey) => {
+    console.log("deleteObjKey", objectKey);
     return await fetch(
       `${import.meta.env.VITE_APP_API_URL}/media-file/delete-file`,
       {
@@ -181,7 +182,9 @@ export function DetailedReview() {
         },
         body: objectKey,
       }
-    ).then((res) => res.json());
+    )
+      .then((res) => res.json())
+      .catch((error) => console.log("Error Deleting"));
   };
 
   //^
@@ -201,6 +204,7 @@ export function DetailedReview() {
 
   //files not in the html url should not be uploaded during form submission
   const [allObjKeys, setAllObjKeys] = useState([]);
+  const [allUploadStates, setAllUploadStates] = useState<uploadFile[]>([]);
 
   //////////////////////makeshift scheduleID
   const scheduleId = "3eb1f5e8-ed0b-49ec-b709-662f0ed104c6"; //we will append this to our url when creating review instead
@@ -229,14 +233,20 @@ export function DetailedReview() {
           originalFileName: fileName,
           contentLocation: contentLocation,
         };
+
         //getPresignedURL(s3Body);
+        console.log("file_size", fileSize);
         const objKey = await uploadAmazonS3(file, s3Body); //uploads to cloud
         const s3_url = await getFroms3(objKey); //get file after we upload
+        const uploadStateBody = {
+          objectKey: objKey,
+          size: fileSize,
+        };
         quilEditor.insertEmbed(quilSelection, "image", s3_url); //encoded differently in HTML so we need to make edits
         setAllObjKeys((p) => [...p, objKey]);
+        setAllUploadStates((p) => [...p, uploadStateBody]); //async
         console.log("s3 url is", s3_url);
         console.log("obj key is", objKey);
-        //completeUpload({ objectKey: s3_url, size: fileSize }); -> don't complete yet until we do form submission
       }
     };
   }, []);
@@ -295,12 +305,90 @@ export function DetailedReview() {
     },
   });
 
-  const getAllInputSrc = () => {
+  const getAllInputSrc = (quilRef) => {
     const htmlString = quilRef.current.value;
+    const newDomParser = new DOMParser().parseFromString(
+      htmlString,
+      "text/html"
+    ); //parses into new document(seperate from our page)
+    var imgsArray = Array.from(newDomParser.getElementsByTagName("img")); //gets all 'img' tags
+    console.log("imgsArray before map", imgsArray);
+    imgsArray = imgsArray.map((items) => {
+      return replaceAmp(items.src);
+    });
+
+    return imgsArray;
   };
 
-  const problem =
-    "https://nus-orbital-roamgram.s3.ap-southeast-2.amazonaws.com/uploads/d52df994-0c45-437f-bb32-5806409f405d/booking.png/image/png/3eb1f5e8-ed0b-49ec-b709-662f0ed104c6/633451c3b593fb89caaf818a0c721087?X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20240707T180859Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Credential=AKIA4MTWIDUWB4UVOPQO%2F20240707%2Fap-southeast-2%2Fs3%2Faws4_request&amp;X-Amz-Expires=1800&amp;X-Amz-Signature=863116f61592cbd059a44150ccc21619d82ae46d70e205963f5024993e665fcf";
+  const getAvailableObjKeys = (imgsArray) => {
+    const availableObjKeys = imgsArray.map((items) => {
+      return getObjectKey(items);
+    });
+    return availableObjKeys;
+
+    // console.log(availableObjKeys);
+    // console.log(allObjKeys);
+    // const avaib = allObjKeys.find((ev) => !availableObjKeys.includes(ev));
+    // console.log(avaib);
+
+    // const leftoverObjKeys = allObjKeys.filter(
+    //   (key) => !availableObjKeys.include(key)
+    // );
+    // console.log("leftOverKeys", leftoverObjKeys);
+    // return leftoverObjKeys;
+  };
+
+  const [leftoverKeyState, setLeftOverKeyState] = useState([]);
+  const deleteLeftOvers = useQueries({
+    queries: leftoverKeyState?.map((leftover) => ({
+      queryKey: [leftover],
+      queryFn: async () => {
+        console.log("lo", leftover);
+        return await deleteImage(leftover);
+      },
+    })),
+  });
+
+  const checkKeysandDelete = async (allObjKeys, availableObjKeys) => {
+    //function
+    const leftoverObjKeysFunction = (allObjKeys, availableObjKeys) => {
+      const leftover = allObjKeys.filter(
+        (ev) => !availableObjKeys.includes(ev)
+      );
+      return leftover;
+    };
+    //
+
+    /////////
+
+    const leftoverObjKeys = leftoverObjKeysFunction(
+      allObjKeys,
+      availableObjKeys
+    );
+    //
+    await setLeftOverKeyState(leftoverObjKeys);
+    //actual calling
+    console.log("leftoverObjKeys", leftoverObjKeys);
+
+    // console.log("checkk pgadmin4 for proper addition");
+    return deleteLeftOvers; //calls delete
+  };
+
+  //overall function
+  const submitReview = async () => {
+    const imgsArray = getAllInputSrc(quilRef);
+    const availableObjKeys = getAvailableObjKeys(imgsArray);
+
+    //this is working
+    await allUploadStates.map((states) => {
+      console.log(states);
+      completeUpload(states);
+    });
+
+    //delete complete_upload stuff
+    await checkKeysandDelete(allObjKeys, availableObjKeys); //
+  };
+
   return (
     <>
       <header>
@@ -341,29 +429,23 @@ export function DetailedReview() {
         </Center>
         <Button
           mt={10}
-          ml={1200}
+          ml={600}
           variant="outline"
           onClick={async () => {
             console.log(quilRef.current.value);
             console.log(ratingValue);
             console.log("allObjKeys", allObjKeys);
             console.log(getAllUrlsFromObjKeys);
-            const item = new DOMParser();
-            const n = item.parseFromString(quilRef.current.value, "text/html");
-            const imgsArray = Array.from(n.getElementsByTagName("img")); // this is a shallow copy
-            await imgsArray.map((items) => console.log(replaceAmp(items.src)));
+            const imgsArray = getAllInputSrc(quilRef);
+            const availableObjKeys = getAvailableObjKeys(imgsArray);
+            const y = await checkKeysandDelete(allObjKeys, availableObjKeys);
+            console.log("checkadKeys function", y);
+            console.log("button pressed");
           }}
         >
           Submit Review
         </Button>
-        <Button
-          onClick={() => {
-            var dd = problem.replace(/&amp;/g, "&");
-            console.log("replaced", dd);
-          }}
-        >
-          Test Parser
-        </Button>
+        <Button onClick={submitReview}>Test Submit</Button>
       </body>
     </>
   );
