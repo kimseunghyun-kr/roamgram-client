@@ -277,11 +277,29 @@ export function DetailedReview() {
     }),
     []
   );
-
+  const tpID = "9dad0de4-2535-4d89-b27b-f0d9699d48a9"; //testing purposes
   //do url extraction from quil.ref --> and compare the links
   const uploadReview = async (fileList) => {
     const rating = ratingValue;
     const userDescription = quilRef.current.value; //stores it in html format
+    const requestBody = {
+      fileList: [
+        {
+          id: null,
+          review: null,
+          sizeBytes: null,
+          contentType: null,
+          originalFileName: null,
+          s3Key: "",
+          mediaFileStatus: null,
+        },
+      ],
+      fileLocation: {
+        additionalProp1: 0,
+      },
+      userDescription: userDescription,
+      rating: rating,
+    };
   };
 
   ///replace amp
@@ -389,6 +407,8 @@ export function DetailedReview() {
     await checkKeysandDelete(allObjKeys, availableObjKeys); //
   };
 
+  const test = "<html>YfdsES<html>";
+
   return (
     <>
       <header>
@@ -420,7 +440,7 @@ export function DetailedReview() {
                   theme="snow"
                   modules={modules}
                   formats={formats}
-                  value={value}
+                  value={test}
                   onChange={setValue}
                 />
               </Container>
