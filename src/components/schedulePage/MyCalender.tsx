@@ -32,6 +32,8 @@ import "./MyCalender.css";
 import React from "react";
 import { useAuth } from "../Login/AuthContext";
 import { Link } from "react-router-dom";
+import { useForm } from "@mantine/form";
+import { SimpleReview } from "../ReviewsPage/SimpleReview";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -197,7 +199,6 @@ function MyCalender(props) {
       //("selected is", selected);
     }
   }, [eventID, setEventID]);
-  console.log(eventID, "eventID");
 
   // const activityEvent = Array.isArray(props.event)
   //  ? props.event.find((ev) => ev.id == eventID)
@@ -462,7 +463,26 @@ function MyCalender(props) {
 
   const modalMapRef = useRef<HTMLDivElement>(null);
 
+  //async //reviews page things included here
   const [rating, setRating] = useState(null);
+  const reviewRef = useRef(null);
+  const form = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      userDescription: "",
+      rating: 0,
+    },
+    validate: {
+      userDescription: (value) =>
+        value.length > 3 ? null : "Description should be longer than 3 letters",
+    },
+  });
+  const convertStringtoHtml = (s) => {
+    const replaceNewLines = s.replace(/\n/g, "<br>");
+    const htmlVersion = `<p>${replaceNewLines}</p>`;
+    return htmlVersion;
+  };
+
   return (
     <>
       <DnDCalendar
@@ -542,22 +562,36 @@ function MyCalender(props) {
                 ) : null}
                 <Divider w={350} />
                 <Text>Leave a short review</Text>
-                <Rating
-                  fractions={2}
-                  value={rating}
-                  onChange={(e) => {
-                    setRating(e);
-                    console.log(rating);
-                  }}
-                />
-                <Textarea autosize w={350} />
-                <Button
-                  onClick={() => {
-                    console.log(rating);
-                  }}
+                <form
+                  onSubmit={form.onSubmit((values) =>
+                    console.log("yes to submission!!", values)
+                  )}
                 >
-                  Submit Review
-                </Button>
+                  <Rating
+                    fractions={2}
+                    key={form.key("rating")}
+                    {...form.getInputProps("rating")}
+                  />
+                  <Textarea
+                    key={form.key("userDescription")}
+                    {...form.getInputProps("userDescription")}
+                    autosize
+                    w={350}
+                  />
+                  <Button
+                    type="submit"
+                    onClick={() => {
+                      SimpleReview(
+                        form.getValues().rating,
+                        convertStringtoHtml(form.getValues().userDescription),
+                        props.travelID,
+                        eventID
+                      );
+                    }}
+                  >
+                    Submit Review
+                  </Button>
+                </form>
                 <Divider c="gray" w={250} />
                 <Link
                   to={`/reviews/id?travelId=${props.travelID}&scheduleId=${eventID}`}
