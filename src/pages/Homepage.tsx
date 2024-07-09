@@ -38,6 +38,7 @@ import { IconBrandGithub, IconSearch } from "@tabler/icons-react";
 import { useForm } from "@mantine/form";
 import Header from "../components/Header/Header";
 import HeaderHome from "../components/Header/HeaderHome";
+import { motion as m } from "framer-motion";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -251,11 +252,36 @@ function HomePage() {
     <>
       <body>
         <Container fluid h={700} p="0">
-          <Image
-            h={700}
-            style={{ minWidth: 1200 }}
-            fallbackSrc="assets/japan-background-night.png"
-          ></Image>
+          <m.div
+            initial={{ opacity: 0.3 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.75 }}
+            exit={{ opacity: 1 }}
+          >
+            <Carousel plugins={[autoplay.current]}>
+              <Carousel.Slide>
+                <Image
+                  h={700}
+                  style={{ minWidth: 1200 }}
+                  fallbackSrc="assets/japan-background-night.png"
+                ></Image>
+              </Carousel.Slide>
+              <CarouselSlide>
+                <Image
+                  h={700}
+                  style={{ minWidth: 1200 }}
+                  fallbackSrc="assets/seoul.png"
+                ></Image>
+              </CarouselSlide>
+              <CarouselSlide>
+                <Image
+                  h={700}
+                  style={{ minWidth: 1200 }}
+                  fallbackSrc="assets/sg.png"
+                ></Image>
+              </CarouselSlide>
+            </Carousel>
+          </m.div>
           <Overlay backgroundOpacity={0.35} h={700}>
             <HeaderHome />
             <Flex
@@ -346,7 +372,7 @@ function HomePage() {
                         <TextInput
                           key={form.key("name")}
                           {...form.getInputProps("name")}
-                          placeholder="Input Plan name"
+                          placeholder="Input Plan Name"
                           variant="unstyled"
                           styles={{
                             input: { fontSize: "16px" },

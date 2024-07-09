@@ -385,7 +385,7 @@ export function DetailedReview() {
           contentType: null,
           originalFileName: null,
           s3Key: "",
-          mediaFileStatus: null,
+          mediaFileStatus: "UPLOADED",
         },
       ],
       fileLocation: {
@@ -395,7 +395,8 @@ export function DetailedReview() {
       rating: rating,
     };
 
-    console.log("userdescription", userDescription);
+    console.log("userdescription from uploadReview", userDescription);
+    console.log("rq body", requestBody);
 
     await fetch(
       `${
@@ -429,6 +430,7 @@ export function DetailedReview() {
     //delete complete_upload stuff
     await checkKeysandDelete(allObjKeys, availableObjKeys); //
     await uploadReview();
+
     return console.log("review has been submitted");
   };
 
@@ -447,7 +449,7 @@ export function DetailedReview() {
     fileLocation: {
       additionalProp1: 0,
     },
-    userDescription: `000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`,
+    userDescription: ``,
     rating: 4.5,
   };
   const webURL = new URLSearchParams(window.location.search);

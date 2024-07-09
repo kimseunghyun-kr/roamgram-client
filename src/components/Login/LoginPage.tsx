@@ -32,6 +32,7 @@ import { useAuth } from "./AuthContext";
 import { AuthProvider } from "./AuthContext";
 import { useInterval } from "@mantine/hooks";
 import Header from "../Header/Header";
+import { motion as m } from "framer-motion";
 
 function LoginPage() {
   const history = useNavigate();
@@ -142,18 +143,22 @@ function LoginPage() {
 
   return (
     <>
-      <Center>
-        <Card
-          withBorder
-          mt={85}
-          w={1300}
-          h={800}
-          pt={0}
-          shadow="xl"
-          radius="md"
-        >
-          <SimpleGrid cols={2}>
-            {section === false ? (
+      <m.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.75, ease: "easeOut" }}
+      >
+        <Center>
+          <Card
+            withBorder
+            mt={85}
+            w={1300}
+            h={800}
+            pt={0}
+            shadow="xl"
+            radius="md"
+          >
+            <SimpleGrid cols={2}>
               <div
                 style={{
                   textAlign: "center",
@@ -257,117 +262,23 @@ function LoginPage() {
                   <FcGoogle size={45}></FcGoogle>
                 </ActionIcon>
 
-                <Space h={100}></Space>
-                <UnstyledButton style={{ color: "" }}>
-                  Forgot your password?
-                </UnstyledButton>
+                <Space h={120}></Space>
                 <Space h={8}></Space>
                 <Flex gap="xs" justify="center">
                   <Text c="gray">Don't have an account?</Text>
-                  <UnstyledButton c="green" onClick={() => setSection(true)}>
+                  <UnstyledButton c="green" onClick={() => history("/signup")}>
                     Create Here
                   </UnstyledButton>
                 </Flex>
               </div>
-            ) : (
-              <form
-                onSubmit={formCreate.onSubmit(
-                  (values, event) => (
-                    console.log(values, event), createMutate(values)
-                  )
-                )}
-              >
-                <div
-                  style={{
-                    textAlign: "center",
-                  }}
-                  className="create-account"
-                >
-                  <Flex h={30} pt={15}>
-                    <ActionIcon
-                      variant="transparent"
-                      onClick={() => setSection(false)}
-                    >
-                      <IconArrowLeft color="gray"></IconArrowLeft>
-                    </ActionIcon>
-                  </Flex>
-                  <Container mt={55} h={425}>
-                    <Center>
-                      <Image
-                        h={75}
-                        w="auto"
-                        src="assets/roamgram logo only.png"
-                      ></Image>
-                    </Center>
 
-                    <Center>
-                      <Image
-                        h={85}
-                        w="auto"
-                        src="assets/roamgram words only.png"
-                      ></Image>
-                    </Center>
-                    <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
-                      Create Your Account Here
-                    </Text>
-                    <Stack align="center" mt={40}>
-                      <TextInput
-                        w={300}
-                        placeholder="Enter Name"
-                        key={formCreate.key("name")}
-                        {...formCreate.getInputProps("name")}
-                      ></TextInput>
-                      <TextInput
-                        w={300}
-                        placeholder="Enter Email Address"
-                        key={formCreate.key("email")}
-                        {...formCreate.getInputProps("email")}
-                      ></TextInput>
-                      <TextInput
-                        w={300}
-                        placeholder="Enter Username"
-                        key={formCreate.key("username")}
-                        {...formCreate.getInputProps("username")}
-                      ></TextInput>
-                      <PasswordInput
-                        w={300}
-                        placeholder="Enter Password"
-                        key={formCreate.key("password")}
-                        {...formCreate.getInputProps("password")}
-                      ></PasswordInput>
-                      <Center>
-                        <Popover opened={createError} onChange={setCreateError}>
-                          <Popover.Target>
-                            {!createLoading ? (
-                              <Button
-                                type="submit"
-                                variant="gradient"
-                                w={150}
-                                radius="lg"
-                              >
-                                Create Account
-                              </Button>
-                            ) : (
-                              <Loader size={30}></Loader>
-                            )}
-                          </Popover.Target>
-                          <Popover.Dropdown c="red">
-                            Error creating an account
-                          </Popover.Dropdown>
-                        </Popover>
-                      </Center>
-                    </Stack>
-                  </Container>
-                </div>
-              </form>
-            )}
-
-            <CardSection>
-              <Image h={1000} src="assets/shibuya-crossing.png"></Image>
-            </CardSection>
-          </SimpleGrid>
-        </Card>
-      </Center>
+              <CardSection>
+                <Image h={1000} src="assets/shibuya-crossing.png"></Image>
+              </CardSection>
+            </SimpleGrid>
+          </Card>
+        </Center>
+      </m.div>
     </>
   );
 }

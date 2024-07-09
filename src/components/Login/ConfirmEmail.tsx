@@ -31,6 +31,8 @@ function ConfirmEmail() {
       window.close();
     }
   }, []);
+
+  return <></>;
 }
 
 export default ConfirmEmail;

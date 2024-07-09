@@ -445,192 +445,199 @@ function TravelPlans() {
 
   return (
     <>
-      <Header></Header>
-      <Space h={85} />
-      <Center>
-        <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
-          <Tabs
-            className="tabs"
-            variant="outline"
-            radius="md"
-            value={activeTab}
-            onChange={setActiveTab}
-          >
-            <Tabs.List>
-              <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
-              <Tabs.Tab
-                value="complete"
-                leftSection={<IconCheck size={15} color="green" />}
-              >
-                Complete
-              </Tabs.Tab>
-              <Tabs.Tab
-                ml={225}
-                value="create_travel"
-                leftSection={<IconPlus size={15} color="gray" />}
-              >
-                Create
-              </Tabs.Tab>
-            </Tabs.List>
-            <Tabs.Panel value="incomplete">
-              {authToken && eventData ? (
-                <Carousel
-                  initialSlide={initialSlides}
-                  withIndicators
-                  key={eventData.length}
-                  withControls={eventData.length > 0}
-                  styles={{
-                    indicator: { backgroundColor: "#A9ADB9", marginTop: "px" },
-                  }}
+      <header>
+        <Header></Header>
+      </header>
+      <body>
+        <Space h={85} />
+        <Center>
+          <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
+            <Tabs
+              className="tabs"
+              variant="outline"
+              radius="md"
+              value={activeTab}
+              onChange={setActiveTab}
+            >
+              <Tabs.List>
+                <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
+                <Tabs.Tab
+                  value="complete"
+                  leftSection={<IconCheck size={15} color="green" />}
                 >
-                  {cardTravel()}
-                </Carousel>
-              ) : (
-                UnauthCardTravel()
-              )}
-            </Tabs.Panel>
-            <Tabs.Panel value="create_travel">
-              <Center h={500}>
-                <Stack w={300}>
-                  <Title
-                    style={{
-                      textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
+                  Complete
+                </Tabs.Tab>
+                <Tabs.Tab
+                  ml={225}
+                  value="create_travel"
+                  leftSection={<IconPlus size={15} color="gray" />}
+                >
+                  Create
+                </Tabs.Tab>
+              </Tabs.List>
+              <Tabs.Panel value="incomplete">
+                {authToken && eventData ? (
+                  <Carousel
+                    initialSlide={initialSlides}
+                    withIndicators
+                    key={eventData.length}
+                    withControls={eventData.length > 0}
+                    styles={{
+                      indicator: {
+                        backgroundColor: "#A9ADB9",
+                        marginTop: "px",
+                      },
                     }}
                   >
-                    Create Plan
-                  </Title>
-                  <Divider></Divider>
-                  <TextInput
-                    //right hand side
-                    description="Activity Name"
-                    rightSectionPointerEvents="all"
-                    rightSection={
-                      <CloseButton
-                        size={23}
-                        aria-label="Clear Name"
-                        onClick={() =>
-                          setTravelPlanDetails((p) => ({
-                            ...p,
-                            name: "",
-                          }))
-                        }
-                      />
-                    }
-                    required
-                    //other Input Properties
-                    placeholder="Choose Name"
-                    value={travelPlanDetails.name}
-                    onChange={(e) => {
-                      setTravelPlanDetails((p) => ({
-                        ...p,
-                        name: e.target.value,
-                      }));
-                    }}
-                  ></TextInput>
-                  <DatePickerInput
-                    description="Date Range"
-                    clearable
-                    type="range"
-                    placeholder="Choose Date"
-                    value={dateRanges}
-                    onChange={settingTravelPlanDetailsDate}
-                  ></DatePickerInput>
-                  <Popover opened={createUnauth} onChange={setCreateUnauth}>
-                    <Popover.Target>
-                      {!createPending ? (
-                        <Button
-                          mt={15}
-                          color="red"
-                          radius="lg"
-                          type="submit"
-                          onClick={(e) => {
-                            if (authToken) {
-                              eventMutate(travelPlanDetails);
-                              setActiveTab("incomplete");
-                            } else {
-                              setCreateUnauth(true);
-                            }
-                          }}
-                        >
-                          Create
-                        </Button>
-                      ) : (
-                        <Loader size={30}></Loader>
-                      )}
-                    </Popover.Target>
-                    <Popover.Dropdown>
-                      <Text c="red" size="17px">
-                        Please sign in to create extra plans
-                      </Text>
-                    </Popover.Dropdown>
-                  </Popover>
-                </Stack>
-              </Center>
-            </Tabs.Panel>
-          </Tabs>
-        </Card>
-      </Center>
-
-      <Modal
-        centered
-        size="auto"
-        opened={opened}
-        onClose={() => setOpened(false)}
-        overlayProps={{ backgroundOpacity: 0.3 }}
-      >
-        <Stack>
-          <Title style={{ fontFamily: "monospace" }}>Edit Details</Title>
-          <Divider></Divider>
-          <TextInput
-            w={350}
-            //right hand side
-            value={editTravelPlanModal.name}
-            onChange={(e) => {
-              console.log("name changed", e.target.value);
-              setEditTravelPlanModal((p) => ({ ...p, name: e.target.value }));
-              setEditTravelPlan((p) => ({ ...p, name: e.target.value }));
-            }}
-            description="Name"
-            rightSectionPointerEvents="all"
-            rightSection={
-              <CloseButton
-                aria-label="Clear Name"
-                size={23}
-                onClick={() => (
-                  setEditTravelPlanModal((p) => ({ ...p, name: "" })),
-                  setEditTravelPlan((p) => ({ ...p, name: "" }))
+                    {cardTravel()}
+                  </Carousel>
+                ) : (
+                  UnauthCardTravel()
                 )}
-              />
-            }
-            required
-            //other Input Properties
-            placeholder="Choose Name"
-          ></TextInput>
-          <DatePickerInput
-            description="Date Range"
-            clearable
-            type="range"
-            placeholder="Choose Date"
-            value={editTravelPlanModal.date}
-            //onChange={settingTravelPlanDetailsDate}
-            onChange={
-              (e) =>
-                //setUpdateTravelPlan((p) => ({ ...p, date: e })),
-                modify_travel_plan_date(e)
-              //setUpdateTravelPlanModal(e), console.log("e is", e)
-              //</Stack>setDateTest(e)
-            }
-          ></DatePickerInput>
-          <Button
-            color="green"
-            variant="outline"
-            type="submit"
-            onClick={() => updateMutate(editTravelPlan)}
-          >
-            Update
-          </Button>
-        </Stack>
-      </Modal>
+              </Tabs.Panel>
+              <Tabs.Panel value="create_travel">
+                <Center h={500}>
+                  <Stack w={300}>
+                    <Title
+                      style={{
+                        textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
+                      }}
+                    >
+                      Create Plan
+                    </Title>
+                    <Divider></Divider>
+                    <TextInput
+                      //right hand side
+                      description="Activity Name"
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <CloseButton
+                          size={23}
+                          aria-label="Clear Name"
+                          onClick={() =>
+                            setTravelPlanDetails((p) => ({
+                              ...p,
+                              name: "",
+                            }))
+                          }
+                        />
+                      }
+                      required
+                      //other Input Properties
+                      placeholder="Choose Name"
+                      value={travelPlanDetails.name}
+                      onChange={(e) => {
+                        setTravelPlanDetails((p) => ({
+                          ...p,
+                          name: e.target.value,
+                        }));
+                      }}
+                    ></TextInput>
+                    <DatePickerInput
+                      description="Date Range"
+                      clearable
+                      type="range"
+                      placeholder="Choose Date"
+                      value={dateRanges}
+                      onChange={settingTravelPlanDetailsDate}
+                    ></DatePickerInput>
+                    <Popover opened={createUnauth} onChange={setCreateUnauth}>
+                      <Popover.Target>
+                        {!createPending ? (
+                          <Button
+                            mt={15}
+                            color="red"
+                            radius="lg"
+                            type="submit"
+                            onClick={(e) => {
+                              if (authToken) {
+                                eventMutate(travelPlanDetails);
+                                setActiveTab("incomplete");
+                              } else {
+                                setCreateUnauth(true);
+                              }
+                            }}
+                          >
+                            Create
+                          </Button>
+                        ) : (
+                          <Loader size={30}></Loader>
+                        )}
+                      </Popover.Target>
+                      <Popover.Dropdown>
+                        <Text c="red" size="17px">
+                          Please sign in to create extra plans
+                        </Text>
+                      </Popover.Dropdown>
+                    </Popover>
+                  </Stack>
+                </Center>
+              </Tabs.Panel>
+            </Tabs>
+          </Card>
+        </Center>
+
+        <Modal
+          centered
+          size="auto"
+          opened={opened}
+          onClose={() => setOpened(false)}
+          overlayProps={{ backgroundOpacity: 0.3 }}
+        >
+          <Stack>
+            <Title style={{ fontFamily: "monospace" }}>Edit Details</Title>
+            <Divider></Divider>
+            <TextInput
+              w={350}
+              //right hand side
+              value={editTravelPlanModal.name}
+              onChange={(e) => {
+                console.log("name changed", e.target.value);
+                setEditTravelPlanModal((p) => ({ ...p, name: e.target.value }));
+                setEditTravelPlan((p) => ({ ...p, name: e.target.value }));
+              }}
+              description="Name"
+              rightSectionPointerEvents="all"
+              rightSection={
+                <CloseButton
+                  aria-label="Clear Name"
+                  size={23}
+                  onClick={() => (
+                    setEditTravelPlanModal((p) => ({ ...p, name: "" })),
+                    setEditTravelPlan((p) => ({ ...p, name: "" }))
+                  )}
+                />
+              }
+              required
+              //other Input Properties
+              placeholder="Choose Name"
+            ></TextInput>
+            <DatePickerInput
+              description="Date Range"
+              clearable
+              type="range"
+              placeholder="Choose Date"
+              value={editTravelPlanModal.date}
+              //onChange={settingTravelPlanDetailsDate}
+              onChange={
+                (e) =>
+                  //setUpdateTravelPlan((p) => ({ ...p, date: e })),
+                  modify_travel_plan_date(e)
+                //setUpdateTravelPlanModal(e), console.log("e is", e)
+                //</Stack>setDateTest(e)
+              }
+            ></DatePickerInput>
+            <Button
+              color="green"
+              variant="outline"
+              type="submit"
+              onClick={() => updateMutate(editTravelPlan)}
+            >
+              Update
+            </Button>
+          </Stack>
+        </Modal>
+      </body>
     </>
   );
 }

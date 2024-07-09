@@ -276,7 +276,7 @@ function GoogleMaps() {
   return (
     <>
       <Grid.Col span="auto">
-        <Container h={300} style={{ alignContent: "center" }}>
+        <Container fluid h={300} style={{ alignContent: "center" }}>
           <Stack justify="center" align="center" mt={50} gap="7">
             <TextInput
               w={300}
@@ -408,7 +408,7 @@ function GoogleMaps() {
         </Container>
       </Grid.Col>
       <Grid.Col span={7}>
-        <div style={{ height: "100vh" }} ref={mapRef}></div>
+        <Container fluid style={{ height: "100vh" }} ref={mapRef} />
       </Grid.Col>
     </>
   );

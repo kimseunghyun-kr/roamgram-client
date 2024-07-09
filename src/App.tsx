@@ -4,7 +4,7 @@ import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "./App.css";
 import LoginPage from "./components/Login/LoginPage.tsx";
 import SchedulePageMap from "./components/schedulePage/SchedulePageMap.tsx";
@@ -19,9 +19,25 @@ import { AuthProvider } from "./components/Login/AuthContext.tsx";
 import DetailedReview from "./components/ReviewsPage/DetailedReview.tsx";
 import TravelPlansNewUI from "./components/travelPage/TravelPlansNewUI.tsx";
 import ConfirmEmail from "./components/Login/ConfirmEmail.tsx";
+import { AnimatePresence } from "framer-motion";
+import SignUpPage from "./components/Login/SignUpPage.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
+const RoutesComponent = () => (
+  <Routes>
+    <Route path="/" element={<HomePage />} />
+    <Route path="/login" element={<LoginPage />} />
+    <Route path="/travelPage" element={<TravelPlans />} />
+    <Route path="/schedulePage/travelID" element={<SchedulePageMap />} />
+    <Route path="/planner" element={<MapPage />} />
+    <Route path="/authSuccess" element={<GoogleLogin />} />
+    <Route path="/loginSuccess" element={<ConfirmEmail />} />
+    <Route path="/reviews" element={<ReviewsPage />} />
+    <Route path="/reviews/id" element={<DetailedReview />} />
+    <Route path="/signup" element={<SignUpPage />}></Route>
+  </Routes>
+);
 
 function App() {
   const { isLoaded } = useJsApiLoader({
@@ -31,26 +47,16 @@ function App() {
   });
   //remember to change this!
 
+  const location = useLocation();
   return isLoaded ? (
     <>
       <QueryClientProvider client={queryClient}>
         <div>
-          <AuthProvider>
-            <Routes>
-              <Route path="/" element={<HomePage />}></Route>
-              <Route path="/login" element={<LoginPage />}></Route>
-              <Route path="/travelPage" element={<TravelPlans />}></Route>
-              <Route
-                path="/schedulePage/travelID"
-                element={<SchedulePageMap />}
-              />
-              <Route path="/planner" element={<MapPage />}></Route>
-              <Route path="/authSuccess" element={<GoogleLogin />}></Route>
-              <Route path="/loginSuccess" element={<ConfirmEmail />}></Route>
-              <Route path="/reviews" element={<ReviewsPage />}></Route>
-              <Route path="/reviews/id" element={<DetailedReview />}></Route>
-            </Routes>
-          </AuthProvider>
+          <AnimatePresence key={location.pathname}>
+            <AuthProvider>
+              <RoutesComponent />
+            </AuthProvider>
+          </AnimatePresence>
         </div>
         <ReactQueryDevtools />
       </QueryClientProvider>
