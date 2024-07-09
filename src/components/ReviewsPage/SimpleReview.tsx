@@ -1,3 +1,4 @@
+import { v4 } from "uuid";
 export async function SimpleReview(
   rating,
   userDescription,
@@ -9,8 +10,8 @@ export async function SimpleReview(
   const requestBody = {
     fileList: [
       {
-        id: null,
-        review: null,
+        id: v4(),
+        review: v4(),
         sizeBytes: null,
         contentType: null,
         originalFileName: null,

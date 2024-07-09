@@ -4,27 +4,33 @@ import { useNavigate } from "react-router-dom";
 function ConfirmEmail() {
   const url = window.location.search; //gerts the current url
   const urlParams = new URLSearchParams(url); //gets confirmation Token
+  const confirmationToken = urlParams.get(`confirmationToken`);
   const navigate = useNavigate();
+  console.log("cfmtoken", confirmationToken);
 
   //checking if double slash
+  sessionStorage.removeItem(`authToken`);
 
-  const confirm = (urlParams) =>
-    fetch(
+  const confirm = async () => {
+    const res = await fetch(
       `${
         import.meta.env.VITE_APP_API_URL
-      }/authentication/confirm?token=${urlParams}`,
+      }/authentication/confirm?token=${confirmationToken}`,
       { method: "POST" }
     )
       .then((res) => res.json())
-      .then((data) => console.log("Successful confirmation"))
-      .catch((error) => console.log("error confirming token", error));
+      .then((data) => window.close());
 
-  console.log("We are at Confirm Email");
+    return res;
+  };
+
   useEffect(() => {
-    confirm(urlParams);
-    navigate("/");
+    if (confirmationToken) {
+      confirm();
+      alert("Email confirmation succesful!");
+      window.close();
+    }
   }, []);
-  return <></>;
 }
 
 export default ConfirmEmail;

@@ -123,6 +123,7 @@ function LoginPage() {
     onSuccess: (data) => {
       console.log("Success Registering, data is", data);
       setSection(false);
+      alert("Please confirm email before logging in");
     },
     onError: (error) => {
       console.log("Error creating an account");

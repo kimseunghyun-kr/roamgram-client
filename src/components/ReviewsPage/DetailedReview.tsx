@@ -207,8 +207,6 @@ export function DetailedReview() {
   const [allUploadStates, setAllUploadStates] = useState<uploadFile[]>([]);
 
   //////////////////////makeshift scheduleID
-  const scheduleId = "3eb1f5e8-ed0b-49ec-b709-662f0ed104c6"; //we will append this to our url when creating review instead
-
   const queryClient = useQueryClient();
 
   //solution -> just store
@@ -238,11 +236,14 @@ export function DetailedReview() {
         console.log("file_size", fileSize);
         const objKey = await uploadAmazonS3(file, s3Body); //uploads to cloud
         const s3_url = await getFroms3(objKey); //get file after we upload
+        console.log("s3 before decode is", s3_url);
+        console.log("s3 after decode is", decodeURI(s3_url));
+        sets3url(decodeURI(s3_url));
         const uploadStateBody = {
           objectKey: objKey,
           size: fileSize,
         };
-        quilEditor.insertEmbed(quilSelection, "image", s3_url); //encoded differently in HTML so we need to make edits
+        quilEditor.insertEmbed(quilSelection, "image", decodeURI(s3_url)); //encoded differently in HTML so we need to make edits
         setAllObjKeys((p) => [...p, objKey]);
         setAllUploadStates((p) => [...p, uploadStateBody]); //async
         console.log("s3 url is", s3_url);
@@ -250,6 +251,8 @@ export function DetailedReview() {
       }
     };
   }, []);
+
+  const [s3url, sets3url] = useState("");
 
   const modules = useMemo(
     () => ({
@@ -279,28 +282,6 @@ export function DetailedReview() {
   );
   const tpID = "9dad0de4-2535-4d89-b27b-f0d9699d48a9"; //testing purposes
   //do url extraction from quil.ref --> and compare the links
-  const uploadReview = async (fileList) => {
-    const rating = ratingValue;
-    const userDescription = quilRef.current.value; //stores it in html format
-    const requestBody = {
-      fileList: [
-        {
-          id: null,
-          review: null,
-          sizeBytes: null,
-          contentType: null,
-          originalFileName: null,
-          s3Key: "",
-          mediaFileStatus: null,
-        },
-      ],
-      fileLocation: {
-        additionalProp1: 0,
-      },
-      userDescription: userDescription,
-      rating: rating,
-    };
-  };
 
   ///replace amp
   const replaceAmp = (url) => {
@@ -330,10 +311,10 @@ export function DetailedReview() {
       "text/html"
     ); //parses into new document(seperate from our page)
     var imgsArray = Array.from(newDomParser.getElementsByTagName("img")); //gets all 'img' tags
-    console.log("imgsArray before map", imgsArray);
     imgsArray = imgsArray.map((items) => {
-      return replaceAmp(items.src);
+      return decodeURI(items.src);
     });
+    console.log("imgsArray before map", imgsArray);
 
     return imgsArray;
   };
@@ -392,6 +373,48 @@ export function DetailedReview() {
     return deleteLeftOvers; //calls delete
   };
 
+  const uploadReview = async () => {
+    const rating = ratingValue;
+    const userDescription = quilRef.current.getEditor().root.innerHTML; //stores it in html format
+    const requestBody = {
+      fileList: [
+        {
+          id: null,
+          review: null,
+          sizeBytes: null,
+          contentType: null,
+          originalFileName: null,
+          s3Key: "",
+          mediaFileStatus: null,
+        },
+      ],
+      fileLocation: {
+        additionalProp1: 0,
+      },
+      userDescription: userDescription,
+      rating: rating,
+    };
+
+    console.log("userdescription", userDescription);
+
+    await fetch(
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${travelId}/schedule/${scheduleId}/review/upload`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(requestBody),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => console.log("success adding detailed reviews!@"))
+      .catch((error) => console.log("error adding detailed review"));
+  };
+
   //overall function
   const submitReview = async () => {
     const imgsArray = getAllInputSrc(quilRef);
@@ -405,9 +428,51 @@ export function DetailedReview() {
 
     //delete complete_upload stuff
     await checkKeysandDelete(allObjKeys, availableObjKeys); //
+    await uploadReview();
+    return console.log("review has been submitted");
   };
 
-  const test = "<html>YfdsES<html>"; // we can directly use this to value in quilRef to set up
+  const testBody = {
+    fileList: [
+      {
+        id: null,
+        review: null,
+        sizeBytes: null,
+        contentType: null,
+        originalFileName: null,
+        s3Key: "",
+        mediaFileStatus: null,
+      },
+    ],
+    fileLocation: {
+      additionalProp1: 0,
+    },
+    userDescription: `000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000`,
+    rating: 4.5,
+  };
+  const webURL = new URLSearchParams(window.location.search);
+  const travelId = webURL.get(`travelId`);
+  const scheduleId = webURL.get(`scheduleId`);
+
+  const testFunction = async () => {
+    console.log("json stringify version to check", JSON.stringify(s3url));
+    await fetch(
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${travelId}/schedule/${scheduleId}/review/upload`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken}`,
+        },
+        body: JSON.stringify(testBody),
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => console.log("success adding detailed reviews!@"))
+      .catch((error) => console.log("error adding detailed review"));
+  };
 
   return (
     <>
@@ -465,7 +530,8 @@ export function DetailedReview() {
         >
           Submit Review
         </Button>
-        <Button onClick={submitReview}>Test Submit</Button>
+        <Button onClick={submitReview}>Test Actual Submit</Button>
+        <Button onClick={testFunction}>Test submit with image</Button>
       </body>
     </>
   );
