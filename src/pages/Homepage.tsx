@@ -230,9 +230,9 @@ function HomePage() {
       dateRange: [null, null],
     },
     validate: {
-      name: (value) => (value.length > 0 ? null : "Invalid Name"),
+      name: (value) => (value.length > 0 ? null : " "),
       dateRange: (value) =>
-        value[0] !== null && value[1] !== null ? null : "Invalid Date",
+        value[0] !== null && value[1] !== null ? null : " ",
     },
   });
 
@@ -405,7 +405,10 @@ function HomePage() {
                             type="submit"
                             variant="filled"
                             color="indigo"
-                            style={{ fontSize: "16px", width: "147px" }}
+                            style={{
+                              fontSize: "16px",
+                              width: "147px",
+                            }}
                             radius="md"
                           >
                             Submit

@@ -19,8 +19,9 @@ import { AuthProvider } from "./components/Login/AuthContext.tsx";
 import DetailedReview from "./components/ReviewsPage/DetailedReview.tsx";
 import TravelPlansNewUI from "./components/travelPage/TravelPlansNewUI.tsx";
 import ConfirmEmail from "./components/Login/ConfirmEmail.tsx";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion as m } from "framer-motion";
 import SignUpPage from "./components/Login/SignUpPage.tsx";
+import { Center, Container, Flex, Loader, Stack, Text } from "@mantine/core";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -62,7 +63,20 @@ function App() {
       </QueryClientProvider>
     </>
   ) : (
-    <></>
+    <>
+      <Center mt={450}>
+        <Stack>
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 2 }}
+          >
+            <Text>Loading...</Text>
+          </m.div>
+          <Loader size={65}></Loader>
+        </Stack>
+      </Center>
+    </>
   );
 }
 

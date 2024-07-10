@@ -27,8 +27,8 @@ function ConfirmEmail() {
   useEffect(() => {
     if (confirmationToken) {
       confirm();
-      alert("Email confirmation succesful!");
-      window.close();
+      alert("Email confirmation is Succesful!");
+      navigate("/login");
     }
   }, []);
 

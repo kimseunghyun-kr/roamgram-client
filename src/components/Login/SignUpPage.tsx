@@ -14,6 +14,7 @@ import {
   CardSection,
   Text,
   PasswordInput,
+  Alert,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { IconArrowLeft } from "@tabler/icons-react";
@@ -21,6 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { motion as m } from "framer-motion";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Notifications } from "@mantine/notifications";
 
 function SignUpPage() {
   const formCreate = useForm({
@@ -43,7 +45,11 @@ function SignUpPage() {
 
   const [createError, setCreateError] = useState(false);
 
-  const { mutate: createMutate, isPending: createLoading } = useMutation({
+  const {
+    mutate: createMutate,
+    isPending: createLoading,
+    isSuccess: createSuccess,
+  } = useMutation({
     mutationKey: ["create"],
     mutationFn: async (values: {}) => {
       await fetch(
@@ -62,6 +68,7 @@ function SignUpPage() {
       console.log("Success Registering, data is", data);
       alert("Please confirm email before logging in");
       navigate("/login");
+      createSuccess;
     },
     onError: (error) => {
       console.log("Error creating an account");
@@ -76,7 +83,7 @@ function SignUpPage() {
       <m.div
         initial={{ x: "100%" }}
         animate={{ x: "0%" }}
-        transition={{ duration: 0.45, bounce: 0.2, type: "spring" }}
+        transition={{ duration: 0.65, bounce: 0.15, type: "spring" }}
       >
         <Center>
           <Card
