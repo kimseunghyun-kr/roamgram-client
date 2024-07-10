@@ -74,8 +74,6 @@ interface ModalItem {
 }
 
 function TravelPlansNewUI() {
-  const [burgerOpen, setBurgerOpen] = useState(false);
-
   const [event, setEvent] = useState([]);
 
   //Gets All Travel Plans
@@ -97,16 +95,6 @@ function TravelPlansNewUI() {
     new Date(),
     null,
   ]);
-  const [editTravelPlanModal, setEditTravelPlanModal] = useState<ModalItem>({
-    name: "",
-    date: [null, null],
-  });
-  const [editTravelPlan, setEditTravelPlan] = useState({
-    uuid: "",
-    name: "",
-    startDate: "",
-    endDate: "",
-  });
 
   //function for formatting our start and endDate from mantine into YYYY-MM-DD Format
   function formatDate(_Date: Date) {
@@ -189,15 +177,6 @@ function TravelPlansNewUI() {
     }
     //console.log("event is after adding", event);
   }, [itemToAdd]);
-  const modify_travel_plan_date = (e) => {
-    setEditTravelPlanModal((p) => ({ ...p, date: e }));
-    console.log("e is", e[0], e[1]);
-    setEditTravelPlan((p) => ({
-      ...p,
-      startDate: moment(e[0]).format("YYYY-MM-DD"),
-      endDate: moment(e[1]).format("YYYY-MM-DD"),
-    }));
-  };
 
   //this works
   const { mutateAsync: deleteMutate } = useMutation({
@@ -233,23 +212,90 @@ function TravelPlansNewUI() {
   });
 
   const homePageItem = JSON.parse(sessionStorage.getItem("HomePageTravel"));
-  console.log(
-    "homepageItem",
-    JSON.parse(sessionStorage.getItem("HomePageTravel"))
-  );
 
-  const eventCards = () => {
-    if (!eventData) {
-      return null;
+  const [initialSlides, setInitialSlides] = useState(0);
+
+  const [activeTab, setActiveTab] = useState<string | null>("travel-plans");
+
+  const [homeItem, sethomeItem] = useState({
+    uuid: uuid(),
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  useEffect(() => {
+    //const token = sessionStorage.getItem(`authToken`);
+    //console.log(tokens);
+    //console.log("itemshometravel", sessionStorage.getItem(`HomePageTravel`));
+    if (sessionStorage.getItem(`HomePageTravel`) && authToken) {
+      const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
+      sethomeItem((p) => ({
+        ...p,
+        name: items.name,
+        startDate: moment(items.dateRange[0]).format("YYYY-MM-DD"),
+        endDate: moment(items.dateRange[1]).format("YYYY-MM-DD"),
+      }));
     }
-    return eventData;
+  }, [authToken]);
+
+  useEffect(() => {
+    console.log("useItem", homeItem);
+    console.log("sueItem", authToken);
+    if (homeItem?.name && authToken) {
+      eventMutate(homeItem);
+      sessionStorage.removeItem(`HomePageTravel`);
+      sethomeItem(null);
+    }
+  }, [homeItem]);
+
+  //const [modalTravelPlan, setModalTravelPlan] = useState();
+  const [editTravelPlan, setEditTravelPlan] = useState({
+    uuid: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
+
+  const [editTravelPlanModal, setEditTravelPlanModal] = useState<ModalItem>({
+    name: "",
+    date: [null, null],
+  });
+
+  const open_travel_plan = (planID: string) => {
+    //find it from our event list
+    const tp: EventType = eventData?.find((ev: EventType) => ev.id === planID);
+    console.log("tp is", tp);
+    if (!tp) {
+      throw new Error("No tp found with the given id");
+    }
+
+    const modalItem: ModalItem = {
+      name: tp.name,
+      date: [
+        moment(tp.travelStartDate).subtract(1, "month").toDate(),
+        moment(tp.travelEndDate).subtract(1, "month").toDate(),
+      ],
+    };
+    const travelItem = {
+      uuid: planID,
+      name: tp.name,
+      startDate: moment(tp.travelStartDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+      endDate: moment(tp.travelEndDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+    };
+    setEditTravelPlanModal(modalItem);
+    setEditTravelPlan(travelItem);
   };
 
-  const [filterName, setFilterName] = useState(false);
-  const [filterDate, setFilterDate] = useState(false);
-
-  const [createUnauth, setCreateUnauth] = useState(false);
-  const [activeTab, setActiveTab] = useState<string | null>("travel-plans");
+  const modify_travel_plan_date = (e) => {
+    setEditTravelPlanModal((p) => ({ ...p, date: e }));
+    console.log("e is", e[0], e[1]);
+    setEditTravelPlan((p) => ({
+      ...p,
+      startDate: moment(e[0]).format("YYYY-MM-DD"),
+      endDate: moment(e[1]).format("YYYY-MM-DD"),
+    }));
+  };
 
   const { mutateAsync: updateMutate } = useMutation({
     mutationFn: async (updated_plan) => {
@@ -278,31 +324,7 @@ function TravelPlansNewUI() {
     },
   });
 
-  const open_travel_plan = (planID: string) => {
-    //find it from our event list
-    const tp: EventType = eventData?.find((ev: EventType) => ev.id === planID);
-    console.log("tp is", tp);
-    if (!tp) {
-      throw new Error("No tp found with the given id");
-    }
-
-    const modalItem: ModalItem = {
-      name: tp.name,
-      date: [
-        moment(tp.travelStartDate).subtract(1, "month").toDate(),
-        moment(tp.travelEndDate).subtract(1, "month").toDate(),
-      ],
-    };
-
-    const travelItem = {
-      uuid: planID,
-      name: tp.name,
-      startDate: moment(tp.travelStartDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
-      endDate: moment(tp.travelEndDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
-    };
-    setEditTravelPlanModal(modalItem);
-    setEditTravelPlan(travelItem);
-  };
+  const [createUnauth, setCreateUnauth] = useState(false);
 
   const cardSection = () => {
     if (!eventData) {
@@ -310,8 +332,8 @@ function TravelPlansNewUI() {
     }
     return eventData.map((items) => (
       <>
-        <Space h={10} />
-        <Card withBorder shadow="xs" radius="md" h={150}>
+        <Space h={15} />
+        <Card withBorder shadow="xs" radius="md" h={150} key={items.id}>
           <Group justify="space-between">
             <Stack ml={40} mt={23}>
               <Title>{items.name}</Title>
@@ -377,6 +399,33 @@ function TravelPlansNewUI() {
       </>
     ));
   };
+  const unauthCardSection = () => {
+    return homePageItem && !authToken ? (
+      <>
+        <Space h={15} />
+        <Card withBorder shadow="xs" radius="md" h={150}>
+          <Group justify="space-between">
+            <Stack ml={40} mt={23}>
+              <Title>{homePageItem?.name ?? null}</Title>
+              <Text c="gray" style={{ fontSize: "15px" }}>
+                From{" "}
+                {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}{" "}
+                to{" "}
+                {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}
+              </Text>
+            </Stack>
+            <Link to="/login">
+              <UnstyledButton c="red">Sign In to Access</UnstyledButton>
+            </Link>
+          </Group>
+        </Card>
+      </>
+    ) : null;
+  };
 
   return (
     <>
@@ -410,28 +459,19 @@ function TravelPlansNewUI() {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel value="travel-plans">
-              <ScrollArea h={650}>
-                <Group justify="space-between">
-                  <Group className="travel-details">
-                    <Button
-                      rightSection={<IconSortAscendingLetters color="gray" />}
-                      variant="transparent"
-                    >
-                      Name
-                    </Button>
-                    <Button
-                      rightSection={<IconArrowDown color="gray" />}
-                      variant="transparent"
-                    >
-                      Date
-                    </Button>
-                  </Group>
-                </Group>
-                <Divider />
-                <Space h={15}></Space>
-                {authToken && eventData ? cardSection() : null}
-                <Stack justify="center" align="center"></Stack>
-              </ScrollArea>
+              {authToken && eventData ? (
+                <>
+                  <div key={eventData.length}>
+                    <ScrollArea h={650}>
+                      <Space h={25}></Space>
+                      {cardSection()}
+                      <Stack justify="center" align="center"></Stack>
+                    </ScrollArea>
+                  </div>
+                </>
+              ) : (
+                unauthCardSection()
+              )}
             </Tabs.Panel>
             <Tabs.Panel value="create-travel-plan">
               <Center>
@@ -447,6 +487,7 @@ function TravelPlansNewUI() {
                     <Divider></Divider>
                     <TextInput
                       //right hand side
+
                       description="Activity Name"
                       rightSectionPointerEvents="all"
                       rightSection={
@@ -475,6 +516,7 @@ function TravelPlansNewUI() {
                     <DatePickerInput
                       description="Date Range"
                       clearable
+                      required
                       type="range"
                       placeholder="Choose Date"
                       value={dateRanges}
@@ -581,6 +623,3 @@ function TravelPlansNewUI() {
 }
 
 export default TravelPlansNewUI;
-function setInitialSlides(length: any) {
-  throw new Error("Function not implemented.");
-}
