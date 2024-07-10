@@ -42,6 +42,7 @@ import moment from "moment";
 import { v4 as uuid } from "uuid";
 import { DatePickerInput } from "@mantine/dates";
 import { Link } from "react-router-dom";
+import { motion as m } from "framer-motion";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -330,72 +331,80 @@ function TravelPlansNewUI() {
     if (!eventData) {
       return null;
     }
-    return eventData.map((items) => (
+    return eventData.map((items, index) => (
       <>
         <Space h={15} />
-        <Card withBorder shadow="xs" radius="md" h={150} key={items.id}>
-          <Group justify="space-between">
-            <Stack ml={40} mt={23}>
-              <Title>{items.name}</Title>
+        <m.div
+          initial={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: index * 0.05 }}
+        >
+          <Card withBorder shadow="xs" radius="md" h={150} key={items.id}>
+            <Group justify="space-between">
+              <Stack ml={40} mt={23}>
+                <Title>{items.name}</Title>
 
-              <Text c="gray" style={{ fontSize: "15px" }}>
-                From{" "}
-                {moment(items.travelStartDate, "YYYY-MM-DD").format(
-                  "MMM Do YY"
-                )}{" "}
-                to {` `}
-                {moment(items.travelEndDate, "YYYY-MM-DD").format("MMM Do YY")}
-              </Text>
-            </Stack>
-            <Group>
-              <HoverCard>
-                <HoverCard.Target>
-                  <ActionIcon
-                    variant="transparent"
-                    className="to-schedule-button"
-                  >
-                    <Link to={`/schedulePage/travelID?id=${items.id}`}>
-                      <IconArrowRight size={28} color="black" />
-                    </Link>
-                  </ActionIcon>
-                </HoverCard.Target>
-                <HoverCard.Dropdown>
-                  <Text size="xs">Click here to check your schedules</Text>
-                </HoverCard.Dropdown>
-              </HoverCard>
-              <Menu>
-                <Menu.Target>
-                  <ActionIcon variant="transparent" c="black">
-                    <IconSettings />
-                  </ActionIcon>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Label>Application</Menu.Label>
-                  <Menu.Item
-                    onClick={() => (
-                      setOpened(true),
-                      //console.log("item id is", items.id),
-                      open_travel_plan(items.id)
-                    )}
-                  >
-                    Edit
-                  </Menu.Item>
-                  <Menu.Divider />
-                  <Menu.Label>Danger Zone</Menu.Label>
-                  <Menu.Item
-                    c="red"
-                    onClick={(e) => (
-                      deleteMutate(items.id), e.preventDefault()
-                    )}
-                    leftSection={<IconTrash size={14} />}
-                  >
-                    Delete
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
+                <Text c="gray" style={{ fontSize: "15px" }}>
+                  From{" "}
+                  {moment(items.travelStartDate, "YYYY-MM-DD").format(
+                    "MMM Do YY"
+                  )}{" "}
+                  to {` `}
+                  {moment(items.travelEndDate, "YYYY-MM-DD").format(
+                    "MMM Do YY"
+                  )}
+                </Text>
+              </Stack>
+              <Group>
+                <HoverCard>
+                  <HoverCard.Target>
+                    <ActionIcon
+                      variant="transparent"
+                      className="to-schedule-button"
+                    >
+                      <Link to={`/schedulePage/travelID?id=${items.id}`}>
+                        <IconArrowRight size={28} color="black" />
+                      </Link>
+                    </ActionIcon>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown>
+                    <Text size="xs">Click here to check your schedules</Text>
+                  </HoverCard.Dropdown>
+                </HoverCard>
+                <Menu>
+                  <Menu.Target>
+                    <ActionIcon variant="transparent" c="black">
+                      <IconSettings />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Application</Menu.Label>
+                    <Menu.Item
+                      onClick={() => (
+                        setOpened(true),
+                        //console.log("item id is", items.id),
+                        open_travel_plan(items.id)
+                      )}
+                    >
+                      Edit
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Label>Danger Zone</Menu.Label>
+                    <Menu.Item
+                      c="red"
+                      onClick={(e) => (
+                        deleteMutate(items.id), e.preventDefault()
+                      )}
+                      leftSection={<IconTrash size={14} />}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Group>
             </Group>
-          </Group>
-        </Card>
+          </Card>
+        </m.div>
       </>
     ));
   };
@@ -463,8 +472,17 @@ function TravelPlansNewUI() {
                 <>
                   <div key={eventData.length}>
                     <ScrollArea h={650}>
-                      <Space h={25}></Space>
-                      {cardSection()}
+                      <m.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ staggerChildren: 0.3 }}
+                      >
+                        <Space h={25}></Space>
+
+                        {cardSection()}
+                      </m.div>
+
                       <Stack justify="center" align="center"></Stack>
                     </ScrollArea>
                   </div>
