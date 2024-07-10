@@ -29,7 +29,7 @@ const RoutesComponent = () => (
   <Routes>
     <Route path="/" element={<HomePage />} />
     <Route path="/login" element={<LoginPage />} />
-    <Route path="/travelPage" element={<TravelPlans />} />
+    <Route path="/travelPage" element={<TravelPlansNewUI />} />
     <Route path="/schedulePage/travelID" element={<SchedulePageMap />} />
     <Route path="/planner" element={<MapPage />} />
     <Route path="/authSuccess" element={<GoogleLogin />} />

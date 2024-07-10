@@ -250,6 +250,9 @@ function TravelPlans() {
     );
   };
 
+  const [sortName, setSortName] = useState(false);
+  const [sortDate, setSortDate] = useState(false);
+
   const cardTravel = () => {
     if (!eventData) {
       return null;

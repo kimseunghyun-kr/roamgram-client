@@ -4,17 +4,23 @@ import {
   Button,
   Card,
   Center,
+  CloseButton,
   Container,
   Divider,
   GridCol,
   Group,
   HoverCard,
+  Loader,
   Menu,
+  Modal,
+  Popover,
   ScrollArea,
   SimpleGrid,
   Space,
   Stack,
+  Tabs,
   Text,
+  TextInput,
   Title,
   UnstyledButton,
 } from "@mantine/core";
@@ -23,14 +29,19 @@ import {
   IconArrowDown,
   IconArrowRight,
   IconEdit,
+  IconPhoto,
+  IconPlus,
   IconSettings,
   IconSortAscendingLetters,
   IconSquareRoundedArrowRight,
+  IconTrash,
 } from "@tabler/icons-react";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { v4 as uuid } from "uuid";
+import { DatePickerInput } from "@mantine/dates";
+import { Link } from "react-router-dom";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -86,6 +97,16 @@ function TravelPlansNewUI() {
     new Date(),
     null,
   ]);
+  const [editTravelPlanModal, setEditTravelPlanModal] = useState<ModalItem>({
+    name: "",
+    date: [null, null],
+  });
+  const [editTravelPlan, setEditTravelPlan] = useState({
+    uuid: "",
+    name: "",
+    startDate: "",
+    endDate: "",
+  });
 
   //function for formatting our start and endDate from mantine into YYYY-MM-DD Format
   function formatDate(_Date: Date) {
@@ -168,6 +189,15 @@ function TravelPlansNewUI() {
     }
     //console.log("event is after adding", event);
   }, [itemToAdd]);
+  const modify_travel_plan_date = (e) => {
+    setEditTravelPlanModal((p) => ({ ...p, date: e }));
+    console.log("e is", e[0], e[1]);
+    setEditTravelPlan((p) => ({
+      ...p,
+      startDate: moment(e[0]).format("YYYY-MM-DD"),
+      endDate: moment(e[1]).format("YYYY-MM-DD"),
+    }));
+  };
 
   //this works
   const { mutateAsync: deleteMutate } = useMutation({
@@ -215,6 +245,139 @@ function TravelPlansNewUI() {
     return eventData;
   };
 
+  const [filterName, setFilterName] = useState(false);
+  const [filterDate, setFilterDate] = useState(false);
+
+  const [createUnauth, setCreateUnauth] = useState(false);
+  const [activeTab, setActiveTab] = useState<string | null>("travel-plans");
+
+  const { mutateAsync: updateMutate } = useMutation({
+    mutationFn: async (updated_plan) => {
+      const res = await fetch(
+        `${import.meta.env.VITE_APP_API_URL}/travelPlan/modify_travel_plan`,
+        {
+          credentials: "include",
+          method: "PATCH",
+          headers: {
+            "Content-type": "application/json",
+            Authorization: `Bearer ${authToken}`,
+          },
+          body: JSON.stringify(updated_plan),
+        }
+      );
+      return res.json();
+    },
+    onSuccess: (data) => {
+      console.log("data is", data);
+      const dataID = data.id;
+      const previousTodos = queryClient.getQueryData(["queryEvent"]);
+      const index = previousTodos.findIndex((item) => item.id === dataID);
+      previousTodos[index] = data;
+      queryClient.setQueryData(["queryEvent"], (old) => previousTodos);
+      setOpened(false);
+    },
+  });
+
+  const open_travel_plan = (planID: string) => {
+    //find it from our event list
+    const tp: EventType = eventData?.find((ev: EventType) => ev.id === planID);
+    console.log("tp is", tp);
+    if (!tp) {
+      throw new Error("No tp found with the given id");
+    }
+
+    const modalItem: ModalItem = {
+      name: tp.name,
+      date: [
+        moment(tp.travelStartDate).subtract(1, "month").toDate(),
+        moment(tp.travelEndDate).subtract(1, "month").toDate(),
+      ],
+    };
+
+    const travelItem = {
+      uuid: planID,
+      name: tp.name,
+      startDate: moment(tp.travelStartDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+      endDate: moment(tp.travelEndDate, "YYYY-MM-DD").format("YYYY-MM-DD"),
+    };
+    setEditTravelPlanModal(modalItem);
+    setEditTravelPlan(travelItem);
+  };
+
+  const cardSection = () => {
+    if (!eventData) {
+      return null;
+    }
+    return eventData.map((items) => (
+      <>
+        <Space h={10} />
+        <Card withBorder shadow="xs" radius="md" h={150}>
+          <Group justify="space-between">
+            <Stack ml={40} mt={23}>
+              <Title>{items.name}</Title>
+
+              <Text c="gray" style={{ fontSize: "15px" }}>
+                From{" "}
+                {moment(items.travelStartDate, "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}{" "}
+                to {` `}
+                {moment(items.travelEndDate, "YYYY-MM-DD").format("MMM Do YY")}
+              </Text>
+            </Stack>
+            <Group>
+              <HoverCard>
+                <HoverCard.Target>
+                  <ActionIcon
+                    variant="transparent"
+                    className="to-schedule-button"
+                  >
+                    <Link to={`/schedulePage/travelID?id=${items.id}`}>
+                      <IconArrowRight size={28} color="black" />
+                    </Link>
+                  </ActionIcon>
+                </HoverCard.Target>
+                <HoverCard.Dropdown>
+                  <Text size="xs">Click here to check your schedules</Text>
+                </HoverCard.Dropdown>
+              </HoverCard>
+              <Menu>
+                <Menu.Target>
+                  <ActionIcon variant="transparent" c="black">
+                    <IconSettings />
+                  </ActionIcon>
+                </Menu.Target>
+                <Menu.Dropdown>
+                  <Menu.Label>Application</Menu.Label>
+                  <Menu.Item
+                    onClick={() => (
+                      setOpened(true),
+                      //console.log("item id is", items.id),
+                      open_travel_plan(items.id)
+                    )}
+                  >
+                    Edit
+                  </Menu.Item>
+                  <Menu.Divider />
+                  <Menu.Label>Danger Zone</Menu.Label>
+                  <Menu.Item
+                    c="red"
+                    onClick={(e) => (
+                      deleteMutate(items.id), e.preventDefault()
+                    )}
+                    leftSection={<IconTrash size={14} />}
+                  >
+                    Delete
+                  </Menu.Item>
+                </Menu.Dropdown>
+              </Menu>
+            </Group>
+          </Group>
+        </Card>
+      </>
+    ));
+  };
+
   return (
     <>
       <header>
@@ -224,68 +387,194 @@ function TravelPlansNewUI() {
         <Space h={65} />
 
         <Container>
-          <ScrollArea h={650}>
-            <Group justify="space-between">
-              <Group className="travel-details">
-                <Button
-                  rightSection={<IconSortAscendingLetters color="gray" />}
-                  variant="transparent"
-                >
-                  Name
-                </Button>
-                <Button
-                  rightSection={<IconArrowDown color="gray" />}
-                  variant="transparent"
-                >
-                  Date
-                </Button>
-              </Group>
-            </Group>
-            <Divider />
-            <Space h={15}></Space>
-            <Card withBorder shadow="xs" radius="md" h={150}>
-              <Group justify="space-between">
-                <Stack ml={40} mt={23}>
-                  <Title>Name</Title>
-
-                  <Text c="gray" style={{ fontSize: "15px" }}>
-                    From to {` `}
-                  </Text>
-                </Stack>
-                <Group>
-                  <HoverCard>
-                    <HoverCard.Target>
-                      <ActionIcon
-                        variant="transparent"
-                        className="to-schedule-button"
-                      >
-                        <IconArrowRight size={28} color="black" />
-                      </ActionIcon>
-                    </HoverCard.Target>
-                    <HoverCard.Dropdown>
-                      <Text size="xs">Click here to check your schedules</Text>
-                    </HoverCard.Dropdown>
-                  </HoverCard>
-                  <Menu>
-                    <Menu.Target>
-                      <ActionIcon variant="transparent" c="black">
-                        <IconSettings />
-                      </ActionIcon>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                      <Menu.Label>Application</Menu.Label>
-                      <Menu.Item>Edit</Menu.Item>
-                      <Menu.Divider />
-                      <Menu.Label>Danger Zone</Menu.Label>
-                      <Menu.Item c="red">Delete</Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
+          <Tabs
+            radius="md"
+            variant="outline"
+            value={activeTab}
+            onChange={setActiveTab}
+            defaultValue="travel-plans"
+          >
+            <Tabs.List>
+              <Tabs.Tab
+                leftSection={<IconPhoto color="green" />}
+                value="travel-plans"
+              >
+                Travel Plans
+              </Tabs.Tab>
+              <Tabs.Tab
+                ml={650}
+                leftSection={<IconPlus color="gray" />}
+                value="create-travel-plan"
+              >
+                Create
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="travel-plans">
+              <ScrollArea h={650}>
+                <Group justify="space-between">
+                  <Group className="travel-details">
+                    <Button
+                      rightSection={<IconSortAscendingLetters color="gray" />}
+                      variant="transparent"
+                    >
+                      Name
+                    </Button>
+                    <Button
+                      rightSection={<IconArrowDown color="gray" />}
+                      variant="transparent"
+                    >
+                      Date
+                    </Button>
+                  </Group>
                 </Group>
-              </Group>
-            </Card>
-            <Stack justify="center" align="center"></Stack>
-          </ScrollArea>
+                <Divider />
+                <Space h={15}></Space>
+                {authToken && eventData ? cardSection() : null}
+                <Stack justify="center" align="center"></Stack>
+              </ScrollArea>
+            </Tabs.Panel>
+            <Tabs.Panel value="create-travel-plan">
+              <Center>
+                <Center h={500}>
+                  <Stack w={300}>
+                    <Title
+                      style={{
+                        textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
+                      }}
+                    >
+                      Create Plan
+                    </Title>
+                    <Divider></Divider>
+                    <TextInput
+                      //right hand side
+                      description="Activity Name"
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <CloseButton
+                          size={23}
+                          aria-label="Clear Name"
+                          onClick={() =>
+                            setTravelPlanDetails((p) => ({
+                              ...p,
+                              name: "",
+                            }))
+                          }
+                        />
+                      }
+                      required
+                      //other Input Properties
+                      placeholder="Choose Name"
+                      value={travelPlanDetails.name}
+                      onChange={(e) => {
+                        setTravelPlanDetails((p) => ({
+                          ...p,
+                          name: e.target.value,
+                        }));
+                      }}
+                    ></TextInput>
+                    <DatePickerInput
+                      description="Date Range"
+                      clearable
+                      type="range"
+                      placeholder="Choose Date"
+                      value={dateRanges}
+                      onChange={settingTravelPlanDetailsDate}
+                    ></DatePickerInput>
+                    <Popover opened={createUnauth} onChange={setCreateUnauth}>
+                      <Popover.Target>
+                        {!createPending ? (
+                          <Button
+                            mt={15}
+                            color="red"
+                            radius="lg"
+                            type="submit"
+                            onClick={(e) => {
+                              if (authToken) {
+                                eventMutate(travelPlanDetails);
+                                setActiveTab("travel-plans");
+                              } else {
+                                setCreateUnauth(true);
+                              }
+                            }}
+                          >
+                            Create
+                          </Button>
+                        ) : (
+                          <Loader size={30}></Loader>
+                        )}
+                      </Popover.Target>
+                      <Popover.Dropdown>
+                        <Text c="red" size="17px">
+                          Please sign in to create extra plans
+                        </Text>
+                      </Popover.Dropdown>
+                    </Popover>
+                  </Stack>
+                </Center>
+              </Center>
+            </Tabs.Panel>
+          </Tabs>
         </Container>
+        <Modal
+          centered
+          size="auto"
+          opened={opened}
+          onClose={() => setOpened(false)}
+          overlayProps={{ backgroundOpacity: 0.3 }}
+        >
+          <Stack>
+            <Title style={{ fontFamily: "monospace" }}>Edit Details</Title>
+            <Divider></Divider>
+            <TextInput
+              w={350}
+              //right hand side
+              value={editTravelPlanModal.name}
+              onChange={(e) => {
+                console.log("name changed", e.target.value);
+                setEditTravelPlanModal((p) => ({ ...p, name: e.target.value }));
+                setEditTravelPlan((p) => ({ ...p, name: e.target.value }));
+              }}
+              description="Name"
+              rightSectionPointerEvents="all"
+              rightSection={
+                <CloseButton
+                  aria-label="Clear Name"
+                  size={23}
+                  onClick={() => (
+                    setEditTravelPlanModal((p) => ({ ...p, name: "" })),
+                    setEditTravelPlan((p) => ({ ...p, name: "" }))
+                  )}
+                />
+              }
+              required
+              //other Input Properties
+              placeholder="Choose Name"
+            ></TextInput>
+            <DatePickerInput
+              description="Date Range"
+              clearable
+              type="range"
+              placeholder="Choose Date"
+              value={editTravelPlanModal.date}
+              //onChange={settingTravelPlanDetailsDate}
+              onChange={
+                (e) =>
+                  //setUpdateTravelPlan((p) => ({ ...p, date: e })),
+                  modify_travel_plan_date(e)
+                //setUpdateTravelPlanModal(e), console.log("e is", e)
+                //</Stack>setDateTest(e)
+              }
+            ></DatePickerInput>
+            <Button
+              color="green"
+              variant="outline"
+              type="submit"
+              onClick={() => updateMutate(editTravelPlan)}
+            >
+              Update
+            </Button>
+          </Stack>
+        </Modal>
       </body>
     </>
   );
