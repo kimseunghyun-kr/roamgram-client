@@ -3,14 +3,15 @@ export async function SimpleReview(
   rating,
   userDescription,
   travelId,
-  scheduleId
+  scheduleId,
+  placeId
 ) {
   const authToken = sessionStorage.getItem(`authToken`);
 
   const requestBody = {
     fileList: [
       {
-        id: v4(),
+        id: placeId,
         review: v4(),
         sizeBytes: null,
         contentType: null,

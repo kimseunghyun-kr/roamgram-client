@@ -13,8 +13,16 @@ import {
   Space,
   Group,
   Rating,
+  Flex,
+  Stack,
+  Grid,
+  Modal,
+  Text,
 } from "@mantine/core";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
+import { useNavigate } from "react-router-dom";
+import { useDisclosure } from "@mantine/hooks";
+import "./DetailedReview.css";
 
 interface uploadFile {
   objectKey: string;
@@ -398,6 +406,7 @@ export function DetailedReview() {
     console.log("userdescription from uploadReview", userDescription);
     console.log("rq body", requestBody);
 
+    const navigate = useNavigate();
     await fetch(
       `${
         import.meta.env.VITE_APP_API_URL
@@ -476,13 +485,50 @@ export function DetailedReview() {
       .catch((error) => console.log("error adding detailed review"));
   };
 
+  const [opened, { open, close }] = useDisclosure(false);
+
   return (
     <>
       <header>
         <Header></Header>
       </header>
       <body>
-        <Image src="/assets/Create Review.png" w="auto" mt={35} ml={360} />
+        <Modal
+          opened={opened}
+          onClose={close}
+          overlayProps={{
+            backgroundOpacity: 0,
+          }}
+        >
+          <Group justify="center" align="center">
+            <Stack>
+              <Text>
+                Are you sure? This is{" "}
+                <Text span c="red">
+                  irreversible...
+                </Text>
+              </Text>
+
+              <Button
+                className="submit-button-review-detailed"
+                variant="outline"
+                onClick={submitReview}
+              >
+                Confirm
+              </Button>
+            </Stack>
+          </Group>
+        </Modal>
+        <Container fluid>
+          <Group>
+            <Image src="/assets/Create Review.png" w="auto" mt={35} ml={180} />
+            <Space w={640} />
+            <Button onClick={open} mt={60} w={155}>
+              Submit
+            </Button>
+          </Group>
+        </Container>
+
         <Center>
           <Card withBorder w={1200} mt={20}>
             <ScrollArea h={650}>
@@ -514,27 +560,10 @@ export function DetailedReview() {
             </ScrollArea>
           </Card>
         </Center>
-        <Button
-          mt={10}
-          ml={600}
-          variant="outline"
-          onClick={async () => {
-            console.log(quilRef.current.value);
-            console.log(ratingValue);
-            console.log("allObjKeys", allObjKeys);
-            console.log(getAllUrlsFromObjKeys);
-            const imgsArray = getAllInputSrc(quilRef);
-            const availableObjKeys = getAvailableObjKeys(imgsArray);
-            const y = await checkKeysandDelete(allObjKeys, availableObjKeys);
-            console.log("checkadKeys function", y);
-            console.log("button pressed");
-          }}
-        >
-          Submit Review
-        </Button>
-        <Button onClick={submitReview}>Test Actual Submit</Button>
-        <Button onClick={testFunction}>Test submit with image</Button>
       </body>
+      <Container fluid>
+        <Flex justify="flex-end" w={1300}></Flex>
+      </Container>
     </>
   );
 }

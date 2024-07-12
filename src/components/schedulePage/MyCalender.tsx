@@ -4,6 +4,7 @@ import {
   Container,
   Divider,
   Group,
+  HoverCard,
   Image,
   Input,
   Modal,
@@ -34,6 +35,7 @@ import { useAuth } from "../Login/AuthContext";
 import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { SimpleReview } from "../ReviewsPage/SimpleReview";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -561,42 +563,65 @@ function MyCalender(props) {
                   </>
                 ) : null}
                 <Divider w={350} />
-                <Text>Leave a short review</Text>
+                <Text>Want to leave a short review?</Text>
                 <form
                   onSubmit={form.onSubmit((values) =>
                     console.log("yes to submission!!", values)
                   )}
                 >
-                  <Rating
-                    fractions={2}
-                    key={form.key("rating")}
-                    {...form.getInputProps("rating")}
-                  />
-                  <Textarea
-                    key={form.key("userDescription")}
-                    {...form.getInputProps("userDescription")}
-                    autosize
-                    w={350}
-                  />
-                  <Button
-                    type="submit"
-                    onClick={() => {
-                      SimpleReview(
-                        form.getValues().rating,
-                        convertStringtoHtml(form.getValues().userDescription),
-                        props.travelID,
-                        eventID
-                      );
-                    }}
-                  >
-                    Submit Review
-                  </Button>
+                  <Center>
+                    <Stack align="center">
+                      <Rating
+                        fractions={2}
+                        key={form.key("rating")}
+                        {...form.getInputProps("rating")}
+                      />
+
+                      <Textarea
+                        key={form.key("userDescription")}
+                        {...form.getInputProps("userDescription")}
+                        autosize
+                        w={350}
+                      />
+                      <HoverCard>
+                        <HoverCard.Target>
+                          <Button
+                            type="submit"
+                            className="rev-button-short"
+                            onDoubleClick={() => {
+                              SimpleReview(
+                                form.getValues().rating,
+                                convertStringtoHtml(
+                                  form.getValues().userDescription
+                                ),
+                                props.travelID,
+                                eventID,
+                                modalActivityDescription.googleMapsKeyId
+                              );
+                              form.reset();
+                            }}
+                          >
+                            Submit Review
+                          </Button>
+                        </HoverCard.Target>
+                        <HoverCard.Dropdown>
+                          <Text c="red">
+                            {" "}
+                            Are you sure? This cannot be reversed. {` `}
+                            <Center>
+                              <Text c="indigo">Double Click to Submit</Text>
+                            </Center>
+                          </Text>
+                        </HoverCard.Dropdown>
+                      </HoverCard>
+                    </Stack>
+                  </Center>
                 </form>
                 <Divider c="gray" w={250} />
                 <Link
                   to={`/reviews/id?travelId=${props.travelID}&scheduleId=${eventID}`}
                 >
-                  <UnstyledButton c="purple">
+                  <UnstyledButton className="custom-review-modal" c="blue">
                     Click here to give a detailed review
                   </UnstyledButton>
                 </Link>

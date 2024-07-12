@@ -471,14 +471,14 @@ function TravelPlansNewUI() {
               {authToken && eventData ? (
                 <>
                   <div key={eventData.length}>
-                    <ScrollArea h={650}>
+                    <ScrollArea h={690}>
                       <m.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ staggerChildren: 0.3 }}
                       >
-                        <Space h={25}></Space>
+                        <Space h={20}></Space>
 
                         {cardSection()}
                       </m.div>
@@ -552,6 +552,12 @@ function TravelPlansNewUI() {
                               if (authToken) {
                                 eventMutate(travelPlanDetails);
                                 setActiveTab("travel-plans");
+                                setTravelPlanDetails((p) => ({
+                                  uuid: uuid(),
+                                  startDate: "",
+                                  endDate: "",
+                                  name: "",
+                                }));
                               } else {
                                 setCreateUnauth(true);
                               }

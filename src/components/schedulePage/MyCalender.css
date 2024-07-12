@@ -100,3 +100,15 @@
     color: white;
     transition: 500ms ease;
 }
+
+
+.rev-button-short:hover{
+    transition: 126ms ease-in;
+    background-color: green;
+  
+}
+
+.custom-review-modal:hover{
+    transition: 120ms ease;
+    color: indigo !important;
+}

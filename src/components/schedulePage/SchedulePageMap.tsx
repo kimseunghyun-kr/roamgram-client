@@ -28,6 +28,7 @@ import MyCalender from "./MyCalender.tsx";
 import { IconMapPin } from "@tabler/icons-react";
 import Header from "../Header/Header.tsx";
 import "./SchedulePageMap.css";
+import { motion as m } from "framer-motion";
 
 //testing purposese but make sure to store the travelPlanID somewhere
 
@@ -511,186 +512,201 @@ function SchedulePageMap(
   //("events directly are", event);
   return (
     <>
-      <Header></Header>
-      <Stack align="stretch" justify="space-between">
-        <SimpleGrid cols={2}>
-          <Center mt={10}>
-            <form style={{}} onSubmit={handleSubmit}>
-              <Image h={74} w="auto" src="/assets/Create Schedule.png"></Image>
-              <Space h={20}></Space>
-              <Input
-                mb={10}
-                placeholder="Name of Activity"
-                w={350}
-                value={scheduleName}
-                required
-                onChange={(e) => {
-                  setScheduleName(e.currentTarget.value);
-                  //(e.currentTarget.value);
-                }}
-              ></Input>
-              <Textarea
-                mb={10}
-                w={350}
-                placeholder="Activity Description"
-                value={scheduleDescription}
-                onChange={(e) => {
-                  setScheduleDescription(e.currentTarget.value);
-                  //(scheduleDescription);
-                }}
-              />
-              <Group mb={10}></Group>
-              <Group mb={10}>
-                <Input
-                  leftSection={
-                    <IconMapPin size={"15"} color="red"></IconMapPin>
-                  }
-                  required
-                  w={350}
-                  placeholder="Destination [Place Added to Schedules]"
-                  ref={autoCompleteEndRef}
-                  disabled={keepEnd}
-                  rightSectionPointerEvents="all"
-                  rightSection={
-                    <Tooltip label="Press checkbox to Keep location on Map">
-                      <Checkbox
-                        checked={keepEnd}
-                        onChange={(e) => {
-                          setKeepEnd(e.currentTarget.checked);
-                        }}
-                      />
-                    </Tooltip>
-                  }
-                ></Input>
-              </Group>
-
-              <Group>
-                <TimeInput
-                  w={167}
-                  description="START"
-                  required
-                  id="startTime"
-                  onChange={(e) => {
-                    e.currentTarget.value;
-                    const startTarget = e.currentTarget.value;
-                    setStartTime(startTarget);
-                  }}
-                />
-
-                <Popover
-                  opened={endTimePop}
-                  onChange={setEndTimePop}
-                  position="right"
-                  withArrow
-                  shadow="md"
-                >
-                  <Popover.Target>
-                    <TimeInput
+      <header>
+        <Header></Header>
+      </header>
+      <body>
+        <m.div
+          initial={{ opacity: 0.1 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.6 }}
+          exit={{ opacity: 1 }}
+        >
+          <Stack align="stretch" justify="space-between">
+            <SimpleGrid cols={2}>
+              <Center mt={10}>
+                <form style={{}} onSubmit={handleSubmit}>
+                  <Image
+                    h={74}
+                    w="auto"
+                    src="/assets/Create Schedule.png"
+                  ></Image>
+                  <Space h={20}></Space>
+                  <Input
+                    mb={10}
+                    placeholder="Name of Activity"
+                    w={350}
+                    value={scheduleName}
+                    required
+                    onChange={(e) => {
+                      setScheduleName(e.currentTarget.value);
+                      //(e.currentTarget.value);
+                    }}
+                  ></Input>
+                  <Textarea
+                    mb={10}
+                    w={350}
+                    placeholder="Activity Description"
+                    value={scheduleDescription}
+                    onChange={(e) => {
+                      setScheduleDescription(e.currentTarget.value);
+                      //(scheduleDescription);
+                    }}
+                  />
+                  <Group mb={10}></Group>
+                  <Group mb={10}>
+                    <Input
+                      leftSection={
+                        <IconMapPin size={"15"} color="red"></IconMapPin>
+                      }
                       required
+                      w={350}
+                      placeholder="Destination [Place Added to Schedules]"
+                      ref={autoCompleteEndRef}
+                      disabled={keepEnd}
+                      rightSectionPointerEvents="all"
+                      rightSection={
+                        <Tooltip label="Press checkbox to Keep location on Map">
+                          <Checkbox
+                            checked={keepEnd}
+                            onChange={(e) => {
+                              setKeepEnd(e.currentTarget.checked);
+                            }}
+                          />
+                        </Tooltip>
+                      }
+                    ></Input>
+                  </Group>
+
+                  <Group>
+                    <TimeInput
                       w={167}
-                      description="END"
-                      id="endTime"
+                      description="START"
+                      required
+                      id="startTime"
                       onChange={(e) => {
-                        e.currentTarget.value < startTime
-                          ? (setEndTimePop(true),
-                            setEndTime(e.currentTarget.value))
-                          : (setEndTime(e.currentTarget.value),
-                            "okie",
-                            setEndTimePop(false));
+                        e.currentTarget.value;
+                        const startTarget = e.currentTarget.value;
+                        setStartTime(startTarget);
                       }}
                     />
-                  </Popover.Target>
-                  <Popover.Dropdown>
-                    <Text size="xs" c="red">
-                      End time should be later than start time
-                    </Text>
-                  </Popover.Dropdown>
-                </Popover>
-              </Group>
-              <Group mt={10}>
-                <DatePickerInput
-                  description="DAY"
-                  w={167}
-                  allowDeselect
-                  onChange={(e) => {
-                    setTravelDay(e);
-                  }}
-                  value={travelDay}
-                  required
-                />
-                <Button
-                  className="schedule-button"
-                  mt={17}
-                  w={167}
-                  //disabled={endTime < startTime || endTime === undefined}
-                  type="submit"
-                  radius="lg"
-                  onClick={createScheduleButton}
-                  variant="light"
-                  c="cyan"
-                >
-                  Create Schedule
-                </Button>
-              </Group>
-            </form>
-          </Center>
-          <Stack>
-            <Box h={400} ref={mapRef}></Box>
-            <Flex justify="flex-start" align="center" gap="sm">
-              <TextInput
-                description="Start Location"
-                w={350}
-                placeholder="Start Location --> Check Distance"
-                ref={autoCompleteStartRef}
-                disabled={keepStart}
-                leftSection={
-                  <IconMapPin size={"15"} color="green"></IconMapPin>
-                }
-                rightSectionPointerEvents="all"
-                rightSection={
-                  <Tooltip label="Press checkbox to Keep location on Map">
-                    <Checkbox
-                      checked={keepStart}
+
+                    <Popover
+                      opened={endTimePop}
+                      onChange={setEndTimePop}
+                      position="right"
+                      withArrow
+                      shadow="md"
+                    >
+                      <Popover.Target>
+                        <TimeInput
+                          required
+                          w={167}
+                          description="END"
+                          id="endTime"
+                          onChange={(e) => {
+                            e.currentTarget.value < startTime
+                              ? (setEndTimePop(true),
+                                setEndTime(e.currentTarget.value))
+                              : (setEndTime(e.currentTarget.value),
+                                "okie",
+                                setEndTimePop(false));
+                          }}
+                        />
+                      </Popover.Target>
+                      <Popover.Dropdown>
+                        <Text size="xs" c="red">
+                          End time should be later than start time
+                        </Text>
+                      </Popover.Dropdown>
+                    </Popover>
+                  </Group>
+                  <Group mt={10}>
+                    <DatePickerInput
+                      description="DAY"
+                      w={167}
+                      allowDeselect
                       onChange={(e) => {
-                        setKeepStart(e.currentTarget.checked);
-                        keepStart;
+                        setTravelDay(e);
                       }}
+                      value={travelDay}
+                      required
                     />
-                  </Tooltip>
-                }
-              ></TextInput>
-              <NativeSelect
-                id="mode"
-                onChange={(e) => setTravelMethod(e.target.value)}
-                w={150}
-                description="Method of Travel"
-                data={[
-                  { label: "Driving", value: "DRIVING" },
-                  { label: "Walking", value: "WALKING" },
-                  { label: "Bicycling", value: "BICYCLING" },
-                  { label: "Transit", value: "TRANSIT" },
-                ]}
-              ></NativeSelect>
-              <SimpleGrid cols={3}>
-                <Text size="md">Information: </Text>
-                <Text>{routes[0]?.legs[0]?.distance?.text}</Text>
-                <Text>{routes[0]?.legs[0]?.duration?.text}</Text>
-              </SimpleGrid>
-            </Flex>
+                    <Button
+                      className="schedule-button"
+                      mt={17}
+                      w={167}
+                      //disabled={endTime < startTime || endTime === undefined}
+                      type="submit"
+                      radius="lg"
+                      onClick={createScheduleButton}
+                      variant="light"
+                      c="cyan"
+                    >
+                      Create Schedule
+                    </Button>
+                  </Group>
+                </form>
+              </Center>
+              <Stack>
+                <Box h={400} ref={mapRef}></Box>
+                <Flex justify="flex-start" align="center" gap="sm">
+                  <TextInput
+                    description="Start Location"
+                    w={350}
+                    placeholder="Start Location --> Check Distance"
+                    ref={autoCompleteStartRef}
+                    disabled={keepStart}
+                    leftSection={
+                      <IconMapPin size={"15"} color="green"></IconMapPin>
+                    }
+                    rightSectionPointerEvents="all"
+                    rightSection={
+                      <Tooltip label="Press checkbox to Keep location on Map">
+                        <Checkbox
+                          checked={keepStart}
+                          onChange={(e) => {
+                            setKeepStart(e.currentTarget.checked);
+                            keepStart;
+                          }}
+                        />
+                      </Tooltip>
+                    }
+                  ></TextInput>
+                  <NativeSelect
+                    id="mode"
+                    onChange={(e) => setTravelMethod(e.target.value)}
+                    w={150}
+                    description="Method of Travel"
+                    data={[
+                      { label: "Driving", value: "DRIVING" },
+                      { label: "Walking", value: "WALKING" },
+                      { label: "Bicycling", value: "BICYCLING" },
+                      { label: "Transit", value: "TRANSIT" },
+                    ]}
+                  ></NativeSelect>
+                  <SimpleGrid cols={3}>
+                    <Text size="md">Information: </Text>
+                    <Text>{routes[0]?.legs[0]?.distance?.text}</Text>
+                    <Text>{routes[0]?.legs[0]?.duration?.text}</Text>
+                  </SimpleGrid>
+                </Flex>
+              </Stack>
+            </SimpleGrid>
+            <Divider size="sm" color="lavender" mt={5}></Divider>
+            <div>
+              <MyCalender
+                h="auto"
+                event={event}
+                setEvents={setEvent}
+                travelID={travelID}
+                map={map}
+                //currentLocation={currentLocation}
+              ></MyCalender>
+            </div>
           </Stack>
-        </SimpleGrid>
-        <Divider size="sm" color="lavender" mt={5}></Divider>
-        <div>
-          <MyCalender
-            h="auto"
-            event={event}
-            setEvents={setEvent}
-            travelID={travelID}
-            map={map}
-            //currentLocation={currentLocation}
-          ></MyCalender>
-        </div>
-      </Stack>
+        </m.div>
+      </body>
     </>
   );
 }
