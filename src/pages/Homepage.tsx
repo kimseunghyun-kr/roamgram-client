@@ -451,7 +451,13 @@ function HomePage() {
             </Chip.Group>
           </SimpleGrid>
           {/* Put Map Here*/}
-          <Container ref={mapRef} fluid h={500} w={1370}></Container>
+          <Container
+            className="map-container-home"
+            ref={mapRef}
+            fluid
+            h={500}
+            w={1370}
+          ></Container>
         </Container>
         <Container fluid h={350}>
           <Grid>
