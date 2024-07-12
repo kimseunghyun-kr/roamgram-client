@@ -1,0 +1,53 @@
+*{
+    font-family: sans-serif
+}  
+
+  .l-header-menu-list-child{
+    list-style: none;
+    
+    
+  }
+
+
+  .l-header-menu-list-child a{
+    font-size: 17px;
+    text-decoration: none;
+    color:  whitesmoke;
+    font-weight: bold;   
+  
+  }
+  
+.l-header-menu-list-child a:hover{    
+    transition: 300ms ease;
+    color: orange;
+    
+  }
+
+  .l-header-menu-list-child a:hover:after { 
+    width: 100%; 
+    left: 0; 
+  }
+
+
+  .buttons-login:hover{
+    transition: 250ms ease-in-out;
+    background-color: orangered;
+
+  }
+
+  .buttons-login{
+    transition: 700ms ease;
+  }
+           
+ .footer{
+  margin-top: 120px;
+ }
+
+ .home-submit:hover{
+  transition: 200ms ease-in;
+  background-color: green;
+ }
+
+ .home-submit{
+  transition: 150ms ease;
+ }

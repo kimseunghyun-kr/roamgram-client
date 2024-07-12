@@ -1,0 +1,19 @@
+.submit-button-review-detailed:hover {
+    animation-name: disappear;
+    animation-duration: 1s;
+    animation-fill-mode: backwards;
+    background-color: steelblue;
+    color:white;
+}
+
+
+@keyframes disappear {
+    from {
+      background-color: white;
+    }
+    to {
+      background-color: steelblue;
+      color:white;
+    }
+  }
+  

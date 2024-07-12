@@ -1,30 +1,21 @@
 # React + TypeScript + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+To run, clone this project and go to terminal and run the following commands
+1. cd roamgram-client
+2. npm install
+3. npm run dev
+To load scripts, create .env file at the root directory. .env file should consist of the following
 
-Currently, two official plugins are available:
+VITE_NEXT_PUBLIC_GOOGLE_MAPS_API_KEY = ....
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+VITE_NEXT_PUBLIC_MAP_ID = ...
 
-## Expanding the ESLint configuration
+VITE_APP_API_URL = ...
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+VITE_APP_GOOGLE_LOGIN_URL = ...
 
-- Configure the top-level `parserOptions` property like this:
+Creating GOOGLE_MAPS_API_KEY & MAP_ID access:
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: 'latest',
-    sourceType: 'module',
-    project: ['./tsconfig.json', './tsconfig.node.json'],
-    tsconfigRootDir: __dirname,
-  },
-}
-```
+https://console.cloud.google.com/project/_/google/maps-apis/credentials?utm_source=Docs_CreateAPIKey&utm_content=Docs_places-backend
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+click on CREATE CREDENTIALS => API_KEY and copy it into 1.

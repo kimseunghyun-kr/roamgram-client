@@ -1,15 +1,29 @@
-import React, { useEffect, useRef, useState } from "react";
-import { Grid } from "@mantine/core";
+import {
+  Collapse,
+  Container,
+  Divider,
+  Grid,
+  NativeSelect,
+  ScrollArea,
+  SimpleGrid,
+  Space,
+  Stack,
+  TextInput,
+  Text,
+  UnstyledButton,
+  Group,
+  Center,
+  Title,
+  Button,
+} from "@mantine/core";
+import { TimeInput } from "@mantine/dates";
+import { useDisclosure } from "@mantine/hooks";
+import { IconArrowRight } from "@tabler/icons-react";
+import moment from "moment";
+import { useCallback, useEffect, useRef, useState } from "react";
+import parse from "parse-duration";
 
 function GoogleMaps() {
-  /*
-  const { isLoaded, loadError } = useJsApiLoader({
-    googleMapsApiKey: "", //rmb to remove
-    libraries: ["places", "maps", "core", "marker", "routes"],
-    version: "weekly",
-  });
-  */
-  console.log("run loaded");
   //for origin textbox
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [autoComplete, setAutoComplete] =
@@ -30,9 +44,9 @@ function GoogleMaps() {
   const [destPositionID, setDestPositionID] = useState<string>();
 
   const [directionsService, setDirectionsService] =
-    useState<google.maps.DirectionsService | null>();
+    useState<google.maps.DirectionsService | null>(null);
   const [directionsRenderer, setDirectionsRenderer] =
-    useState<google.maps.DirectionsRenderer | null>();
+    useState<google.maps.DirectionsRenderer | null>(null);
 
   //
   const [routes, setRoutes] = useState<google.maps.DirectionsRoute[]>([]);
@@ -48,10 +62,14 @@ function GoogleMaps() {
   //so can just directly reference to our component
   const mapRef = useRef<HTMLDivElement>(null);
   //
-  const placeAutoCompleteRef = useRef<HTMLInputElement>();
-  const placeAutoCompleteRefDest = useRef<HTMLInputElement>();
-  //
+  const placeAutoCompleteRef = useRef<HTMLInputElement>(null);
+  const placeAutoCompleteRefDest = useRef<HTMLInputElement>(null);
 
+  //
+  const [time, setTime] = useState(
+    `${new Date().getHours()}:${new Date().getMinutes()}`
+  );
+  const [arrivalTime, setArrivalTime] = useState(null);
   useEffect(() => {
     //mounts only if isLoaded is true
     const mapOptions = {
@@ -99,15 +117,32 @@ function GoogleMaps() {
     //setDirectionsRenderer.setMap(mapContainer); //sets our directionRenderer to our map container instance
   }, []);
 
-  //runs after every rerender
-  const locations = { lat: 25, lng: 30 }; //change this eventually lol
+  // setting to current location general area //
+
+  const [locations, setLocations] = useState({ lat: 0, lng: 0 });
 
   useEffect(() => {
-    const originMarker = new google.maps.Marker({
-      map: map,
-      position: locations, //change ty
-      title: "Origin",
-    });
+    if (map !== null) {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const currentPos = {
+            lat: position.coords.latitude,
+            lng: position.coords.longitude,
+          };
+          map.setCenter(currentPos);
+          map.setZoom(16);
+          //googleMarker.setPosition(currentPos);
+          //googleMarker.setVisible(false);
+          setLocations(currentPos);
+        });
+      }
+    }
+  }, [map]);
+
+  //runs after every rerender
+  //const locations = { lat: 25, lng: 30 }; //change this eventually lol
+
+  useEffect(() => {
     if (autoComplete) {
       //autocomplete not null(our search bar)
       autoComplete.addListener("place_changed", () => {
@@ -120,25 +155,19 @@ function GoogleMaps() {
 
         if (position) {
           //add marker is non-empty position
-          originMarker.setPosition(position);
+          //originMarker.setPosition(position);
           setOriginPositionID(place.place_id);
         }
 
         if (!searchedFilled) {
-          map.setCenter(position); //location given to center
-          map.setZoom(16);
+          //if (map && position) {
+          //map.setCenter(position); //location given to center
+          //map.setZoom(16);
+          //}
           setSearchFilled(!searchedFilled);
         }
       });
     }
-  });
-
-  useEffect(() => {
-    const destMarker = new google.maps.Marker({
-      map: map,
-      position: locations,
-      title: "Destination",
-    });
     if (autoCompleteDest) {
       autoCompleteDest.addListener("place_changed", () => {
         //remember its place_changed
@@ -151,21 +180,12 @@ function GoogleMaps() {
         const positionDest = dest.geometry?.location;
         if (positionDest) {
           //setMarkerDest(positionDest, dest.name!); //if dest.name is not null, we set a marker
-          destMarker.setPosition(positionDest);
+          //destMarker.setPosition(positionDest);
           setDestPositionID(dest.place_id);
           console.log("check here for placesID");
           console.log(autoCompleteDest?.getPlace().place_id);
           console.log(autoComplete?.getPlace().place_id);
         }
-        /*
-        if (!searchedFilled) {
-          console.log("CHECKER SEARCHED FILLED");
-          map.setCenter(positionDest); //location given to center
-          map.setZoom(16);
-          setSearchFilled(true);
-        }
-        */
-        //make some edits here
       });
     }
   });
@@ -174,24 +194,28 @@ function GoogleMaps() {
     directionsService: google.maps.DirectionsService,
     directionsRenderer: google.maps.DirectionsRenderer
   ) {
-    const originID = autoComplete?.getPlace().place_id;
-    const destID = autoCompleteDest?.getPlace().place_id;
+    const originID = autoComplete?.getPlace()?.place_id;
+    const destID = autoCompleteDest?.getPlace()?.place_id;
     const selectedMode = (document.getElementById("mode") as HTMLInputElement)
-      .value;
+      .value as keyof typeof google.maps.TravelMode;
     console.log(originID);
     var request = {
       origin: { placeId: originID },
       destination: { placeId: destID },
-      travelMode: google.maps.TravelMode[selectedMode],
+      travelMode: google.maps.TravelMode[
+        selectedMode
+      ] as google.maps.TravelMode,
       provideRouteAlternatives: true, //always set to TRUE
     };
     directionsService.route(request, function (result, status) {
       if (status == "OK") {
         directionsRenderer.setDirections(result);
-        console.log("routes");
-        console.log(result?.routes);
-        setRoutes(result?.routes);
-        console.log({ routes });
+        if (result?.routes) {
+          setRoutes(result.routes);
+          console.log("resuts routes", result.routes);
+        } else {
+          console.log("error getting route");
+        }
       }
     });
   }
@@ -210,7 +234,9 @@ function GoogleMaps() {
     if (originPositionID && destPositionID) {
       console.log(travelMethodString);
       console.log("Complete locations");
-      calculateRoute(directionsService, directionsRenderer);
+      if (directionsService && directionsRenderer) {
+        calculateRoute(directionsService, directionsRenderer);
+      }
     }
   }, [
     travelMethod,
@@ -220,117 +246,169 @@ function GoogleMaps() {
     directionsRenderer,
   ]);
 
-  useEffect(() => {
+  const showDetailedRoute = useCallback(() => {}, [routeIndex]);
+
+  //Get the general distance between the two locations
+
+  const setRouteCallback = useCallback(() => {
     if (!directionsRenderer) return; //early return
 
     directionsRenderer.setRouteIndex(routeIndex);
+    console.log(selected);
   }, [routeIndex, directionsRenderer]);
 
-  /*
   useEffect(() => {
-    if (autoComplete !== null && autoCompleteDest !== null) {
-      directionsService?.route(
-        {
-          origin: { placeId: autoComplete.getPlace().place_id },
-          destination: { placeId: autoCompleteDest.getPlace().place_id },
-          travelMode: google.maps.TravelMode.DRIVING,
-        },
-        function (result, status) {
-          if (status == "OK") {
-            directionsRenderer?.setDirections(result);
-          }
-        }
-      );
-    }
-  }, [autoComplete, autoCompleteDest]);
-  */
-  /*
-  
-      if (autoComplete == null) {
-        directionsService?.route(
-          {
-            origin: { placeId: autoComplete.getPlace().place_id },
-            destination: { placeId: autoCompleteDest.getPlace().place_id },
-            travelMode: google.maps.TravelMode.DRIVING,
-          },
-          function (result, status) {
-            if (status == "OK") {
-              directionsRenderer?.setDirections(result);
-            }
-          }
-        );
-      }
-  */
-  /*
-  function setMarker(location: google.maps.LatLng, name: string) {
-    if (!map) return; //if map not initialized
-    //else we set to center
+    setRouteCallback();
+  }, [setRouteCallback]);
 
-    map.setCenter(location); //location given to center
-    map.setZoom(16); //sets zoom Level
-    console.log({ location });
-    const marker = new google.maps.Marker({
-      map: map,
-      position: location,
-      title: "Origin",
-    });
+  function getArrivalTime() {
+    const departureTime = moment(time);
   }
 
-  function setMarkerDest(location: google.maps.LatLng, name: string) {
-    if (!map) return;
-    const markerDest = new google.maps.Marker({
-      map: map,
-      position: location,
-      title: "Destination",
-    });
-  }
-  */
+  useEffect(() => {
+    const departureTime = moment(time, "HH:mm");
+    const timeTaken = leg?.duration?.value; //in seconds
+    const arrival = departureTime.add(timeTaken, "seconds");
+    setArrivalTime(arrival);
+  }, [leg, time]);
+  const [opened, { toggle }] = useDisclosure(false);
+
   return (
     <>
       <Grid.Col span="auto">
-        <div>
-          <label>From: </label>
-        </div>
-        <input ref={placeAutoCompleteRef} placeholder="From"></input>
-        <br></br>
-        <div>
-          <label>To:</label>
-        </div>
-        <input ref={placeAutoCompleteRefDest} placeholder="To" required></input>
-        <br></br>
-        <div id="floating-panel">
-          <b>Mode of Travel: </b>
-          <select id="mode" onChange={(e) => setTravelMethod(e.target.value)}>
-            <option value="DRIVING">Driving</option>
-            <option value="WALKING">Walking</option>
-            <option value="BICYCLING">Bicycling</option>
-            <option value="TRANSIT">Transit</option>
-          </select>
-        </div>
-        <label>Origin: {selectedPlace}</label>
-        <br></br>
-        <label>Destination: {selectedPlaceDest} </label>
-        {leg ? (
-          <>
-            <p>Distance: {leg.distance?.text}</p>
-            <p> Duration: {leg.duration?.text}</p>
-          </>
-        ) : (
-          ""
-        )}
-        <h3>Alternative Routes to Choose</h3>
-        <ul>
-          {routes.map((route, index) => (
-            <li key={route.summary}>
-              <button onClick={() => setRouteIndex(index)}>
-                {route.summary}
-              </button>
-            </li>
-          ))}
-        </ul>
+        <Container fluid h={300} style={{ alignContent: "center" }}>
+          <Stack justify="center" align="center" mt={50} gap="7">
+            <TextInput
+              w={300}
+              description="From"
+              ref={placeAutoCompleteRef}
+            ></TextInput>
+            <TextInput
+              w={300}
+              description="To"
+              ref={placeAutoCompleteRefDest}
+            ></TextInput>
+            <SimpleGrid cols={2}>
+              <NativeSelect
+                onChange={(e) => setTravelMethod(e.target.value)}
+                id="mode"
+                w={150}
+                description="Method of Travel"
+                data={[
+                  { label: "Driving", value: "DRIVING" },
+                  { label: "Walking", value: "WALKING" },
+                  { label: "Bicycling", value: "BICYCLING" },
+                  { label: "Transit", value: "TRANSIT" },
+                ]}
+              ></NativeSelect>
+              <TimeInput
+                mt={19}
+                w={150}
+                value={time}
+                onChange={(e) => setTime(e.currentTarget.value)}
+              ></TimeInput>
+            </SimpleGrid>
+          </Stack>
+        </Container>
+        <Divider size="xs"></Divider>
+        <Space h="md"></Space>
+
+        <Container fluid>
+          <Group justify="center">
+            <Text size="xl" fw="bold">
+              {selectedPlace}
+            </Text>
+            {placeAutoCompleteRef?.current?.value !== "" &&
+            placeAutoCompleteRefDest?.current?.value !== "" ? (
+              <IconArrowRight />
+            ) : null}
+            <Text size="xl" fw="bold">
+              {selectedPlaceDest}{" "}
+            </Text>
+          </Group>
+          <Center>
+            <Group>
+              <Text c="gray" fs="italic">
+                Departing at: {time}
+              </Text>
+              <Text c="gray" fs="italic">
+                Arrival at: {moment(arrivalTime).format("HH:mm")}
+              </Text>
+            </Group>
+          </Center>
+          <br></br>
+        </Container>
+        <Divider />
+        <Container>
+          {leg ? (
+            <>
+              <Stack>
+                <UnstyledButton onClick={toggle}>
+                  <Stack align="center" mt={30}>
+                    <Title> {leg.duration?.text}</Title>
+                    <Text style={{ fontSize: "25px" }}>
+                      {leg.distance?.text}
+                    </Text>
+                    <Text c="#585E72">Click Here for Route</Text>
+                  </Stack>
+                </UnstyledButton>
+                <Collapse in={opened}>
+                  <ScrollArea h={300}>
+                    <Stack>
+                      <Divider />
+                      {leg.steps.map((step) => (
+                        <>
+                          <Text
+                            pt={10}
+                            pl={"60"}
+                            size="md"
+                            dangerouslySetInnerHTML={{
+                              __html: `${step.instructions} in ${step.distance.text}`,
+                            }}
+                          ></Text>
+                          <Divider
+                            pl={"40"}
+                            w={"95%"}
+                            label={
+                              <Text size="sm" fw="bold">
+                                {step.duration.text}
+                              </Text>
+                            }
+                            labelPosition="right"
+                          />
+                        </>
+                      ))}
+                    </Stack>
+                  </ScrollArea>
+                </Collapse>
+              </Stack>
+            </>
+          ) : null}
+        </Container>
+        <Divider></Divider>
+        <Container>
+          {routes.length > 1 ? (
+            <>
+              <Center>
+                <h1>Others</h1>
+              </Center>
+              <Group>
+                {routes.map((route, index) => (
+                  <Button
+                    variant="outline"
+                    key={route.summary}
+                    onClick={() => setRouteIndex(index)}
+                  >
+                    {route.summary}
+                  </Button>
+                ))}
+              </Group>
+            </>
+          ) : null}
+        </Container>
       </Grid.Col>
       <Grid.Col span={7}>
-        <div style={{ height: "100vh" }} ref={mapRef}></div>
+        <Container fluid style={{ height: "100vh" }} ref={mapRef} />
       </Grid.Col>
     </>
   );
