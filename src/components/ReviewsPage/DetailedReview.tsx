@@ -534,11 +534,7 @@ export function DetailedReview() {
             <ScrollArea h={650}>
               <Container fluid w={1100} h="auto">
                 <Group>
-                  <TextInput
-                    id="review-location"
-                    description="Location"
-                    w={350}
-                  />
+                  <TextInput id="review-location" description="Title" w={350} />
                   <Rating
                     fractions={2}
                     pt={20}

@@ -28,7 +28,7 @@ function ConfirmEmail() {
     if (confirmationToken) {
       confirm();
       alert("Email confirmation is Succesful!");
-      navigate("/home");
+      navigate("/");
     }
   }, []);
 

@@ -51,7 +51,11 @@ function ReviewsPage() {
                 radius="xl"
                 w={350}
               ></TextInput>
-              <Space w={700}></Space>
+              <Space w={520}></Space>
+              <Button style={{ backgroundColor: "purple" }}>
+                Your Reviews
+              </Button>
+              <Space w={10} />
               <Button
                 color="blue"
                 className="submit-review-page"
