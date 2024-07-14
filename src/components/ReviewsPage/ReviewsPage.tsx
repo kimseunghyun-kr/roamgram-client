@@ -19,6 +19,9 @@ import {
   Button,
   Pagination,
   Center,
+  ActionIcon,
+  Flex,
+  Spoiler,
 } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
@@ -36,26 +39,28 @@ function ReviewsPage() {
         <Header />
       </header>
       <body>
+        <Image src="/assets/Reviews.png" w="auto" ml={395} mt={40}></Image>
         <Grid mt={50} w={1800}>
-          <Grid.Col span={2.5}>
-            <Paper withBorder h={600} p="xl" radius="xl" ml={50} mr={50}>
-              <Text>Filter Area</Text>
-            </Paper>
-          </Grid.Col>
+          <Grid.Col span={2.5}></Grid.Col>
           <Grid.Col span={9.5}>
             <Container display="flex" fluid>
               <TextInput
                 ref={searchRef}
-                size="lg"
+                placeholder="Search Location"
+                size="md"
                 rightSection={<IconSearch />}
-                radius="xl"
+                radius="lg"
                 w={350}
+                mr={60}
               ></TextInput>
               <Space w={520}></Space>
-              <Button style={{ backgroundColor: "purple" }}>
+              <Button
+                style={{ backgroundColor: "#D6530C" }}
+                className="submit-review-page"
+              >
                 Your Reviews
               </Button>
-              <Space w={10} />
+              <Space w={7} />
               <Button
                 color="blue"
                 className="submit-review-page"
@@ -67,25 +72,35 @@ function ReviewsPage() {
                       ),
                       navigate("/travelPage"))
                     : alert("Not Signed In");
+                  navigate("/login");
                 }}
               >
                 Write a Review
               </Button>
+            </Container>
+            <Container>
+              <ActionIcon>
+                <IconPencil></IconPencil>
+              </ActionIcon>
             </Container>
             <Group mt={50} gap="md">
               <Card
                 withBorder
                 radius="xl"
                 w={285}
-                style={{ backgroundColor: "gray" }}
+                style={{ backgroundColor: "white" }}
               >
                 <Divider mt={10} />
                 <Space h={10} />
-                <Rating readOnly />
                 <h2> Review Title</h2>
-                <p>Review Body</p>
-                <p>Reviewer Name</p>
+                <Rating readOnly />
                 <p>Date</p>
+                <p>By: Reviewer Name</p>
+                <p>Review Body</p>
+
+                <Flex justify="flex-end">
+                  <UnstyledButton c="steelblue">Read More..</UnstyledButton>
+                </Flex>
               </Card>
               <Card withBorder radius="xl" w={285}>
                 <Image

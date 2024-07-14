@@ -267,13 +267,15 @@ function LoginPage() {
                 <Space h={8}></Space>
                 <Flex gap="xs" justify="center">
                   <Text c="gray">Don't have an account?</Text>
-                  <UnstyledButton
-                    aria-label="create-button"
-                    c="green"
-                    onClick={() => history("/signup")}
-                  >
-                    Create Here
-                  </UnstyledButton>
+                  <Link to="/signup">
+                    <UnstyledButton
+                      aria-label="create-button"
+                      c="green"
+                      type="button"
+                    >
+                      Create Here
+                    </UnstyledButton>
+                  </Link>
                 </Flex>
               </div>
 

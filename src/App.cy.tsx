@@ -1,9 +1,17 @@
-import React from 'react'
-import App from './App'
+import React from "react";
+import App from "./App";
+import HomePage from "./pages/HomePage";
+import { MemoryRouter, Router } from "react-router-dom";
+import { MantineProvider } from "@mantine/core";
 
-describe('<App />', () => {
-  it('renders', () => {
-    // see: https://on.cypress.io/mounting-react
-    cy.mount(<App />)
-  })
-})
+describe("<App />", () => {
+  it("App renders", () => {
+    cy.mount(
+      <MantineProvider>
+        <MemoryRouter>
+          <App />
+        </MemoryRouter>
+      </MantineProvider>
+    );
+  });
+});

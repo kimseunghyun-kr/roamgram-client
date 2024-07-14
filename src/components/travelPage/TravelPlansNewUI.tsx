@@ -412,7 +412,13 @@ function TravelPlansNewUI() {
     return homePageItem && !authToken ? (
       <>
         <Space h={15} />
-        <Card withBorder shadow="xs" radius="md" h={150}>
+        <Card
+          withBorder
+          shadow="xs"
+          radius="md"
+          h={150}
+          aria-label="unauth-card"
+        >
           <Group justify="space-between">
             <Stack ml={40} mt={23}>
               <Title>{homePageItem?.name ?? null}</Title>

@@ -304,7 +304,7 @@ function GoogleMaps() {
               <TimeInput
                 mt={19}
                 w={150}
-                value={time}
+                value={moment(time, "HH:mm").format("HH:mm")}
                 onChange={(e) => setTime(e.currentTarget.value)}
               ></TimeInput>
             </SimpleGrid>
