@@ -103,14 +103,14 @@ function YourReviews() {
 
   useEffect(() => {
     const allRevs = async () => {
-      if (getTravelPlans && successTp) {
+      if (successTp) {
         const allRevs = allTravelPlanWithScheduleId();
         const allReviews = (await allReviewsWithProperties(allRevs)).flat(); //flattens our list
         setAllRevs(allReviews);
       }
     };
     allRevs();
-  }, []);
+  }, [successTp, getTravelPlans]);
 
   const deleteReview = async (item) => {
     const travelId = item.travelId;
