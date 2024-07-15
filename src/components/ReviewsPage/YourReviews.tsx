@@ -18,8 +18,10 @@ import {
   SimpleGrid,
   Container,
   Spoiler,
+  ScrollArea,
+  Title,
 } from "@mantine/core";
-import { IconX } from "@tabler/icons-react";
+import { IconTrash, IconX } from "@tabler/icons-react";
 import "./YourReviews.css";
 import { stripHtml } from "string-strip-html";
 
@@ -180,7 +182,7 @@ function YourReviews() {
                   <Menu>
                     <Menu.Target>
                       <ActionIcon variant="transparent">
-                        <IconX color="red" />
+                        <IconTrash size={23} color="red" />
                       </ActionIcon>
                     </Menu.Target>
                     <Menu.Dropdown>
@@ -198,17 +200,16 @@ function YourReviews() {
                   </Menu>
                 </Group>
                 <Rating value={items.rating} readOnly />
-                <Spoiler
-                  maxHeight={100}
-                  showLabel="Show more"
-                  hideLabel="Hide"
-                  mt={10}
-                >
-                  <Text
-                    h={145}
-                    className="textInnerHtml"
-                    dangerouslySetInnerHTML={{ __html: items.userDescription }}
-                  />
+                <Spoiler maxHeight={100} showLabel="Show more" hideLabel="Hide">
+                  <ScrollArea h={155}>
+                    <Text
+                      h={145}
+                      className="textInnerHtml"
+                      dangerouslySetInnerHTML={{
+                        __html: items.userDescription,
+                      }}
+                    />
+                  </ScrollArea>
                 </Spoiler>
               </Card>
             ))}
@@ -224,8 +225,16 @@ function YourReviews() {
         <Header />
       </header>
       <body>
+        <div
+          style={{
+            textAlign: "center",
+            paddingTop: "15px",
+          }}
+        >
+          <Title>Your Reviews</Title>
+        </div>
         {allRevData ? card(allRevData) : null}
-        <Space h={90} />
+        <Space h={35} />
         <Center>
           <Pagination
             total={allRevChunk.length}
