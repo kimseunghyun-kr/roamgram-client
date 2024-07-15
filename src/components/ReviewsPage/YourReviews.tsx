@@ -12,6 +12,7 @@ import {
   Flex,
   Group,
   ActionIcon,
+  Menu,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
 function YourReviews() {
@@ -64,30 +65,6 @@ function YourReviews() {
     ];
     // console.log("tp dict is", travelPlanDict);
   };
-  // const getAllReviews = useCallback(async () => {
-  //   const travelPlanDict = {};
-  //   getTravelPlans.map((items) => fetchSchedules(items, travelPlanDict));
-  //   if (travelPlanDict) {
-  //     for (const tp in travelPlanDict) {
-  //       const schedules = travelPlanDict[tp][0]; //kv pairs
-  //       console.log("sched", schedules);
-  //       return await schedules.map(
-  //         async (id) => await fetchReviews(tp, id, 50)
-  //       );
-  //     }
-  //   }
-  // }, []);
-
-  // const getAllReviews = async () => {
-  //   const travelPlanDict = {};
-  //   getTravelPlans.map((items) => fetchSchedules(items, travelPlanDict));
-  //   if (travelPlanDict) {
-  //     for (const tp in travelPlanDict) {
-  //       const schedules = travelPlanDict[tp][0]; //kv pairs
-  //       return console.log("sched", schedules);
-  //     }
-  //   }
-  // };
 
   const allTravelPlanWithScheduleId = () => {
     const travelPlanDict = {};
@@ -175,14 +152,25 @@ function YourReviews() {
               <Space h={10} />
               <Group justify="space-between">
                 <h2> Review Title</h2>
-                <ActionIcon
-                  variant="transparent"
-                  onClick={() => {
-                    deleteReview(items);
-                  }}
-                >
-                  <IconX color="red" />
-                </ActionIcon>
+                <Menu>
+                  <Menu.Target>
+                    <ActionIcon variant="transparent">
+                      <IconX color="red" />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Danger Zone</Menu.Label>
+                    <Menu.Divider />
+                    <Menu.Item
+                      c="red"
+                      onClick={() => {
+                        deleteReview(items);
+                      }}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               </Group>
               <Rating value={items.rating} readOnly />
 
