@@ -123,6 +123,7 @@ function YourReviews() {
   };
 
   const [allRevs, setAllRevs] = useState([]);
+
   useEffect(() => {
     const allRevs = async () => {
       if (getTravelPlans && successTp) {
@@ -134,34 +135,65 @@ function YourReviews() {
     allRevs();
   }, []);
 
+  const deleteReview = async (item) => {
+    const travelId = item.travelId;
+    const scheduleId = item.scheduleId;
+    const reviewId = item.id;
+    await fetch(
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${travelId}/schedule/${scheduleId}/review/delete?reviewID=${reviewId}`,
+      {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => console.log("successful delete"))
+      .catch((error) => console.log("error deleting review"));
+
+    //const filtered = allRevs.filter((item) => item.id != reviewId);
+    setAllRevs((p) => p.filter((item) => item.id != reviewId));
+    console.log(allRevs);
+  };
+
   function card(allRevs) {
     return (
       <>
-        {allRevs.map((items) => (
-          <Card
-            withBorder
-            radius="xl"
-            w={285}
-            style={{ backgroundColor: "white" }}
-            id="test"
-          >
-            <Divider mt={10} />
-            <Space h={10} />
-            <Group justify="space-between">
-              <h2> Review Title</h2>
-              <ActionIcon variant="transparent">
-                <IconX color="red" />
-              </ActionIcon>
-            </Group>
-            <Rating value={items.rating} readOnly />
+        <div key={allRevs.length}>
+          {allRevs.map((items) => (
+            <Card
+              withBorder
+              radius="xl"
+              w={285}
+              style={{ backgroundColor: "white" }}
+              id="test"
+            >
+              <Divider mt={10} />
+              <Space h={10} />
+              <Group justify="space-between">
+                <h2> Review Title</h2>
+                <ActionIcon
+                  variant="transparent"
+                  onClick={() => {
+                    deleteReview(items);
+                  }}
+                >
+                  <IconX color="red" />
+                </ActionIcon>
+              </Group>
+              <Rating value={items.rating} readOnly />
 
-            <p dangerouslySetInnerHTML={{ __html: items.userDescription }} />
+              <p dangerouslySetInnerHTML={{ __html: items.userDescription }} />
 
-            <Flex justify="flex-end">
-              <UnstyledButton c="steelblue">Read More..</UnstyledButton>
-            </Flex>
-          </Card>
-        ))}
+              <Flex justify="flex-end">
+                <UnstyledButton c="steelblue">Read More..</UnstyledButton>
+              </Flex>
+            </Card>
+          ))}
+        </div>
       </>
     );
   }
