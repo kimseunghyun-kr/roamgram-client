@@ -25,7 +25,7 @@ import {
 } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { useMutation } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./ReviewsPage.css";
 
 function ReviewsPage() {
@@ -54,12 +54,14 @@ function ReviewsPage() {
                 mr={60}
               ></TextInput>
               <Space w={520}></Space>
-              <Button
-                style={{ backgroundColor: "#D6530C" }}
-                className="submit-review-page"
-              >
-                Your Reviews
-              </Button>
+              <Link to="/your-reviews">
+                <Button
+                  style={{ backgroundColor: "#D6530C" }}
+                  className="submit-review-page"
+                >
+                  Your Reviews
+                </Button>
+              </Link>
               <Space w={7} />
               <Button
                 color="blue"

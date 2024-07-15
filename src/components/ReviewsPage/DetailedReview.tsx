@@ -460,6 +460,8 @@ export function DetailedReview() {
     },
     userDescription: ``,
     rating: 4.5,
+    isPublic: true,
+    public: true,
   };
   const webURL = new URLSearchParams(window.location.search);
   const travelId = webURL.get(`travelId`);

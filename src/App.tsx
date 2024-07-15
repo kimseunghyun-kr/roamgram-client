@@ -22,6 +22,7 @@ import ConfirmEmail from "./components/Login/ConfirmEmail.tsx";
 import { AnimatePresence, motion as m } from "framer-motion";
 import SignUpPage from "./components/Login/SignUpPage.tsx";
 import { Center, Container, Flex, Loader, Stack, Text } from "@mantine/core";
+import YourReviews from "./components/ReviewsPage/YourReviews.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -37,6 +38,7 @@ const RoutesComponent = () => (
     <Route path="/reviews" element={<ReviewsPage />} />
     <Route path="/reviews/id" element={<DetailedReview />} />
     <Route path="/signup" element={<SignUpPage />}></Route>
+    <Route path="/your-reviews" element={<YourReviews />}></Route>
   </Routes>
 );
 

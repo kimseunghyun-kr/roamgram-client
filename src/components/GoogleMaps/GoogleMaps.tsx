@@ -332,7 +332,8 @@ function GoogleMaps() {
                 Departing at: {time}
               </Text>
               <Text c="gray" fs="italic">
-                Arrival at: {moment(arrivalTime).format("HH:mm")}
+                Arrival at:{" "}
+                {arrivalTime ? moment(arrivalTime).format("HH:mm") : "null"}
               </Text>
             </Group>
           </Center>
