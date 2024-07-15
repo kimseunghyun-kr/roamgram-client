@@ -13,8 +13,16 @@ import {
   Group,
   ActionIcon,
   Menu,
+  Pagination,
+  Center,
+  SimpleGrid,
+  Container,
+  Spoiler,
 } from "@mantine/core";
 import { IconX } from "@tabler/icons-react";
+import "./YourReviews.css";
+import { stripHtml } from "string-strip-html";
+
 function YourReviews() {
   const authToken = sessionStorage.getItem(`authToken`);
   const allReviews = []; //objects with travelPlanId
@@ -135,53 +143,77 @@ function YourReviews() {
     setAllRevs((p) => p.filter((item) => item.id != reviewId));
     console.log(allRevs);
   };
+  //chunks data into equally sized arrays(if possible) of list
+  function chunk(allRevs, size: number) {
+    if (!allRevs.length) {
+      return [];
+    }
+    const head = allRevs.slice(0, size);
+    const tail = allRevs.slice(size);
+    return [head, ...chunk(tail, size)];
+  }
 
-  function card(allRevs) {
+  const [activePage, setPage] = useState(1);
+  const [expanded, setExpanded] = useState(false);
+
+  const allRevChunk = chunk(allRevs, 8);
+  const allRevData = allRevChunk[activePage - 1];
+  console.log("allRevData", allRevData);
+
+  function card(allRevData) {
     return (
       <>
-        <div key={allRevs.length}>
-          {allRevs.map((items) => (
-            <Card
-              withBorder
-              radius="xl"
-              w={285}
-              style={{ backgroundColor: "white" }}
-              id="test"
-            >
-              <Divider mt={10} />
-              <Space h={10} />
-              <Group justify="space-between">
-                <h2> Review Title</h2>
-                <Menu>
-                  <Menu.Target>
-                    <ActionIcon variant="transparent">
-                      <IconX color="red" />
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Label>Danger Zone</Menu.Label>
-                    <Menu.Divider />
-                    <Menu.Item
-                      c="red"
-                      onClick={() => {
-                        deleteReview(items);
-                      }}
-                    >
-                      Delete
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Group>
-              <Rating value={items.rating} readOnly />
-
-              <p dangerouslySetInnerHTML={{ __html: items.userDescription }} />
-
-              <Flex justify="flex-end">
-                <UnstyledButton c="steelblue">Read More..</UnstyledButton>
-              </Flex>
-            </Card>
-          ))}
-        </div>
+        <Container size="xl" w={1500} h={800} mt="xl">
+          <SimpleGrid cols={4} spacing="xs" verticalSpacing="md">
+            {allRevData.map((items) => (
+              <Card
+                withBorder
+                radius="xl"
+                w={285}
+                h={325}
+                style={{ backgroundColor: "white" }}
+                id="test"
+              >
+                <Space h={10} />
+                <Group justify="space-between">
+                  <h2> Review Title</h2>
+                  <Menu>
+                    <Menu.Target>
+                      <ActionIcon variant="transparent">
+                        <IconX color="red" />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Label>Danger Zone</Menu.Label>
+                      <Menu.Divider />
+                      <Menu.Item
+                        c="red"
+                        onClick={() => {
+                          deleteReview(items);
+                        }}
+                      >
+                        Delete
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </Group>
+                <Rating value={items.rating} readOnly />
+                <Spoiler
+                  maxHeight={100}
+                  showLabel="Show more"
+                  hideLabel="Hide"
+                  mt={10}
+                >
+                  <Text
+                    h={145}
+                    className="textInnerHtml"
+                    dangerouslySetInnerHTML={{ __html: items.userDescription }}
+                  />
+                </Spoiler>
+              </Card>
+            ))}
+          </SimpleGrid>
+        </Container>
       </>
     );
   }
@@ -192,26 +224,16 @@ function YourReviews() {
         <Header />
       </header>
       <body>
-        {card(allRevs)}
-        <Card
-          withBorder
-          radius="xl"
-          w={285}
-          style={{ backgroundColor: "white" }}
-          id="test"
-        >
-          <Divider mt={10} />
-          <Space h={10} />
-          <h2> Review Title</h2>
-          <Rating readOnly />
-          <p>Date</p>
-          <p>By: Reviewer Name</p>
-          <p>Review Body</p>
-
-          <Flex justify="flex-end">
-            <UnstyledButton c="steelblue">Read More..</UnstyledButton>
-          </Flex>
-        </Card>
+        {allRevData ? card(allRevData) : null}
+        <Space h={90} />
+        <Center>
+          <Pagination
+            total={allRevChunk.length}
+            value={activePage}
+            onChange={setPage}
+            mt="sm"
+          ></Pagination>
+        </Center>
       </body>
     </>
   );
