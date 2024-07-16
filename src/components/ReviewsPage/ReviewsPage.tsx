@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../Header/Header.tsx";
 import {
   Card,
@@ -22,17 +22,79 @@ import {
   ActionIcon,
   Flex,
   Spoiler,
+  ScrollArea,
 } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import "./ReviewsPage.css";
+
+const dummyTravelId = import.meta.env.VITE_DUMMY_TRAVELID;
+const dummyScheduleId = import.meta.env.VITE_DUMMY_SCHEDULEID;
 
 function ReviewsPage() {
   const searchRef = useRef(null);
   const navigate = useNavigate();
+  const authToken = sessionStorage.getItem(`authToken`);
+
+  const get_all_reviews = async () => {
+    //set parameter to 1000 first
+    return await fetch(
+      `${
+        import.meta.env.VITE_APP_API_URL
+      }/travelPlan/${dummyTravelId}/schedule/${dummyScheduleId}/review/public-all?page=0&size=1000`,
+      { method: "GET", headers: { Authorization: `Bearer ${authToken}` } }
+    ).then((res) => res.json());
+  };
+  const { data: getAllReviews } = useQuery({
+    queryKey: ["all-reviews"],
+    queryFn: get_all_reviews,
+  });
 
   //use mantine autocomplete
+
+  function chunk(allRevs, size: number) {
+    if (!allRevs.length) {
+      return [];
+    }
+    const head = allRevs.slice(0, size);
+    const tail = allRevs.slice(size);
+    return [head, ...chunk(tail, size)];
+  }
+
+  console.log("get all", getAllReviews.content);
+  const [activePage, setPage] = useState(1);
+  const allReviewsContentChunked = chunk(getAllReviews.content, 8);
+  const allReviewsContentData = allReviewsContentChunked[activePage - 1];
+  function cardSection(allReviewsContentData) {
+    return (
+      <>
+        {allReviewsContentData.map((item) => (
+          <Card radius="xl" w={285} h={470}>
+            <Image
+              h={200}
+              src="https://placehold.co/600x400?text=Placeholder"
+            />
+            <Divider mt={10} />
+            <Space h={10} />
+            <Rating value={item.rating} readOnly />
+            <UnstyledButton>
+              <h2>Review Title</h2>
+            </UnstyledButton>
+            <Spoiler maxHeight={90} showLabel="Show more" hideLabel="Hide">
+              <ScrollArea h={130}>
+                <Text
+                  dangerouslySetInnerHTML={{
+                    __html: item.userDescription,
+                  }}
+                />
+              </ScrollArea>
+            </Spoiler>
+          </Card>
+        ))}
+      </>
+    );
+  }
   return (
     <>
       <header>
@@ -54,100 +116,52 @@ function ReviewsPage() {
                 mr={60}
               ></TextInput>
               <Space w={520}></Space>
-              <Link to="/your-reviews">
-                <Button
-                  style={{ backgroundColor: "#D6530C" }}
-                  className="submit-review-page"
-                >
-                  Your Reviews
-                </Button>
-              </Link>
+
+              <Button
+                style={{ backgroundColor: "#D6530C" }}
+                className="submit-review-page"
+                onClick={() => {
+                  {
+                    authToken
+                      ? navigate("/your-reviews")
+                      : alert("Sign in to acesss");
+                  }
+                }}
+              >
+                Your Reviews
+              </Button>
+
               <Space w={7} />
               <Button
                 color="blue"
                 className="submit-review-page"
                 leftSection={<IconPencil />}
                 onClick={() => {
-                  sessionStorage.getItem(`authToken`)
+                  authToken
                     ? (alert(
                         "Please choose travel plan and respective schedule"
                       ),
                       navigate("/travelPage"))
-                    : alert("Not Signed In");
-                  navigate("/login");
+                    : (alert("Not Signed In"), navigate("/login"));
                 }}
               >
                 Write a Review
               </Button>
             </Container>
-            <Container>
-              <ActionIcon>
-                <IconPencil></IconPencil>
-              </ActionIcon>
+            <Container fluid h={900}>
+              <Group mt={50} gap="md" justify="center">
+                {cardSection(allReviewsContentData)}
+              </Group>
             </Container>
-            <Group mt={50} gap="md">
-              <Card
-                withBorder
-                radius="xl"
-                w={285}
-                style={{ backgroundColor: "white" }}
-              >
-                <Divider mt={10} />
-                <Space h={10} />
-                <h2> Review Title</h2>
-                <Rating readOnly />
-                <p>Date</p>
-                <p>By: Reviewer Name</p>
-                <p>Review Body</p>
-
-                <Flex justify="flex-end">
-                  <UnstyledButton c="steelblue">Read More..</UnstyledButton>
-                </Flex>
-              </Card>
-              <Card withBorder radius="xl" w={285}>
-                <Image
-                  h={200}
-                  src="https://placehold.co/600x400?text=Placeholder"
-                />
-                <Divider mt={10} />
-                <Space h={10} />
-                <Rating readOnly />
-                <h2> Review Title</h2>
-                <p>Review Body</p>
-                <p>Reviewer Name</p>
-                <p>Date</p>
-              </Card>
-              <Card withBorder radius="xl" w={285}>
-                <Image
-                  h={200}
-                  src="https://placehold.co/600x400?text=Placeholder"
-                />
-                <Divider mt={10} />
-                <Space h={10} />
-                <Rating readOnly />
-                <h2> Review Title</h2>
-                <p>Review Body</p>
-                <p>Reviewer Name</p>
-                <p>Date</p>
-              </Card>
-              <Card withBorder radius="xl" w={285}>
-                <Image
-                  h={200}
-                  src="https://placehold.co/600x400?text=Placeholder"
-                />
-                <Divider mt={10} />
-                <Space h={10} />
-                <Rating readOnly />
-                <h2> Review Title</h2>
-                <p>Review Body</p>
-                <p>Reviewer Name</p>
-                <p>Date</p>
-              </Card>
-            </Group>
           </Grid.Col>
         </Grid>
         <Center mt={80}>
-          <Pagination total={10}></Pagination>
+          <Pagination
+            total={allReviewsContentChunked.length}
+            value={activePage}
+            onChange={setPage}
+            pb={25}
+          ></Pagination>
         </Center>
       </body>
     </>

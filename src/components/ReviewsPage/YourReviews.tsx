@@ -200,7 +200,7 @@ function YourReviews() {
                   </Menu>
                 </Group>
                 <Rating value={items.rating} readOnly />
-                <Spoiler maxHeight={100} showLabel="Show more" hideLabel="Hide">
+                <Spoiler maxHeight={110} showLabel="Show more" hideLabel="Hide">
                   <ScrollArea h={155}>
                     <Text
                       h={145}

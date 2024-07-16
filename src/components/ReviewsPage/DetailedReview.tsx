@@ -401,12 +401,13 @@ export function DetailedReview() {
       },
       userDescription: userDescription,
       rating: rating,
+      isPublic: true,
+      public: true,
     };
 
     console.log("userdescription from uploadReview", userDescription);
     console.log("rq body", requestBody);
 
-    const navigate = useNavigate();
     await fetch(
       `${
         import.meta.env.VITE_APP_API_URL
@@ -488,6 +489,7 @@ export function DetailedReview() {
   };
 
   const [opened, { open, close }] = useDisclosure(false);
+  const navigate = useNavigate();
 
   return (
     <>
@@ -514,7 +516,9 @@ export function DetailedReview() {
               <Button
                 className="submit-button-review-detailed"
                 variant="outline"
-                onClick={submitReview}
+                onClick={() => {
+                  submitReview();
+                }}
               >
                 Confirm
               </Button>
