@@ -18,6 +18,7 @@ import {
   Grid,
   Modal,
   Text,
+  Divider,
 } from "@mantine/core";
 import { useMutation, useQueries, useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -490,6 +491,7 @@ export function DetailedReview() {
 
   const [opened, { open, close }] = useDisclosure(false);
   const navigate = useNavigate();
+  const titleRef = useRef(null);
 
   return (
     <>
@@ -527,7 +529,7 @@ export function DetailedReview() {
         </Modal>
         <Container fluid>
           <Group>
-            <Image src="/assets/Create Review.png" w="auto" mt={35} ml={180} />
+            <Image src="/assets/Create Review.png" w="auto" mt={35} ml={340} />
             <Space w={640} />
             <Button onClick={open} mt={60} w={155}>
               Submit
@@ -539,14 +541,27 @@ export function DetailedReview() {
           <Card withBorder w={1200} mt={20}>
             <ScrollArea h={650}>
               <Container fluid w={1100} h="auto">
-                <Group>
-                  <TextInput id="review-location" description="Title" w={350} />
-                  <Rating
-                    fractions={2}
-                    pt={20}
-                    value={ratingValue}
-                    onChange={setRatingValue}
-                  />
+                <Group justify="">
+                  <Card withBorder radius="lg">
+                    <Text size="sm">Give a Rating</Text>
+                    <Divider></Divider>
+
+                    <Rating
+                      size="36px"
+                      fractions={2}
+                      pt={20}
+                      value={ratingValue}
+                      onChange={setRatingValue}
+                    />
+                    <Group justify="space-between">
+                      <Text size="9px" c="gray">
+                        Terrible
+                      </Text>
+                      <Text size="9px" c="gray">
+                        Exceptional
+                      </Text>
+                    </Group>
+                  </Card>
                 </Group>
                 <Space h={30} />
                 <ReactQuill

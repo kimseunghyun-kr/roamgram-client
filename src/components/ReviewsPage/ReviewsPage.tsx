@@ -85,10 +85,16 @@ function ReviewsPage() {
   function cardSection(allReviewsContentData) {
     return (
       <>
-        <Container fluid h={900} key={allReviewsContentData.length}>
-          <Group mt={50} gap="md" justify="center">
+        <Center>
+          <Group
+            mt={50}
+            gap="lg"
+            key={allReviewsContentData.length}
+            w={1400}
+            justify="center"
+          >
             {allReviewsContentData.map((item) => (
-              <Card radius="xl" w={285} h={470} key={item.id}>
+              <Card radius="xl" w={285} h={440} key={item.id}>
                 <Image
                   h={200}
                   src="https://placehold.co/600x400?text=Placeholder"
@@ -96,9 +102,7 @@ function ReviewsPage() {
                 <Divider mt={10} />
                 <Space h={10} />
                 <Rating value={item.rating} readOnly />
-                <UnstyledButton>
-                  <h2>Review Title</h2>
-                </UnstyledButton>
+                <UnstyledButton></UnstyledButton>
                 <Spoiler maxHeight={90} showLabel="Show more" hideLabel="Hide">
                   <ScrollArea h={130}>
                     <Text
@@ -111,13 +115,13 @@ function ReviewsPage() {
               </Card>
             ))}
           </Group>
-        </Container>
-        <Center mt={80}>
+        </Center>
+
+        <Center mt={20} mb={10}>
           <Pagination
             total={allReviewsContentChunked.length}
             value={activePage}
             onChange={setPage}
-            pb={25}
           ></Pagination>
         </Center>
       </>
@@ -131,8 +135,8 @@ function ReviewsPage() {
     const googleReviewData = googleReviewsChunked[googleActivePage - 1];
     return googleReviewData ? (
       <>
-        <Container fluid h={900}>
-          <Group mt={50} gap="md" justify="center">
+        <Center>
+          <Group mt={50} gap="lg" w={1400} justify="center">
             {googleReviewData.map((item) => (
               <Card radius="xl" w={285} h={470} key={item.id}>
                 <Image
@@ -157,13 +161,14 @@ function ReviewsPage() {
               </Card>
             ))}
           </Group>
-        </Container>
-        <Center mt={80}>
+        </Center>
+        <Center mt={20} mb={10}>
           <Pagination
             total={googleReviewsChunked.length}
             value={googleActivePage}
             onChange={setGooglePage}
-            pb={25}
+            pb={15}
+            mr={200}
           ></Pagination>
         </Center>
       </>
@@ -208,25 +213,22 @@ function ReviewsPage() {
         <Header />
       </header>
       <body>
-        <Image src="/assets/Reviews.png" w="auto" ml={395} mt={40}></Image>
-        <Grid mt={50} w={1800}>
-          <Grid.Col span={2.5}></Grid.Col>
-          <Grid.Col span={9.5}>
-            <Container display="flex" fluid>
-              <TextInput
-                ref={searchRef}
-                placeholder="Search Location"
-                size="md"
-                rightSection={<IconSearch />}
-                radius="lg"
-                w={350}
-                mr={60}
-                onChange={(e) => {
-                  setSearchRefInput(e.currentTarget.value);
-                }}
-              ></TextInput>
-              <Space w={520}></Space>
+        <Image src="/assets/Reviews.png" w="auto" ml={350} mt={40}></Image>
+        <Center mt={30} w={1300} ml={300}>
+          <Group justify="space-between" align="center" w={1200}>
+            <TextInput
+              ref={searchRef}
+              placeholder="Search Reviews By Location"
+              size="md"
+              rightSection={<IconSearch />}
+              radius="lg"
+              w={350}
+              onChange={(e) => {
+                setSearchRefInput(e.currentTarget.value);
+              }}
+            ></TextInput>
 
+            <Group gap="1px">
               <Button
                 style={{ backgroundColor: "#D6530C" }}
                 className="submit-review-page"
@@ -257,14 +259,15 @@ function ReviewsPage() {
               >
                 Write a Review
               </Button>
-            </Container>
-            {allReviewsContentData
-              ? haveId
-                ? googleCardSection(googleReviews)
-                : cardSection(allReviewsContentData)
-              : null}
-          </Grid.Col>
-        </Grid>
+            </Group>
+          </Group>
+        </Center>
+
+        {allReviewsContentData
+          ? haveId
+            ? googleCardSection(googleReviews)
+            : cardSection(allReviewsContentData)
+          : null}
       </body>
     </>
   );

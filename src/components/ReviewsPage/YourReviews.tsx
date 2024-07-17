@@ -20,8 +20,9 @@ import {
   Spoiler,
   ScrollArea,
   Title,
+  TextInput,
 } from "@mantine/core";
-import { IconTrash, IconX } from "@tabler/icons-react";
+import { IconSearch, IconTrash, IconX } from "@tabler/icons-react";
 import "./YourReviews.css";
 import { stripHtml } from "string-strip-html";
 
@@ -177,8 +178,7 @@ function YourReviews() {
                 id="test"
               >
                 <Space h={10} />
-                <Group justify="space-between">
-                  <h2> Review Title</h2>
+                <Group justify="flex-end">
                   <Menu>
                     <Menu.Target>
                       <ActionIcon variant="transparent">
@@ -228,11 +228,13 @@ function YourReviews() {
         <div
           style={{
             textAlign: "center",
-            paddingTop: "15px",
+            paddingTop: "30px",
           }}
         >
           <Title>Your Reviews</Title>
         </div>
+        <Space h={30} />
+        <Container fluid></Container>
         {allRevData ? card(allRevData) : null}
         <Space h={35} />
         <Center>
