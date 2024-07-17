@@ -1,4 +1,6 @@
 /// <reference types="cypress" />
+import { Query, QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { mount } from 'cypress/react';
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite

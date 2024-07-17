@@ -175,6 +175,7 @@ function LoginPage() {
                   <Flex h={30} pt={15}>
                     <Link to="/">
                       <ActionIcon
+                        aria-label="actionIcon-back"
                         variant="transparent"
                         onClick={() => console.log("Back to Homepage")}
                       >
@@ -266,9 +267,15 @@ function LoginPage() {
                 <Space h={8}></Space>
                 <Flex gap="xs" justify="center">
                   <Text c="gray">Don't have an account?</Text>
-                  <UnstyledButton c="green" onClick={() => history("/signup")}>
-                    Create Here
-                  </UnstyledButton>
+                  <Link to="/signup">
+                    <UnstyledButton
+                      aria-label="create-button"
+                      c="green"
+                      type="button"
+                    >
+                      Create Here
+                    </UnstyledButton>
+                  </Link>
                 </Flex>
               </div>
 

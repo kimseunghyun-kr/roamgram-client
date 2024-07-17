@@ -304,7 +304,7 @@ function GoogleMaps() {
               <TimeInput
                 mt={19}
                 w={150}
-                value={time}
+                value={moment(time, "HH:mm").format("HH:mm")}
                 onChange={(e) => setTime(e.currentTarget.value)}
               ></TimeInput>
             </SimpleGrid>
@@ -332,7 +332,8 @@ function GoogleMaps() {
                 Departing at: {time}
               </Text>
               <Text c="gray" fs="italic">
-                Arrival at: {moment(arrivalTime).format("HH:mm")}
+                Arrival at:{" "}
+                {arrivalTime ? moment(arrivalTime).format("HH:mm") : "null"}
               </Text>
             </Group>
           </Center>

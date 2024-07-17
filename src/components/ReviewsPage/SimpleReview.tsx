@@ -11,7 +11,7 @@ export async function SimpleReview(
   const requestBody = {
     fileList: [
       {
-        id: placeId,
+        id: v4(),
         review: v4(),
         sizeBytes: null,
         contentType: null,
@@ -25,6 +25,8 @@ export async function SimpleReview(
     },
     userDescription: userDescription,
     rating: rating,
+    isPublic: true,
+    public: true,
   };
 
   console.log(

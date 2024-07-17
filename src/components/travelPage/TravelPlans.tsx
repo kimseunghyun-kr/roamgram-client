@@ -1,48 +1,48 @@
-import { Carousel } from "@mantine/carousel";
 import {
   ActionIcon,
+  Burger,
   Button,
   Card,
   Center,
   CloseButton,
+  Container,
   Divider,
+  GridCol,
+  Group,
+  HoverCard,
   Loader,
   Menu,
   Modal,
   Popover,
   ScrollArea,
+  SimpleGrid,
   Space,
   Stack,
   Tabs,
   Text,
   TextInput,
   Title,
-  Tooltip,
   UnstyledButton,
 } from "@mantine/core";
-import { DatePickerInput } from "@mantine/dates";
+import Header from "../Header/Header";
 import {
-  IconCheck,
+  IconArrowDown,
+  IconArrowRight,
   IconEdit,
+  IconPhoto,
   IconPlus,
+  IconSettings,
+  IconSortAscendingLetters,
   IconSquareRoundedArrowRight,
   IconTrash,
-  IconX,
 } from "@tabler/icons-react";
-import moment from "moment";
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { v4 as uuid } from "uuid";
-import Header from "../Header/Header.tsx";
-import "./TravelPlans.css";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../Login/AuthContext.tsx";
-
-//const data = [
-//  { name: "First", startDate: "2024-06-18", endDate: "2024-06-18" },
-//  { name: "Second", startDate: "2024-06-18", endDate: "2024-06-20" },
-//  { name: "Third", startDate: "2024-06-18", endDate: "2024-06-31" },
-//];
+import moment from "moment";
+import { v4 as uuid } from "uuid";
+import { DatePickerInput } from "@mantine/dates";
+import { Link } from "react-router-dom";
+import { motion as m } from "framer-motion";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -213,131 +213,10 @@ function TravelPlans() {
   });
 
   const homePageItem = JSON.parse(sessionStorage.getItem("HomePageTravel"));
-  console.log(
-    "homepageItem",
-    JSON.parse(sessionStorage.getItem("HomePageTravel"))
-  );
-
-  //console.log("homepageitem", homePageItem);
-  const UnauthCardTravel = () => {
-    return (
-      <Center h={550}>
-        <Stack align="center">
-          {homePageItem ? (
-            <>
-              <Title>{homePageItem?.name ?? null}</Title>
-
-              <Text style={{ fontSize: "15px" }}>
-                From{" "}
-                {moment(homePageItem.dateRange[0], "YYYY-MM-DD").format(
-                  "MMM Do YY"
-                )}{" "}
-                to {` `}
-                {moment(homePageItem.dateRange[1], "YYYY-MM-DD").format(
-                  "MMM Do YY"
-                )}
-              </Text>
-
-              <Link to="/login">
-                <UnstyledButton c="red">
-                  Sign In to access more options
-                </UnstyledButton>
-              </Link>
-            </>
-          ) : null}
-        </Stack>
-      </Center>
-    );
-  };
-
-  const [sortName, setSortName] = useState(false);
-  const [sortDate, setSortDate] = useState(false);
-
-  const cardTravel = () => {
-    if (!eventData) {
-      return null;
-    }
-    return eventData
-      ? eventData.map((items) => (
-          //console.log("Rendering item", items.id),
-          <Carousel.Slide key={items.id}>
-            <Center h={550}>
-              <Stack align="center">
-                <Title>{items.name}</Title>
-                <Text style={{ fontSize: "15px" }}>
-                  From{" "}
-                  {moment(items.travelStartDate, "YYYY-MM-DD").format(
-                    "MMM Do YY"
-                  )}{" "}
-                  to {` `}
-                  {moment(items.travelEndDate, "YYYY-MM-DD").format(
-                    "MMM Do YY"
-                  )}
-                </Text>
-                <ActionIcon
-                  className="edit-button"
-                  variant="subtle"
-                  color="cyan"
-                  onClick={() => (
-                    setOpened(true),
-                    //console.log("item id is", items.id),
-                    open_travel_plan(items.id)
-                  )}
-                >
-                  <IconEdit />
-                </ActionIcon>
-                {authToken ? (
-                  <Link to={`/schedulePage/travelID?id=${items.id}`}>
-                    <ActionIcon
-                      variant="transparent"
-                      className="to-schedule-button"
-                    >
-                      <IconSquareRoundedArrowRight size={28} color="black" />
-                    </ActionIcon>
-                  </Link>
-                ) : (
-                  <Tooltip label="Sign In to Create Schedules">
-                    <ActionIcon
-                      className="to-schedule-button"
-                      variant="filled"
-                      data-disabled
-                    >
-                      <IconSquareRoundedArrowRight size={28} />
-                    </ActionIcon>
-                  </Tooltip>
-                )}
-                <Menu shadow="md">
-                  <Menu.Target>
-                    <ActionIcon variant="subtle" c="red">
-                      <IconX />
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Label>Danger</Menu.Label>
-                    <Menu.Divider></Menu.Divider>
-                    <Menu.Item
-                      c="red"
-                      onClick={(e) => (
-                        deleteMutate(items.id), e.preventDefault()
-                      )}
-                      leftSection={<IconTrash size={14} />}
-                    >
-                      Delete
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </Stack>
-            </Center>
-          </Carousel.Slide>
-        ))
-      : null;
-  };
 
   const [initialSlides, setInitialSlides] = useState(0);
 
-  const [activeTab, setActiveTab] = useState<string | null>("incomplete");
-
-  const [homePageItems, setHomePageItems] = useState(null);
+  const [activeTab, setActiveTab] = useState<string | null>("travel-plans");
 
   const [homeItem, sethomeItem] = useState({
     uuid: uuid(),
@@ -350,7 +229,7 @@ function TravelPlans() {
     //const token = sessionStorage.getItem(`authToken`);
     //console.log(tokens);
     //console.log("itemshometravel", sessionStorage.getItem(`HomePageTravel`));
-    if (sessionStorage.getItem(`HomePageTravel`)) {
+    if (sessionStorage.getItem(`HomePageTravel`) && authToken) {
       const items = JSON.parse(sessionStorage.getItem(`HomePageTravel`));
       sethomeItem((p) => ({
         ...p,
@@ -362,12 +241,14 @@ function TravelPlans() {
   }, [authToken]);
 
   useEffect(() => {
+    console.log("useItem", homeItem);
+    console.log("sueItem", authToken);
     if (homeItem?.name && authToken) {
       eventMutate(homeItem);
       sessionStorage.removeItem(`HomePageTravel`);
       sethomeItem(null);
     }
-  });
+  }, [homeItem]);
 
   //const [modalTravelPlan, setModalTravelPlan] = useState();
   const [editTravelPlan, setEditTravelPlan] = useState({
@@ -446,59 +327,178 @@ function TravelPlans() {
 
   const [createUnauth, setCreateUnauth] = useState(false);
 
+  const cardSection = () => {
+    if (!eventData) {
+      return null;
+    }
+    return eventData.map((items, index) => (
+      <>
+        <Space h={15} />
+        <m.div
+          initial={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: index * 0.05 }}
+        >
+          <Card withBorder shadow="xs" radius="md" h={150} key={items.id}>
+            <Group justify="space-between">
+              <Stack ml={40} mt={23}>
+                <Title>{items.name}</Title>
+
+                <Text c="gray" style={{ fontSize: "15px" }}>
+                  From{" "}
+                  {moment(items.travelStartDate, "YYYY-MM-DD").format(
+                    "MMM Do YY"
+                  )}{" "}
+                  to {` `}
+                  {moment(items.travelEndDate, "YYYY-MM-DD").format(
+                    "MMM Do YY"
+                  )}
+                </Text>
+              </Stack>
+              <Group>
+                <HoverCard>
+                  <HoverCard.Target>
+                    <ActionIcon
+                      variant="transparent"
+                      className="to-schedule-button"
+                    >
+                      <Link to={`/schedulePage/travelID?id=${items.id}`}>
+                        <IconArrowRight size={28} color="black" />
+                      </Link>
+                    </ActionIcon>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown>
+                    <Text size="xs">Click here to check your schedules</Text>
+                  </HoverCard.Dropdown>
+                </HoverCard>
+                <Menu>
+                  <Menu.Target>
+                    <ActionIcon variant="transparent" c="black">
+                      <IconSettings />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Label>Application</Menu.Label>
+                    <Menu.Item
+                      onClick={() => (
+                        setOpened(true),
+                        //console.log("item id is", items.id),
+                        open_travel_plan(items.id)
+                      )}
+                    >
+                      Edit
+                    </Menu.Item>
+                    <Menu.Divider />
+                    <Menu.Label>Danger Zone</Menu.Label>
+                    <Menu.Item
+                      c="red"
+                      onClick={(e) => (
+                        deleteMutate(items.id), e.preventDefault()
+                      )}
+                      leftSection={<IconTrash size={14} />}
+                    >
+                      Delete
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Group>
+            </Group>
+          </Card>
+        </m.div>
+      </>
+    ));
+  };
+  const unauthCardSection = () => {
+    return homePageItem && !authToken ? (
+      <>
+        <Space h={15} />
+        <Card
+          withBorder
+          shadow="xs"
+          radius="md"
+          h={150}
+          aria-label="unauth-card"
+        >
+          <Group justify="space-between">
+            <Stack ml={40} mt={23}>
+              <Title>{homePageItem?.name ?? null}</Title>
+              <Text c="gray" style={{ fontSize: "15px" }}>
+                From{" "}
+                {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}{" "}
+                to{" "}
+                {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
+                  "MMM Do YY"
+                )}
+              </Text>
+            </Stack>
+            <Link to="/login">
+              <UnstyledButton c="red">Sign In to Access</UnstyledButton>
+            </Link>
+          </Group>
+        </Card>
+      </>
+    ) : null;
+  };
+
   return (
     <>
       <header>
-        <Header></Header>
+        <Header />
       </header>
       <body>
-        <Space h={85} />
-        <Center>
-          <Card shadow="xs" radius="lg" h={600} w={600} withBorder>
-            <Tabs
-              className="tabs"
-              variant="outline"
-              radius="md"
-              value={activeTab}
-              onChange={setActiveTab}
-            >
-              <Tabs.List>
-                <Tabs.Tab value="incomplete">Incomplete</Tabs.Tab>
-                <Tabs.Tab
-                  value="complete"
-                  leftSection={<IconCheck size={15} color="green" />}
-                >
-                  Complete
-                </Tabs.Tab>
-                <Tabs.Tab
-                  ml={225}
-                  value="create_travel"
-                  leftSection={<IconPlus size={15} color="gray" />}
-                >
-                  Create
-                </Tabs.Tab>
-              </Tabs.List>
-              <Tabs.Panel value="incomplete">
-                {authToken && eventData ? (
-                  <Carousel
-                    initialSlide={initialSlides}
-                    withIndicators
-                    key={eventData.length}
-                    withControls={eventData.length > 0}
-                    styles={{
-                      indicator: {
-                        backgroundColor: "#A9ADB9",
-                        marginTop: "px",
-                      },
-                    }}
-                  >
-                    {cardTravel()}
-                  </Carousel>
-                ) : (
-                  UnauthCardTravel()
-                )}
-              </Tabs.Panel>
-              <Tabs.Panel value="create_travel">
+        <Space h={65} />
+
+        <Container>
+          <Tabs
+            radius="md"
+            variant="outline"
+            value={activeTab}
+            onChange={setActiveTab}
+            defaultValue="travel-plans"
+          >
+            <Tabs.List>
+              <Tabs.Tab
+                leftSection={<IconPhoto color="green" />}
+                value="travel-plans"
+              >
+                Travel Plans
+              </Tabs.Tab>
+              <Tabs.Tab
+                ml={650}
+                leftSection={<IconPlus color="gray" />}
+                value="create-travel-plan"
+              >
+                Create
+              </Tabs.Tab>
+            </Tabs.List>
+            <Tabs.Panel value="travel-plans">
+              {authToken && eventData ? (
+                <>
+                  <div key={eventData.length}>
+                    <ScrollArea h={690}>
+                      <m.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ staggerChildren: 0.3 }}
+                      >
+                        <Space h={20}></Space>
+
+                        {cardSection()}
+                      </m.div>
+
+                      <Stack justify="center" align="center"></Stack>
+                    </ScrollArea>
+                  </div>
+                </>
+              ) : (
+                unauthCardSection()
+              )}
+            </Tabs.Panel>
+            <Tabs.Panel value="create-travel-plan">
+              <Center>
                 <Center h={500}>
                   <Stack w={300}>
                     <Title
@@ -511,6 +511,7 @@ function TravelPlans() {
                     <Divider></Divider>
                     <TextInput
                       //right hand side
+
                       description="Activity Name"
                       rightSectionPointerEvents="all"
                       rightSection={
@@ -539,6 +540,7 @@ function TravelPlans() {
                     <DatePickerInput
                       description="Date Range"
                       clearable
+                      required
                       type="range"
                       placeholder="Choose Date"
                       value={dateRanges}
@@ -555,7 +557,13 @@ function TravelPlans() {
                             onClick={(e) => {
                               if (authToken) {
                                 eventMutate(travelPlanDetails);
-                                setActiveTab("incomplete");
+                                setActiveTab("travel-plans");
+                                setTravelPlanDetails((p) => ({
+                                  uuid: uuid(),
+                                  startDate: "",
+                                  endDate: "",
+                                  name: "",
+                                }));
                               } else {
                                 setCreateUnauth(true);
                               }
@@ -575,11 +583,10 @@ function TravelPlans() {
                     </Popover>
                   </Stack>
                 </Center>
-              </Tabs.Panel>
-            </Tabs>
-          </Card>
-        </Center>
-
+              </Center>
+            </Tabs.Panel>
+          </Tabs>
+        </Container>
         <Modal
           centered
           size="auto"
