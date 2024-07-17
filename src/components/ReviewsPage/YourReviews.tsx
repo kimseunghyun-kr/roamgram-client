@@ -25,6 +25,7 @@ import {
 import { IconSearch, IconTrash, IconX } from "@tabler/icons-react";
 import "./YourReviews.css";
 import { stripHtml } from "string-strip-html";
+import { motion as m } from "framer-motion";
 
 function YourReviews() {
   const authToken = sessionStorage.getItem(`authToken`);
@@ -168,50 +169,60 @@ function YourReviews() {
       <>
         <Container size="xl" w={1500} h={800} mt="xl">
           <SimpleGrid cols={4} spacing="xs" verticalSpacing="md">
-            {allRevData.map((items) => (
-              <Card
-                withBorder
-                radius="xl"
-                w={285}
-                h={325}
-                style={{ backgroundColor: "white" }}
-                id="test"
+            {allRevData.map((items, index) => (
+              <m.div
+                initial={{ translateY: 50, opacity: 0 }}
+                animate={{ translateY: 0, opacity: 1 }}
+                transition={{ duration: 0.5, delay: index * 0.05 }}
               >
-                <Space h={10} />
-                <Group justify="flex-end">
-                  <Menu>
-                    <Menu.Target>
-                      <ActionIcon variant="transparent">
-                        <IconTrash size={23} color="red" />
-                      </ActionIcon>
-                    </Menu.Target>
-                    <Menu.Dropdown>
-                      <Menu.Label>Danger Zone</Menu.Label>
-                      <Menu.Divider />
-                      <Menu.Item
-                        c="red"
-                        onClick={() => {
-                          deleteReview(items);
+                <Card
+                  withBorder
+                  radius="xl"
+                  w={285}
+                  h={325}
+                  style={{ backgroundColor: "white" }}
+                  id="test"
+                >
+                  <Space h={10} />
+                  <Group justify="flex-end">
+                    <Menu>
+                      <Menu.Target>
+                        <ActionIcon variant="transparent">
+                          <IconTrash size={23} color="red" />
+                        </ActionIcon>
+                      </Menu.Target>
+                      <Menu.Dropdown>
+                        <Menu.Label>Danger Zone</Menu.Label>
+                        <Menu.Divider />
+                        <Menu.Item
+                          c="red"
+                          onClick={() => {
+                            deleteReview(items);
+                          }}
+                        >
+                          Delete
+                        </Menu.Item>
+                      </Menu.Dropdown>
+                    </Menu>
+                  </Group>
+                  <Rating value={items.rating} readOnly />
+                  <Spoiler
+                    maxHeight={110}
+                    showLabel="Show more"
+                    hideLabel="Hide"
+                  >
+                    <ScrollArea h={185}>
+                      <Text
+                        h={175}
+                        className="textInnerHtml"
+                        dangerouslySetInnerHTML={{
+                          __html: items.userDescription,
                         }}
-                      >
-                        Delete
-                      </Menu.Item>
-                    </Menu.Dropdown>
-                  </Menu>
-                </Group>
-                <Rating value={items.rating} readOnly />
-                <Spoiler maxHeight={110} showLabel="Show more" hideLabel="Hide">
-                  <ScrollArea h={155}>
-                    <Text
-                      h={145}
-                      className="textInnerHtml"
-                      dangerouslySetInnerHTML={{
-                        __html: items.userDescription,
-                      }}
-                    />
-                  </ScrollArea>
-                </Spoiler>
-              </Card>
+                      />
+                    </ScrollArea>
+                  </Spoiler>
+                </Card>
+              </m.div>
             ))}
           </SimpleGrid>
         </Container>
@@ -225,26 +236,32 @@ function YourReviews() {
         <Header />
       </header>
       <body>
-        <div
-          style={{
-            textAlign: "center",
-            paddingTop: "30px",
-          }}
+        <m.div
+          initial={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          <Title>Your Reviews</Title>
-        </div>
-        <Space h={30} />
-        <Container fluid></Container>
-        {allRevData ? card(allRevData) : null}
-        <Space h={35} />
-        <Center>
-          <Pagination
-            total={allRevChunk.length}
-            value={activePage}
-            onChange={setPage}
-            mt="sm"
-          ></Pagination>
-        </Center>
+          <div
+            style={{
+              textAlign: "center",
+              paddingTop: "30px",
+            }}
+          >
+            <Title>Your Reviews</Title>
+          </div>
+          <Space h={30} />
+          {allRevData ? card(allRevData) : null}
+
+          <Space h={35} />
+          <Center>
+            <Pagination
+              total={allRevChunk.length}
+              value={activePage}
+              onChange={setPage}
+              mt="sm"
+            ></Pagination>
+          </Center>
+        </m.div>
       </body>
     </>
   );

@@ -518,8 +518,9 @@ export function DetailedReview() {
               <Button
                 className="submit-button-review-detailed"
                 variant="outline"
-                onClick={() => {
-                  submitReview();
+                onClick={async () => {
+                  await submitReview();
+                  navigate(-1);
                 }}
               >
                 Confirm
@@ -527,8 +528,8 @@ export function DetailedReview() {
             </Stack>
           </Group>
         </Modal>
-        <Container fluid>
-          <Group>
+        <Container fluid w={1900}>
+          <Group w={1600}>
             <Image src="/assets/Create Review.png" w="auto" mt={35} ml={340} />
             <Space w={640} />
             <Button onClick={open} mt={60} w={155}>

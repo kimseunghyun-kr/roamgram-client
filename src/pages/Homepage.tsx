@@ -73,7 +73,7 @@ function HomePage() {
       </Card>
     </Carousel.Slide>
   ));
-  const autoplay = useRef(Autoplay({ delay: 6000 }));
+  const autoplay = useRef(Autoplay({ delay: 2000 }));
 
   ///Explore Nearby Locations///
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -263,14 +263,14 @@ function HomePage() {
                 <Image
                   h={700}
                   style={{ minWidth: 1200 }}
-                  fallbackSrc="assets/japan-background-night.png"
+                  src="assets/japan-background-night.png"
                 ></Image>
               </Carousel.Slide>
               <CarouselSlide>
                 <Image
                   h={700}
                   style={{ minWidth: 1200 }}
-                  fallbackSrc="assets/seoul.png"
+                  src="assets/seoul.png"
                 ></Image>
               </CarouselSlide>
               <CarouselSlide>
@@ -459,7 +459,7 @@ function HomePage() {
             w={1370}
           ></Container>
         </Container>
-        <Container fluid h={350}>
+        {/* <Container fluid h={350}>
           <Grid>
             <Grid.Col span={3}>
               <Image
@@ -499,7 +499,7 @@ function HomePage() {
               {slides2}
             </Carousel>
           </Container>
-        </Container>
+        </Container> */}
       </body>
       <footer className="footer">
         <Divider
