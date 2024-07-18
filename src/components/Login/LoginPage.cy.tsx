@@ -10,7 +10,7 @@ describe("<LoginPage />", () => {
   const queryClient = new QueryClient();
 
   beforeEach(() => {
-    cy.viewport(1500, 1080);
+    cy.viewport(1920, 1080);
     cy.mount(
       <MantineProvider>
         <MemoryRouter>
@@ -23,17 +23,10 @@ describe("<LoginPage />", () => {
       </MantineProvider>
     );
   });
+
   it("renders", () => {});
 
-  it("Back to HomePage", () => {
-    //checking back button
-    cy.get(`[aria-label="actionIcon-back"]`)
-      .click()
-      .url()
-      .should("include", Cypress.config().baseUrl);
-  });
-
-  it.only("Create Account button", () => {
+  it("Create Account button exist", () => {
     cy.get('[aria-label="create-button"]')
       .should("be.visible")
       .and("be.enabled")
@@ -44,19 +37,30 @@ describe("<LoginPage />", () => {
       });
   });
 
-  it("Create Account redirect", () => {
-    cy.get('[aria-label="create-button"]')
-      .click()
-      .url()
-      .then((url) => {
-        cy.log(url);
-      })
-      .should("include", "/signup");
-  });
+  //e2e testing
+  // it.only("Back to HomePage", () => {
+  //   //checking back button
+  //   cy.get(`[aria-label="actionIcon-back"]`)
+  //     .click()
+  //     .url()
+
+  //     .should("include", Cypress.config().baseUrl);
+  // });
+
+  // it.only("Create Account redirect to sign-up page", () => {
+  //   cy.get('[aria-label="create-button"]')
+  //     .click()
+  //     .url()
+  //     .then((url) => {
+  //       cy.log(url);
+  //     });
+
+  //   cy.location("pathname").should("include", "/signup");
+  // });
 
   it("logging in with unauthorized details", () => {
-    cy.get('input[placeholder="Enter Username"]').type("test");
-    cy.get('input[placeholder="Enter Password"]').type("test");
+    cy.get('input[placeholder="Enter Username"]').type("test21");
+    cy.get('input[placeholder="Enter Password"]').type("test21");
     cy.get("button").contains("Continue").click();
     cy.get(`.mantine-Popover-dropdown`).should("contain", "Error");
   });

@@ -450,7 +450,7 @@ function TravelPlans() {
       <body>
         <Space h={65} />
 
-        <Container>
+        <Container className="travel-plan-container">
           <Tabs
             radius="md"
             variant="outline"
@@ -469,6 +469,7 @@ function TravelPlans() {
                 ml={650}
                 leftSection={<IconPlus color="gray" />}
                 value="create-travel-plan"
+                aria-label="create-reviews-tab-btn"
               >
                 Create
               </Tabs.Tab>
@@ -543,6 +544,7 @@ function TravelPlans() {
                       required
                       type="range"
                       placeholder="Choose Date"
+                      aria-label="create-plan-date-input"
                       value={dateRanges}
                       onChange={settingTravelPlanDetailsDate}
                     ></DatePickerInput>

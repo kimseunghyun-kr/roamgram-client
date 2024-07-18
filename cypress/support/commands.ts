@@ -1,6 +1,8 @@
 /// <reference types="cypress" />
 import { Query, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mount } from 'cypress/react';
+import cypressConfig from "../../cypress.config";
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
@@ -37,3 +39,12 @@ import { mount } from 'cypress/react';
 //     }
 //   }
 // }
+
+Cypress.Commands.add(`fetchAuthToken`, () => {
+    const requestBody = {
+        "username": "string",
+        "password": "string"
+      }
+    
+    return cy.request({method: 'POST', headers: {'Content-Type': 'application/json'}, body: requestBody, url:`${Cypress.env('hostUrl')}/authentication/sign-in`,}).then(res => {const authToken = res.body.accessToken; cy.log(authToken); sessionStorage.setItem(`authToken`, authToken)})
+})  
