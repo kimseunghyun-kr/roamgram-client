@@ -450,7 +450,7 @@ function TravelPlans() {
       <body>
         <Space h={65} />
 
-        <Container className="travel-plan-container">
+        <Container className="c">
           <Tabs
             radius="md"
             variant="outline"

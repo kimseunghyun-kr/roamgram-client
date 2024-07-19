@@ -409,7 +409,12 @@ function GoogleMaps() {
         </Container>
       </Grid.Col>
       <Grid.Col span={7}>
-        <Container fluid style={{ height: "100vh" }} ref={mapRef} />
+        <Container
+          fluid
+          style={{ height: "100vh" }}
+          ref={mapRef}
+          className="google-map-container"
+        />
       </Grid.Col>
     </>
   );

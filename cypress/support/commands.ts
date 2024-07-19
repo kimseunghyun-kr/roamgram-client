@@ -2,6 +2,7 @@
 import { Query, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { mount } from 'cypress/react';
 import cypressConfig from "../../cypress.config";
+import { useJsApiLoader } from "@react-google-maps/api";
 
 // ***********************************************
 // This example commands.ts shows you how to
@@ -48,3 +49,27 @@ Cypress.Commands.add(`fetchAuthToken`, () => {
     
     return cy.request({method: 'POST', headers: {'Content-Type': 'application/json'}, body: requestBody, url:`${Cypress.env('hostUrl')}/authentication/sign-in`,}).then(res => {const authToken = res.body.accessToken; cy.log(authToken); sessionStorage.setItem(`authToken`, authToken)})
 })  
+
+Cypress.Commands.add('mockGoogleMaps', () => {
+  cy.window().then((win) => {
+    win.google = {
+      maps: {
+        Map: function() {},
+        LatLng: function() {},
+        Marker: function() {},
+        InfoWindow: function() {},
+        // Add any other necessary google.maps properties or methods here
+      },
+    };
+  });
+});
+
+Cypress.Commands.add('mockUseJsApiLoader', () => {
+  cy.window().then((win) => {
+    win.useJsApiLoader = () => ({
+      isLoaded: true,
+    });
+  });
+
+  cy.log('isLoaded', isLoaded)
+});
