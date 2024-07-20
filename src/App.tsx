@@ -59,7 +59,6 @@ function App() {
           <AnimatePresence key={location.pathname}>
             <AuthProvider>
               <RoutesComponent />
-              {/* <ReviewsPageDebug /> */}
             </AuthProvider>
           </AnimatePresence>
         </div>

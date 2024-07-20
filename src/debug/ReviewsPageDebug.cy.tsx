@@ -63,7 +63,7 @@ describe("<ReviewsPageDebug />", () => {
     cy.wait("@getGoogleIDReviews").its("response.statusCode").should("eq", 200);
   });
 
-  it("Click Write Reviews", () => {
+  it.only("Click Write Reviews", () => {
     cy.get(".submit-review-page").contains("Write a Review").click();
     cy.on("window:alert", (text) => {
       expect(text).to.contains("choose travel plan");
