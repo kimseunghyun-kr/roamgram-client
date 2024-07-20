@@ -23,6 +23,7 @@ import { AnimatePresence, motion as m } from "framer-motion";
 import SignUpPage from "./components/Login/SignUpPage.tsx";
 import { Center, Container, Flex, Loader, Stack, Text } from "@mantine/core";
 import YourReviews from "./components/ReviewsPage/YourReviews.tsx";
+import ReviewsPageDebug from "./debug/ReviewPageDebug.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -58,6 +59,7 @@ function App() {
           <AnimatePresence key={location.pathname}>
             <AuthProvider>
               <RoutesComponent />
+              {/* <ReviewsPageDebug /> */}
             </AuthProvider>
           </AnimatePresence>
         </div>
