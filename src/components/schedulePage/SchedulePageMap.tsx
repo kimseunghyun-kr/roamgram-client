@@ -603,6 +603,7 @@ function SchedulePageMap(
                           required
                           w={167}
                           description="END"
+                          aria-label="endTime"
                           id="endTime"
                           onChange={(e) => {
                             e.currentTarget.value < startTime
@@ -624,6 +625,7 @@ function SchedulePageMap(
                   <Group mt={10}>
                     <DatePickerInput
                       description="DAY"
+                      id="day-select"
                       w={167}
                       allowDeselect
                       onChange={(e) => {
