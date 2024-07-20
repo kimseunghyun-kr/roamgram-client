@@ -10,9 +10,7 @@ describe("<TravelPlans />", () => {
 
   beforeEach(() => {
     cy.viewport(1920, 1080);
-    cy.intercept("GET", "**/travelPlan/get_all").as("getAllTravelPlans");
     cy.fetchAuthToken();
-
     cy.mount(
       <MantineProvider>
         <MemoryRouter>
@@ -24,18 +22,23 @@ describe("<TravelPlans />", () => {
         </MemoryRouter>
       </MantineProvider>
     );
-
-    cy.wait("@getAllTravelPlans").its("response.statusCode").should("eq", 200);
   });
   it("renders", () => {});
 
   it("checking authToken", () => {
+    // cy.fetchAuthToken();
+
     cy.getAllSessionStorage().then((results) => {
       cy.log(results);
     });
   });
 
+  it("unauthorized render", () => {
+    cy.removeAuthToken();
+    cy.get(".mantine-Card-root").should("not.exist");
+  });
   it("create travel plan unauthorized", () => {
+    cy.removeAuthToken().log("removedAuthToken");
     //fills create-plan
     cy.get('[aria-label = "create-reviews-tab-btn"]')
       .click()
@@ -87,6 +90,7 @@ describe("<TravelPlans />", () => {
     cy.intercept("PATCH", "**/travelPlan/modify_travel_plan").as(
       "modifyTravelPlans"
     );
+    cy.wait("@getAllTravelPlans").its("response.statusCode").should("eq", 200);
 
     cy.get(".mantine-Card-root")
       .first()
@@ -114,9 +118,9 @@ describe("<TravelPlans />", () => {
     cy.get(".mantine-Popover-dropdown").contains(10).click();
 
     cy.get("[type='submit']").contains("Update").click();
-
     cy.wait("@modifyTravelPlans").its("response.statusCode").should("eq", 200);
-    cy.wait(1000);
+
+    // cy.wait(1000);
     // cy.wait("@getAllTravelPlans").its("response.statusCode").should("eq", 200);
 
     //check if activityName is changed

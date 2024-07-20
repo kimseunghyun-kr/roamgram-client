@@ -50,6 +50,10 @@ Cypress.Commands.add(`fetchAuthToken`, () => {
     return cy.request({method: 'POST', headers: {'Content-Type': 'application/json'}, body: requestBody, url:`${Cypress.env('hostUrl')}/authentication/sign-in`,}).then(res => {const authToken = res.body.accessToken; cy.log(authToken); sessionStorage.setItem(`authToken`, authToken)})
 })  
 
+Cypress.Commands.add(`removeAuthToken`, () => {
+  return sessionStorage.removeItem(`authToken`)
+})
+
 // Cypress.Commands.add('mockGoogleMaps', () => {
 //   cy.window().then((win) => {
 //     win.google = {
