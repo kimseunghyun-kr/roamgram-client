@@ -396,14 +396,14 @@ function SchedulePageMap(
 
   //submit button//
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     scheduleDetails;
     //("json version is", JSON.stringify(scheduleDetails));
     //create duplicate;
     //FETCH API HERE!
 
-    fetch(
+    await fetch(
       `${
         import.meta.env.VITE_APP_API_URL
       }/travelPlan/${travelID}/schedule/create_schedule`,
@@ -427,6 +427,7 @@ function SchedulePageMap(
           travelPlanId: data.travelPlanId,
         };
         setScheduleDetails((p) => newSchedule);
+        // console.log("newSchedule", newSchedule);
         setEvent((p) => [...p, newSchedule]);
       })
       .catch((error) => error);
@@ -462,9 +463,9 @@ function SchedulePageMap(
 
   const authToken = sessionStorage.getItem(`authToken`);
 
-  const getAllSchedule = () => {
+  const getAllSchedule = async () => {
     //("authToken", authToken); this works but the call has an error itself
-    fetch(
+    await fetch(
       `${
         import.meta.env.VITE_APP_API_URL
       }/travelPlan/${travelID}/schedule/search_all`,
@@ -480,7 +481,9 @@ function SchedulePageMap(
       .then(
         (data) => (
           //(data),
+          // console.log("events are", event),
           data.forEach((items) => {
+            console.log("unmodded", items);
             items.travelStartTimeEstimate[1] =
               items.travelStartTimeEstimate[1] - 1;
             items.travelStartTimeEstimate = moment(
@@ -491,25 +494,28 @@ function SchedulePageMap(
             items.travelDepartTimeEstimate = moment(
               items.travelDepartTimeEstimate.slice(0, 5)
             ).toDate();
+            console.log(items);
           }),
-          setEvent(data)
-          //("events taken from api are", data)
+          setEvent(data) //("events taken from api are", data)
           //(moment(data[0].travelDepartTimeEstimate.slice(0, 5)))
         )
-      )
-      .catch((error) => error);
+      );
   };
+  // console.log(event, " event");
+  useEffect(() => {
+    getAllSchedule();
+    // console.log(event, "event");
+  }, []);
 
   useEffect(() => {
-    if (authToken) {
-      getAllSchedule();
-    }
-  }, [authToken]);
+    console.log("events have been updated", event); // Log the updated state
+  }, [event]); // This useEffect will run whenever `event` changes
 
   //("events", event);
 
   //(event);
   //("events directly are", event);
+
   return (
     <>
       <header>

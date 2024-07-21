@@ -49,7 +49,7 @@ describe("<YourReviews />", () => {
     cy.wait("@getTravelPlans").its("response.statusCode").should("eq", 200);
   });
 
-  it.only("Review Delete", () => {
+  it("Review Delete", () => {
     cy.intercept(
       "DELETE",
       "**/travelPlan/*/schedule/*/review/delete?reviewID=*"
