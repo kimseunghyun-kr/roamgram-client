@@ -2,6 +2,7 @@ import "@bitnoi.se/react-scheduler/dist/style.css";
 import "@mantine/carousel/styles.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/charts/styles.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -25,6 +26,7 @@ import { Center, Container, Flex, Loader, Stack, Text } from "@mantine/core";
 import YourReviews from "./components/ReviewsPage/YourReviews.tsx";
 import ReviewsPageDebug from "./debug/ReviewPageDebug.tsx";
 import SchedulePageMapDebug from "./debug/SchedulePageMapDebug.tsx";
+import Billing from "./components/Billing/Billing.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -41,6 +43,7 @@ const RoutesComponent = () => (
     <Route path="/reviews/id" element={<DetailedReview />} />
     <Route path="/signup" element={<SignUpPage />}></Route>
     <Route path="/your-reviews" element={<YourReviews />}></Route>
+    <Route path="/billing/travelID" element={<Billing />} />
   </Routes>
 );
 
@@ -60,7 +63,7 @@ function App() {
           <AnimatePresence key={location.pathname}>
             <AuthProvider>
               <RoutesComponent />
-              {/* <SchedulePageMapDebug /> */}
+              {/* <Billing /> */}
             </AuthProvider>
           </AnimatePresence>
         </div>

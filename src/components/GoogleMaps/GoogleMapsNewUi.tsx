@@ -18,15 +18,23 @@ import {
   CheckIcon,
   Checkbox,
   Card,
+  Tabs,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
-import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconBike,
+  IconCar,
+  IconMapPin,
+  IconTrain,
+  IconWalk,
+} from "@tabler/icons-react";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 import parse from "parse-duration";
 
-function GoogleMaps() {
+function GoogleMapsNewUi() {
   //for origin textbox
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [autoComplete, setAutoComplete] =
@@ -199,8 +207,9 @@ function GoogleMaps() {
   ) {
     const originID = autoComplete?.getPlace()?.place_id;
     const destID = autoCompleteDest?.getPlace()?.place_id;
-    const selectedMode = (document.getElementById("mode") as HTMLInputElement)
-      .value as keyof typeof google.maps.TravelMode;
+    // const selectedMode = (document.getElementById("mode") as HTMLInputElement)
+    //   .value as keyof typeof google.maps.TravelMode;
+    const selectedMode = travelMethod;
     console.log(originID);
     var request = {
       origin: { placeId: originID },
@@ -231,11 +240,11 @@ function GoogleMaps() {
 
     // Assuming the IDs are fetched or defined correctly outside of this block
     console.log("Directions Service running now!");
-    const travelMethodString = (
-      document.getElementById("mode") as HTMLInputElement
-    ).value;
+    // const travelMethodString = (
+    //   document.getElementById("mode") as HTMLInputElement
+    // ).value;
     if (originPositionID && destPositionID) {
-      console.log(travelMethodString);
+      //   console.log(travelMethodString);
       console.log("Complete locations");
       if (directionsService && directionsRenderer) {
         calculateRoute(directionsService, directionsRenderer);
@@ -287,15 +296,15 @@ function GoogleMaps() {
               ref={placeAutoCompleteRef}
               leftSection={<IconMapPin color="green" />}
             ></TextInput>
-
-            <TextInput
-              w={310}
-              description="To"
-              ref={placeAutoCompleteRefDest}
-              leftSection={<IconMapPin color="red" />}
-            ></TextInput>
-            <SimpleGrid cols={2}>
-              <NativeSelect
+            <Group>
+              <TextInput
+                w={310}
+                description="To"
+                ref={placeAutoCompleteRefDest}
+                leftSection={<IconMapPin color="red" />}
+              ></TextInput>
+              {/* <SimpleGrid cols={2}> */}
+              {/* <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="mode"
                 w={150}
@@ -306,14 +315,15 @@ function GoogleMaps() {
                   { label: "Bicycling", value: "BICYCLING" },
                   { label: "Transit", value: "TRANSIT" },
                 ]}
-              ></NativeSelect>
+              ></NativeSelect> */}
               <TimeInput
                 mt={19}
                 w={150}
                 value={moment(time, "HH:mm").format("HH:mm")}
                 onChange={(e) => setTime(e.currentTarget.value)}
               ></TimeInput>
-            </SimpleGrid>
+            </Group>
+            {/* </SimpleGrid> */}
           </Stack>
         </Container>
         <Divider size="xs"></Divider>
@@ -350,6 +360,37 @@ function GoogleMaps() {
           <Container>
             {leg ? (
               <>
+                <Center mt={7}>
+                  <Tabs
+                    variant="pills"
+                    color="indigo"
+                    radius="lg"
+                    defaultValue="DRIVING"
+                    onChange={(e) => {
+                      setTravelMethod(e);
+                    }}
+                  >
+                    <Tabs.List>
+                      <Tabs.Tab
+                        value="DRIVING"
+                        leftSection={<IconCar />}
+                      ></Tabs.Tab>
+
+                      <Tabs.Tab
+                        value="WALKING"
+                        leftSection={<IconWalk />}
+                      ></Tabs.Tab>
+                      <Tabs.Tab
+                        value="BICYCLING"
+                        leftSection={<IconBike />}
+                      ></Tabs.Tab>
+                      <Tabs.Tab
+                        value="TRANSIT"
+                        leftSection={<IconTrain />}
+                      ></Tabs.Tab>
+                    </Tabs.List>
+                  </Tabs>
+                </Center>
                 <Stack>
                   <UnstyledButton onClick={toggle}>
                     <Stack align="center" mt={30}>
@@ -435,4 +476,4 @@ function GoogleMaps() {
   );
 }
 
-export default GoogleMaps;
+export default GoogleMapsNewUi;

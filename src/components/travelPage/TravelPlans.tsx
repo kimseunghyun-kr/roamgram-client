@@ -28,6 +28,7 @@ import Header from "../Header/Header";
 import {
   IconArrowDown,
   IconArrowRight,
+  IconCoin,
   IconEdit,
   IconPhoto,
   IconPlus,
@@ -369,6 +370,18 @@ function TravelPlans() {
                   </HoverCard.Target>
                   <HoverCard.Dropdown>
                     <Text size="xs">Click here to check your schedules</Text>
+                  </HoverCard.Dropdown>
+                </HoverCard>
+                <HoverCard>
+                  <HoverCard.Target>
+                    <ActionIcon variant="white">
+                      <Link to={`/billing/travelID?id=${items.id}`}>
+                        <IconCoin size={26} color="black" />
+                      </Link>
+                    </ActionIcon>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown>
+                    <Text size="xs">Click here to track expenditure</Text>
                   </HoverCard.Dropdown>
                 </HoverCard>
                 <Menu>
