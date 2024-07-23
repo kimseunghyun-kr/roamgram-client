@@ -19,6 +19,10 @@ import {
   Checkbox,
   Card,
   Tabs,
+  Timeline,
+  TimelineItem,
+  Avatar,
+  ThemeIcon,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
@@ -26,6 +30,7 @@ import {
   IconArrowRight,
   IconBike,
   IconCar,
+  IconClock,
   IconMapPin,
   IconTrain,
   IconWalk,
@@ -287,24 +292,52 @@ function GoogleMapsNewUi() {
 
   return (
     <>
-      <Grid.Col span="auto">
-        <Container fluid h={225} style={{ alignContent: "center" }}>
-          <Stack justify="center" align="center" mt={35} gap="7" mb={12}>
-            <TextInput
-              w={310}
-              description="From"
-              ref={placeAutoCompleteRef}
-              leftSection={<IconMapPin color="green" />}
-            ></TextInput>
-            <Group>
-              <TextInput
-                w={310}
-                description="To"
-                ref={placeAutoCompleteRefDest}
-                leftSection={<IconMapPin color="red" />}
-              ></TextInput>
-              {/* <SimpleGrid cols={2}> */}
-              {/* <NativeSelect
+      <Grid.Col p={0} span="auto">
+        <Container fluid h={190}>
+          <Stack justify="center" align="center" mt={35} gap="xs">
+            <Timeline bulletSize={30}>
+              <TimelineItem
+                lineVariant="dashed"
+                bullet={
+                  <ThemeIcon
+                    variant="gradient"
+                    radius="xl"
+                    gradient={{ from: "teal", to: "lime", deg: 90 }}
+                  >
+                    <IconMapPin />
+                  </ThemeIcon>
+                }
+              >
+                <TextInput
+                  w={310}
+                  radius="lg"
+                  ref={placeAutoCompleteRef}
+                  placeholder="Enter Starting Location "
+                ></TextInput>
+              </TimelineItem>
+              <TimelineItem
+                lineVariant="dashed"
+                bullet={
+                  <ThemeIcon
+                    variant="gradient"
+                    radius="xl"
+                    gradient={{ from: "pink", to: "red", deg: 90 }}
+                  >
+                    <IconMapPin />
+                  </ThemeIcon>
+                }
+              >
+                <TextInput
+                  radius="lg"
+                  w={310}
+                  ref={placeAutoCompleteRefDest}
+                  placeholder="Enter Ending Location"
+                ></TextInput>
+              </TimelineItem>
+            </Timeline>
+
+            {/* <SimpleGrid cols={2}> */}
+            {/* <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="mode"
                 w={150}
@@ -316,13 +349,17 @@ function GoogleMapsNewUi() {
                   { label: "Transit", value: "TRANSIT" },
                 ]}
               ></NativeSelect> */}
-              <TimeInput
-                mt={19}
-                w={150}
-                value={moment(time, "HH:mm").format("HH:mm")}
-                onChange={(e) => setTime(e.currentTarget.value)}
-              ></TimeInput>
-            </Group>
+
+            <TimeInput
+              variant="unstyled"
+              leftSection={<IconClock size={17} />}
+              style={{ borderBottom: "1px solid" }}
+              mr="155"
+              radius="xl"
+              label="Depart At"
+              value={moment(time, "HH:mm").format("HH:mm")}
+              onChange={(e) => setTime(e.currentTarget.value)}
+            ></TimeInput>
             {/* </SimpleGrid> */}
           </Stack>
         </Container>
@@ -330,33 +367,37 @@ function GoogleMapsNewUi() {
         <Space h="md"></Space>
 
         <Container fluid>
-          <Stack justify="center" align="center">
-            <Text size="xl" fw="bold">
+          <Stack justify="center" align="center" gap="0">
+            <Text size="lg" fw="bold">
               {selectedPlace}
             </Text>
             {placeAutoCompleteRef?.current?.value !== "" &&
             placeAutoCompleteRefDest?.current?.value !== "" ? (
               <IconArrowRight />
             ) : null}
-            <Text size="xl" fw="bold">
+            <Text size="lg" fw="bold">
               {selectedPlaceDest}{" "}
             </Text>
           </Stack>
           <Center>
             <Group>
-              <Text c="gray" fs="italic">
-                Departing at: {time}
-              </Text>
-              <Text c="gray" fs="italic">
+              {/* <Text c="gray">
+                Departing at: <b>{time}</b>
+              </Text> */}
+              <Text c="gray">
                 Arrival at:{" "}
-                {arrivalTime ? moment(arrivalTime).format("HH:mm") : "null"}
+                {arrivalTime ? (
+                  <b>{moment(arrivalTime).format("HH:mm")}</b>
+                ) : (
+                  "null"
+                )}
               </Text>
             </Group>
           </Center>
           <br></br>
         </Container>
         <Divider />
-        <ScrollArea h={545}>
+        <ScrollArea h={570}>
           <Container>
             {leg ? (
               <>
@@ -398,14 +439,16 @@ function GoogleMapsNewUi() {
                         {" "}
                         {leg.duration?.text}
                       </Title>
-                      <Text style={{ fontSize: "25px", fontFamily: "roboto" }}>
+                      <Text style={{ fontSize: "20px", fontFamily: "roboto" }}>
                         {leg.distance?.text}
                       </Text>
-                      <Text c="#585E72">Click Here for Route</Text>
+                      <Text c="blue" style={{ fontSize: "14px" }}>
+                        Click for details
+                      </Text>
                     </Stack>
                   </UnstyledButton>
                   <Collapse in={opened}>
-                    <ScrollArea h={300}>
+                    <ScrollArea>
                       <Stack>
                         <Divider />
                         {leg.steps.map((step) => (
@@ -464,7 +507,7 @@ function GoogleMapsNewUi() {
           </Container>
         </ScrollArea>
       </Grid.Col>
-      <Grid.Col span={7}>
+      <Grid.Col span={8.5} pt={0} pl={3}>
         <Container
           fluid
           style={{ height: "100vh" }}
