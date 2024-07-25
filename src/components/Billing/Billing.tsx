@@ -35,11 +35,11 @@ function Billing() {
     { name: "Food and Dining", value: 0, color: "indigo.6" },
     { name: "Transportation", value: 0, color: "yellow.6" },
     { name: "Activities and Entertainment", value: 0, color: "teal.6" },
-    { name: "Accommodation", value: 100, color: "orange.6" },
-    { name: "Travel Insurance", value: 100, color: "blue.6" },
-    { name: "Souvenirs", value: 100, color: "green.6" },
-    { name: "Miscellaneous", value: 100, color: "red.6" },
-    { name: "Expenditures", value: 100, color: "gray.6" },
+    { name: "Accommodation", value: 0, color: "orange.6" },
+    { name: "Travel Insurance", value: 0, color: "blue.6" },
+    { name: "Souvenirs", value: 0, color: "green.6" },
+    { name: "Miscellaneous", value: 0, color: "red.6" },
+    { name: "Income Remaining", value: 0, color: "gray.6" },
   ]);
 
   const requestbody = {
@@ -88,6 +88,26 @@ function Billing() {
   const amountRef = useRef(null);
   const typeRef = useRef(null);
 
+  const setDonutData = () => {
+    const content = allMonetaryEvent?.content;
+    var eventData = data;
+    console.log("varData", eventData);
+    content.map((ev) => {
+      const description = ev.description;
+      console.log("val", eventData.find((ev) => ev.name === description).value);
+      console.log("ev", ev);
+      console.log("ev.val", ev.val);
+      // eventData.find((ev) => ev.name === description).value += ev.value;
+    });
+    // console.log("new eventData", eventData);
+    // return content.map((ev) => {
+    //   const description = ev.description;
+    //   return eventData.find((ev) => ev.name === description)
+    //     ? eventData.find((ev) => ev.name === description).value + ev.amount
+    //     : null;
+    // });
+  };
+
   const groupByDate = () => {
     const content = allMonetaryEvent?.content.sort((a, b) => {
       return a.timestamp < b.timestamp ? 1 : -1;
@@ -99,7 +119,7 @@ function Billing() {
         accumulator[date] = [];
       }
       accumulator[date].push(currentValue);
-      console.log("check", accumulator);
+      // console.log("check", accumulator);
       return accumulator;
     }, {});
   };
@@ -133,9 +153,9 @@ function Billing() {
     getAllExpenditures();
   }, []);
   const allMonetaryCard = () => {
-    const allMonetaryEventContent = allMonetaryEvent?.content.sort((a, b) => {
-      return a.timestamp < b.timestamp ? 1 : -1;
-    });
+    // const allMonetaryEventContent = allMonetaryEvent?.content.sort((a, b) => {
+    //   return a.timestamp < b.timestamp ? 1 : -1;
+    // });
     const sortedWithKey = groupByDate();
 
     return Object.keys(sortedWithKey).map((ev) => (
@@ -180,7 +200,7 @@ function Billing() {
         <Header />
       </header>
       <body>
-        <Button onClick={getAllExpenditures}>Test</Button>
+        <Button onClick={setDonutData}>Test</Button>
         <SimpleGrid cols={2}>
           <Stack align="center" justify="center" mt={140}>
             <Group gap="lg">
@@ -188,14 +208,10 @@ function Billing() {
                 data={data}
                 tooltipDataSource="segment"
                 size={350}
-                thickness={55}
+                thickness={35}
                 chartLabel={`$ ${income - expenditure}`}
-                styles={{ label: { fontSize: "35px" } }}
-                pieProps={{
-                  isAnimationActive: true,
-                  dataKey: "value",
-                  animationBegin: 100,
-                  animationDuration: 1000,
+                styles={{
+                  label: { fontSize: "35px", overflow: "hidden" },
                 }}
               />
             </Group>
