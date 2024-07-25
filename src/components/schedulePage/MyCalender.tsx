@@ -919,7 +919,7 @@ function MyCalender(props) {
                           amount: newAmount,
                           currency: currencyRef.current.value,
                           source: "string",
-                          description: typeRef.current.value,
+                          description: "Income",
                         };
 
                         await addIncome(requestBody);

@@ -39,7 +39,7 @@ function Billing() {
     { name: "Travel Insurance", value: 0, color: "blue.6" },
     { name: "Souvenirs", value: 0, color: "green.6" },
     { name: "Miscellaneous", value: 0, color: "red.6" },
-    { name: "Income Remaining", value: 0, color: "gray.6" },
+    { name: "Income", value: 0, color: "gray.6" },
   ]);
 
   const requestbody = {
@@ -88,26 +88,39 @@ function Billing() {
   const amountRef = useRef(null);
   const typeRef = useRef(null);
 
-  const setDonutData = () => {
+  const setDonutData = async () => {
     const content = allMonetaryEvent?.content;
-    var eventData = data;
+    var eventData = [...data];
     console.log("varData", eventData);
-    content.map((ev) => {
-      const description = ev.description;
-      console.log("val", eventData.find((ev) => ev.name === description).value);
-      console.log("ev", ev);
-      console.log("ev.val", ev.val);
-      // eventData.find((ev) => ev.name === description).value += ev.value;
-    });
-    // console.log("new eventData", eventData);
-    // return content.map((ev) => {
-    //   const description = ev.description;
-    //   return eventData.find((ev) => ev.name === description)
-    //     ? eventData.find((ev) => ev.name === description).value + ev.amount
-    //     : null;
-    // });
+
+    if (content) {
+      content.map((ev) => {
+        const description = ev.description;
+        // console.log("val", eventData.find((ev) => ev.name === description).value);
+        // console.log("ev", ev);
+        // console.log("ev.val", ev.amount);
+        console.log("ev", ev);
+        console.log("ye11s");
+        console.log(
+          "eeeeee",
+          eventData.find((ev) => ev.name === description)
+        );
+
+        eventData.find((ev) => ev.name === description).value += ev.amount;
+
+        // return content.map((ev) => {
+        //   const description = ev.description;
+        //   return eventData.find((ev) => ev.name === description)
+        //     ? eventData.find((ev) => ev.name === description).value + ev.amount
+        //     : null;
+        // });
+      });
+      console.log("newData", eventData);
+      await setData(eventData);
+    }
   };
 
+  console.log("ups,", data);
   const groupByDate = () => {
     const content = allMonetaryEvent?.content.sort((a, b) => {
       return a.timestamp < b.timestamp ? 1 : -1;
@@ -151,7 +164,9 @@ function Billing() {
   useEffect(() => {
     getAllIncome();
     getAllExpenditures();
+    setDonutData();
   }, []);
+
   const allMonetaryCard = () => {
     // const allMonetaryEventContent = allMonetaryEvent?.content.sort((a, b) => {
     //   return a.timestamp < b.timestamp ? 1 : -1;
@@ -172,7 +187,7 @@ function Billing() {
           {ev}
         </Text>
         {sortedWithKey[ev].map((schedules) => (
-          <Card shadow="xs" withBorder mb={8}>
+          <Card shadow="xs" withBorder mb={8} key={schedules.timestamp}>
             <Text c="gray" style={{ fontSize: "14px" }}>
               {moment.unix(schedules.timestamp).format("HH:mm")}
             </Text>
@@ -200,7 +215,7 @@ function Billing() {
         <Header />
       </header>
       <body>
-        <Button onClick={setDonutData}>Test</Button>
+        {/* <Button onClick={setDonutData}>Test</Button> */}
         <SimpleGrid cols={2}>
           <Stack align="center" justify="center" mt={140}>
             <Group gap="lg">
