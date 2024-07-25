@@ -1,0 +1,1 @@
+This folder is for pages that require manual loading of the google script as google script is loaded globally and is not isolated to components.

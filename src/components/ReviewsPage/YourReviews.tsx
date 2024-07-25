@@ -47,6 +47,7 @@ function YourReviews() {
     enabled: true,
   });
 
+  console.log(getTravelPlans);
   const fetchReviews = (travelPlanId, scheduleId, size) => {
     // const tpWithReviews = {};
     return fetch(

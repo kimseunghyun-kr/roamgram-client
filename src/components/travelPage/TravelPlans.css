@@ -1,0 +1,10 @@
+.create-plan-btn:hover{
+    transition: 300ms ease;
+    transform: scale(1.05);
+    background-color: orangered;
+}
+
+.travel-card:hover{
+    transition: 300ms ease-in;
+    background-color: #E1F9FF;
+}

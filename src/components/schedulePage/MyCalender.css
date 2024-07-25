@@ -2,69 +2,86 @@
     background-color:white;
     font-weight: 400;
     font-size: 12px;
-    color: #424E88;
+    color: #4A5167;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 35px;
     margin-right: 0px;
+  
 }
+
 
 
 .rbc-allday-cell{
     display: none;
 }
 
-
 .rbc-time-header-cell .rbc-today{
-    font-family: monospace;
-    background-color: #5C68AC !important;
+    font-family: Roboto;
+    size: 5px;
+    background-color: #0088E4;
     color: white;
     
     
 }
 
+.rbc-header + .rbc-header{
+    border-left: 0px;
+}
 
 
-.rbc-time-slot{
+.rbc-day-slot  .rbc-time-slot{
     display: flex;
     justify-content: center;
     align-items: center;
     color: #364379 ;
     font-size: 0.85em;
     font-weight: light;
+    border-top: 10px solid transparent;
   }
 
+.rbc-day-slot .rbc-event{
+    border: 0px transparent
+}
+
 .rbc-timeslot-group{
-    min-height: 60px;
+    min-height: 90px;
     width: auto;
+    
+    
 
 }
 
 .rbc-event{
-    width: 100%;
-    margin: 0;
-    padding: 0px;
-    background-color: #b9c7e29f  !important;
-    color: #364379  !important;
-    text-align: center !important;
+    margin: 2px auto; 
+    width: 95%;
+    align-items: center; /* Center content vertically */
+    justify-content: center; /* Center content horizontally */
+
     display: flex;
-    justify-content: center !important;
     height: 100%;
-    align-items: center !important;
     padding-top: 5px;
-    font-size: 13px;
-    border-radius: 0px;
-    border: none !important;
+    
+    border-radius: 10px;
+
 
 
     
 }
 
 
+.rbc-label{
+    font-size: 14px;
+    color: #656A7E;
+}
+
 .rbc-event-label{
-    font-size: 15px;
-    font-family: monospace;
+    padding-left: 10px;
+    font-size: 14px;
+    font-family: Roboto;
+    border-bottom: 1px solid #ffffffad;
+    margin-bottom: 7px;
     
 }
 
@@ -74,24 +91,49 @@
     
 }
 
+
+
 .rbc-toolbar-label {
-    font-size: 20px;
-    font-family: monospace;
-    color: #364379;
+    font-size: 18px;
+    font-family: Roboto;
+    color: black;
+
   }
 
-  
 
   .rbc-btn-group{
     font-size: 13px;
-    font-family: monospace;
+    font-family: Roboto;
     font-weight: bold;
   }
 
   .rbc-event-content{
-    font-family: monospace;
-    font-size: 15px; 
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px; 
+    font-weight: 400;
+    padding-left: 10px;
+}
 
+.rbc-button-link{
+    margin-top: 6px;
+    font-family: Roboto;
+}
+
+.rbc-current .rbc-button-link{
+    font-weight: 400;
+    background-color: #0088E4;
+    border-radius: 40%;
+    padding-left: 4px;
+    padding-right: 4px;
+    padding-top: 1px;
+    color:white
+}
+
+
+.update-content:hover{
+    background-color: green;
+    color: white;
+    transition: 500ms ease;
 }
 
 

@@ -2,6 +2,7 @@ import "@bitnoi.se/react-scheduler/dist/style.css";
 import "@mantine/carousel/styles.css";
 import "@mantine/core/styles.css";
 import "@mantine/dates/styles.css";
+import "@mantine/charts/styles.css";
 import { useJsApiLoader } from "@react-google-maps/api";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { Route, Routes, useLocation } from "react-router-dom";
@@ -17,12 +18,16 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import ReviewsPage from "./components/ReviewsPage/ReviewsPage.tsx";
 import { AuthProvider } from "./components/Login/AuthContext.tsx";
 import DetailedReview from "./components/ReviewsPage/DetailedReview.tsx";
-import TravelPlansNewUI from "./components/travelPage/TravelPlansNewUI.tsx";
+import TravelPlansNewUI from "./components/travelPage/TravelPlans.tsx";
 import ConfirmEmail from "./components/Login/ConfirmEmail.tsx";
 import { AnimatePresence, motion as m } from "framer-motion";
 import SignUpPage from "./components/Login/SignUpPage.tsx";
 import { Center, Container, Flex, Loader, Stack, Text } from "@mantine/core";
 import YourReviews from "./components/ReviewsPage/YourReviews.tsx";
+import ReviewsPageDebug from "./debug/ReviewPageDebug.tsx";
+import SchedulePageMapDebug from "./debug/SchedulePageMapDebug.tsx";
+import Billing from "./components/Billing/Billing.tsx";
+import SchedulePageMapNewUi from "./components/schedulePage/SchedulePageMapNewUi.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -39,6 +44,7 @@ const RoutesComponent = () => (
     <Route path="/reviews/id" element={<DetailedReview />} />
     <Route path="/signup" element={<SignUpPage />}></Route>
     <Route path="/your-reviews" element={<YourReviews />}></Route>
+    <Route path="/billing/travelID" element={<Billing />} />
   </Routes>
 );
 
@@ -58,6 +64,8 @@ function App() {
           <AnimatePresence key={location.pathname}>
             <AuthProvider>
               <RoutesComponent />
+              {/* <Billing /> */}
+              {/* <SchedulePageMapNewUi /> */}
             </AuthProvider>
           </AnimatePresence>
         </div>

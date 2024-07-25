@@ -73,7 +73,7 @@ function HomePage() {
       </Card>
     </Carousel.Slide>
   ));
-  const autoplay = useRef(Autoplay({ delay: 2000 }));
+  const autoplay = useRef(Autoplay({ delay: 10000 }));
 
   ///Explore Nearby Locations///
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -439,14 +439,29 @@ function HomePage() {
               }}
             >
               <Group mt={35}>
-                <Chip value="food"> Food </Chip>
-                <Chip value="shopping_mall">Mall</Chip>
-                <Chip value="tourist_attraction">Tourist attractions</Chip>
-                <Chip value="restaurant">Restaurants</Chip>
+                <Chip value="food" variant="outline">
+                  {" "}
+                  Food{" "}
+                </Chip>
+                <Chip value="shopping_mall" variant="outline">
+                  Mall
+                </Chip>
+                <Chip value="tourist_attraction" variant="outline">
+                  Tourist attractions
+                </Chip>
+                <Chip value="restaurant" variant="outline">
+                  Restaurants
+                </Chip>
 
-                <Chip value="supermarket">Supermarket</Chip>
-                <Chip value="parking">Parking</Chip>
-                <Chip value="ath">ATM</Chip>
+                <Chip value="supermarket" variant="outline">
+                  Supermarket
+                </Chip>
+                <Chip value="parking" variant="outline">
+                  Parking
+                </Chip>
+                <Chip value="atm" variant="outline">
+                  ATM
+                </Chip>
               </Group>
             </Chip.Group>
           </SimpleGrid>
@@ -456,7 +471,8 @@ function HomePage() {
             ref={mapRef}
             fluid
             h={500}
-            w={1370}
+            w={1390}
+            style={{ borderRadius: "20px" }}
           ></Container>
         </Container>
         {/* <Container fluid h={350}>

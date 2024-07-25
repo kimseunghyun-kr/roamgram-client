@@ -6,6 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
+cypress.env.json
 
 node_modules
 dist
@@ -16,6 +17,7 @@ dist-ssr
 .vscode/*
 !.vscode/extensions.json
 .idea
+.cypress.env.json
 .DS_Store
 *.suo
 *.ntvs*
@@ -23,3 +25,4 @@ dist-ssr
 *.sln
 *.sw?
 *.env
+*.env.json

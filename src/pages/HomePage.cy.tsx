@@ -30,8 +30,6 @@ describe("<HomePage />", () => {
     cy.get('[aria-label="unauth-card"]').should("exist").contains("testcase");
   });
 
-  it("css test", () => {});
-
   it("is able to explore nearby locations", () => {
     cy.get(".map-container-home").should("exist");
     cy.wait(7000);

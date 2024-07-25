@@ -18,15 +18,28 @@ import {
   CheckIcon,
   Checkbox,
   Card,
+  Tabs,
+  Timeline,
+  TimelineItem,
+  Avatar,
+  ThemeIcon,
 } from "@mantine/core";
 import { TimeInput } from "@mantine/dates";
 import { useDisclosure } from "@mantine/hooks";
-import { IconArrowRight, IconMapPin } from "@tabler/icons-react";
+import {
+  IconArrowRight,
+  IconBike,
+  IconCar,
+  IconClock,
+  IconMapPin,
+  IconTrain,
+  IconWalk,
+} from "@tabler/icons-react";
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 import parse from "parse-duration";
 
-function GoogleMaps() {
+function GoogleMapsNewUi() {
   //for origin textbox
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [autoComplete, setAutoComplete] =
@@ -199,8 +212,9 @@ function GoogleMaps() {
   ) {
     const originID = autoComplete?.getPlace()?.place_id;
     const destID = autoCompleteDest?.getPlace()?.place_id;
-    const selectedMode = (document.getElementById("mode") as HTMLInputElement)
-      .value as keyof typeof google.maps.TravelMode;
+    // const selectedMode = (document.getElementById("mode") as HTMLInputElement)
+    //   .value as keyof typeof google.maps.TravelMode;
+    const selectedMode = travelMethod;
     console.log(originID);
     var request = {
       origin: { placeId: originID },
@@ -231,11 +245,11 @@ function GoogleMaps() {
 
     // Assuming the IDs are fetched or defined correctly outside of this block
     console.log("Directions Service running now!");
-    const travelMethodString = (
-      document.getElementById("mode") as HTMLInputElement
-    ).value;
+    // const travelMethodString = (
+    //   document.getElementById("mode") as HTMLInputElement
+    // ).value;
     if (originPositionID && destPositionID) {
-      console.log(travelMethodString);
+      //   console.log(travelMethodString);
       console.log("Complete locations");
       if (directionsService && directionsRenderer) {
         calculateRoute(directionsService, directionsRenderer);
@@ -278,24 +292,56 @@ function GoogleMaps() {
 
   return (
     <>
-      <Grid.Col span="auto">
-        <Container fluid h={225} style={{ alignContent: "center" }}>
-          <Stack justify="center" align="center" mt={35} gap="7" mb={12}>
-            <TextInput
-              w={310}
-              description="From"
-              ref={placeAutoCompleteRef}
-              leftSection={<IconMapPin color="green" />}
-            ></TextInput>
+      <Grid.Col
+        p={0}
+        span="auto"
+        style={{ borderRight: "1px solid rgba(128, 128, 128, 0.5)" }}
+      >
+        <Container fluid h={190}>
+          <Stack justify="center" align="center" mt={35} gap="xs">
+            <Timeline bulletSize={30}>
+              <TimelineItem
+                lineVariant="dashed"
+                bullet={
+                  <ThemeIcon
+                    variant="gradient"
+                    radius="xl"
+                    gradient={{ from: "teal", to: "lime", deg: 90 }}
+                  >
+                    <IconMapPin />
+                  </ThemeIcon>
+                }
+              >
+                <TextInput
+                  w={310}
+                  radius="lg"
+                  ref={placeAutoCompleteRef}
+                  placeholder="Enter Starting Location "
+                ></TextInput>
+              </TimelineItem>
+              <TimelineItem
+                lineVariant="dashed"
+                bullet={
+                  <ThemeIcon
+                    variant="gradient"
+                    radius="xl"
+                    gradient={{ from: "pink", to: "red", deg: 90 }}
+                  >
+                    <IconMapPin />
+                  </ThemeIcon>
+                }
+              >
+                <TextInput
+                  radius="lg"
+                  w={310}
+                  ref={placeAutoCompleteRefDest}
+                  placeholder="Enter Ending Location"
+                ></TextInput>
+              </TimelineItem>
+            </Timeline>
 
-            <TextInput
-              w={310}
-              description="To"
-              ref={placeAutoCompleteRefDest}
-              leftSection={<IconMapPin color="red" />}
-            ></TextInput>
-            <SimpleGrid cols={2}>
-              <NativeSelect
+            {/* <SimpleGrid cols={2}> */}
+            {/* <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="mode"
                 w={150}
@@ -306,50 +352,88 @@ function GoogleMaps() {
                   { label: "Bicycling", value: "BICYCLING" },
                   { label: "Transit", value: "TRANSIT" },
                 ]}
-              ></NativeSelect>
-              <TimeInput
-                mt={19}
-                w={150}
-                value={moment(time, "HH:mm").format("HH:mm")}
-                onChange={(e) => setTime(e.currentTarget.value)}
-              ></TimeInput>
-            </SimpleGrid>
+              ></NativeSelect> */}
+
+            <TimeInput
+              variant="unstyled"
+              leftSection={<IconClock size={17} />}
+              style={{ borderBottom: "1px solid" }}
+              mr="155"
+              radius="xl"
+              label="Depart At"
+              value={moment(time, "HH:mm").format("HH:mm")}
+              onChange={(e) => setTime(e.currentTarget.value)}
+            ></TimeInput>
+            {/* </SimpleGrid> */}
           </Stack>
         </Container>
         <Divider size="xs"></Divider>
-        <Space h="md"></Space>
-
-        <Container fluid>
-          <Stack justify="center" align="center">
-            <Text size="xl" fw="bold">
+        {/* <Space h="md"></Space> */}
+        <Card shadow="sm">
+          <Stack justify="center" align="center" gap="0">
+            <Text size="lg" fw="bold">
               {selectedPlace}
             </Text>
             {placeAutoCompleteRef?.current?.value !== "" &&
             placeAutoCompleteRefDest?.current?.value !== "" ? (
               <IconArrowRight />
             ) : null}
-            <Text size="xl" fw="bold">
+            <Text size="lg" fw="bold">
               {selectedPlaceDest}{" "}
             </Text>
           </Stack>
           <Center>
             <Group>
-              <Text c="gray" fs="italic">
-                Departing at: {time}
-              </Text>
-              <Text c="gray" fs="italic">
+              {/* <Text c="gray">
+                Departing at: <b>{time}</b>
+              </Text> */}
+              <Text c="gray">
                 Arrival at:{" "}
-                {arrivalTime ? moment(arrivalTime).format("HH:mm") : "null"}
+                {arrivalTime ? (
+                  <b>{moment(arrivalTime).format("HH:mm")}</b>
+                ) : (
+                  "null"
+                )}
               </Text>
             </Group>
           </Center>
-          <br></br>
-        </Container>
-        <Divider />
-        <ScrollArea h={545}>
+        </Card>
+
+        <ScrollArea mt={10} h={570}>
           <Container>
             {leg ? (
               <>
+                <Center mt={7}>
+                  <Tabs
+                    variant="pills"
+                    color="indigo"
+                    radius="lg"
+                    defaultValue="DRIVING"
+                    onChange={(e) => {
+                      setTravelMethod(e);
+                    }}
+                  >
+                    <Tabs.List>
+                      <Tabs.Tab
+                        value="DRIVING"
+                        leftSection={<IconCar />}
+                      ></Tabs.Tab>
+
+                      <Tabs.Tab
+                        value="WALKING"
+                        leftSection={<IconWalk />}
+                      ></Tabs.Tab>
+                      <Tabs.Tab
+                        value="BICYCLING"
+                        leftSection={<IconBike />}
+                      ></Tabs.Tab>
+                      <Tabs.Tab
+                        value="TRANSIT"
+                        leftSection={<IconTrain />}
+                      ></Tabs.Tab>
+                    </Tabs.List>
+                  </Tabs>
+                </Center>
                 <Stack>
                   <UnstyledButton onClick={toggle}>
                     <Stack align="center" mt={30}>
@@ -357,14 +441,17 @@ function GoogleMaps() {
                         {" "}
                         {leg.duration?.text}
                       </Title>
-                      <Text style={{ fontSize: "25px", fontFamily: "roboto" }}>
+                      <Text style={{ fontSize: "20px", fontFamily: "roboto" }}>
                         {leg.distance?.text}
                       </Text>
-                      <Text c="#585E72">Click Here for Route</Text>
+                      <Text c="blue" style={{ fontSize: "14px" }}>
+                        Click for details
+                      </Text>
                     </Stack>
                   </UnstyledButton>
+                  <Divider />
                   <Collapse in={opened}>
-                    <ScrollArea h={300}>
+                    <ScrollArea h={450}>
                       <Stack>
                         <Divider />
                         {leg.steps.map((step) => (
@@ -396,14 +483,18 @@ function GoogleMaps() {
               </>
             ) : null}
           </Container>
-          <Divider></Divider>
+
           <Container>
             {routes.length > 1 ? (
               <>
                 <Center>
-                  <Title style={{ fontFamily: "roboto" }} p={15}>
+                  <Text
+                    fw={900}
+                    style={{ fontFamily: "roboto", fontSize: "30px" }}
+                    p={15}
+                  >
                     Other Routes
-                  </Title>
+                  </Text>
                 </Center>
                 <Center>
                   <Group>
@@ -423,7 +514,7 @@ function GoogleMaps() {
           </Container>
         </ScrollArea>
       </Grid.Col>
-      <Grid.Col span={7}>
+      <Grid.Col span={8.5} pt={0} pl={3}>
         <Container
           fluid
           style={{ height: "100vh" }}
@@ -435,4 +526,4 @@ function GoogleMaps() {
   );
 }
 
-export default GoogleMaps;
+export default GoogleMapsNewUi;

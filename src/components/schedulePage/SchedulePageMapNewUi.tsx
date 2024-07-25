@@ -53,7 +53,7 @@ interface scheduleGoogle {
   longitude: number;
 }
 
-function SchedulePageMap(
+function SchedulePageMapNewUi(
   {
     /*props*/
   }
@@ -542,7 +542,7 @@ function SchedulePageMap(
           transition={{ duration: 0.6 }}
           exit={{ opacity: 1 }}
         >
-          <Grid mt={20} w={1950}>
+          <Grid mt={20}>
             <Grid.Col span={5}>
               <Stack justify="center">
                 <Container w={400}>
@@ -696,75 +696,73 @@ function SchedulePageMap(
                     Click to view Map
                   </Button>
                 </Container>
-                <Container fluid>
-                  <Collapse h={420} in={collapsed}>
-                    <Stack justify="center">
-                      <Container h={350} w={600} ref={mapRef}></Container>
-                      <Container>
-                        <Stack justify="center" gap="xs">
-                          <Group>
-                            <TextInput
-                              w={350}
-                              radius="lg"
-                              placeholder="Input Start Location"
-                              ref={autoCompleteStartRef}
-                              disabled={keepStart}
-                              leftSection={
-                                <IconMapPin
-                                  size={"15"}
-                                  color="green"
-                                ></IconMapPin>
-                              }
-                              rightSectionPointerEvents="all"
-                              rightSection={
-                                <Tooltip label="Press checkbox to Keep location on Map">
-                                  <Checkbox
-                                    mr={15}
-                                    checked={keepStart}
-                                    onChange={(e) => {
-                                      setKeepStart(e.currentTarget.checked);
-                                      keepStart;
-                                    }}
-                                  />
-                                </Tooltip>
-                              }
-                            ></TextInput>
-                            <NativeSelect
-                              radius="lg"
-                              id="mode"
-                              onChange={(e) => setTravelMethod(e.target.value)}
-                              w={150}
-                              data={[
-                                { label: "Driving", value: "DRIVING" },
-                                { label: "Walking", value: "WALKING" },
-                                { label: "Bicycling", value: "BICYCLING" },
-                                { label: "Transit", value: "TRANSIT" },
-                              ]}
-                            ></NativeSelect>
-                          </Group>
-                          <Group>
-                            <Text>
-                              {routes[0]
-                                ? `Distance: ` +
-                                  routes[0]?.legs[0]?.distance?.text
-                                : null}
-                            </Text>
-                            <Text>
-                              {routes[0]
-                                ? `Distance: ` +
-                                  routes[0]?.legs[0]?.duration?.text
-                                : null}
-                            </Text>
-                          </Group>
-                        </Stack>
-                      </Container>
-                    </Stack>
-                  </Collapse>
-                </Container>
+                <Collapse h={450} in={collapsed}>
+                  <Stack justify="center">
+                    <Container h={350} w={600} ref={mapRef}></Container>
+                    <Container>
+                      <Stack justify="center" gap="xs">
+                        <Group>
+                          <TextInput
+                            w={350}
+                            radius="lg"
+                            placeholder="Input Start Location"
+                            ref={autoCompleteStartRef}
+                            disabled={keepStart}
+                            leftSection={
+                              <IconMapPin
+                                size={"15"}
+                                color="green"
+                              ></IconMapPin>
+                            }
+                            rightSectionPointerEvents="all"
+                            rightSection={
+                              <Tooltip label="Press checkbox to Keep location on Map">
+                                <Checkbox
+                                  mr={15}
+                                  checked={keepStart}
+                                  onChange={(e) => {
+                                    setKeepStart(e.currentTarget.checked);
+                                    keepStart;
+                                  }}
+                                />
+                              </Tooltip>
+                            }
+                          ></TextInput>
+                          <NativeSelect
+                            radius="lg"
+                            id="mode"
+                            onChange={(e) => setTravelMethod(e.target.value)}
+                            w={150}
+                            data={[
+                              { label: "Driving", value: "DRIVING" },
+                              { label: "Walking", value: "WALKING" },
+                              { label: "Bicycling", value: "BICYCLING" },
+                              { label: "Transit", value: "TRANSIT" },
+                            ]}
+                          ></NativeSelect>
+                        </Group>
+                        <Group>
+                          <Text>
+                            {routes[0]
+                              ? `Distance: ` +
+                                routes[0]?.legs[0]?.distance?.text
+                              : null}
+                          </Text>
+                          <Text>
+                            {routes[0]
+                              ? `Distance: ` +
+                                routes[0]?.legs[0]?.duration?.text
+                              : null}
+                          </Text>
+                        </Group>
+                      </Stack>
+                    </Container>
+                  </Stack>
+                </Collapse>
               </Stack>
             </Grid.Col>
             <Grid.Col span={7}>
-              <Center w={1000} mt={45}>
+              <Center w={1000} mt={50}>
                 <MyCalender
                   event={event}
                   setEvents={setEvent}
@@ -781,4 +779,4 @@ function SchedulePageMap(
   );
 }
 
-export default SchedulePageMap;
+export default SchedulePageMapNewUi;
