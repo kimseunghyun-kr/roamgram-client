@@ -1,8 +1,8 @@
-export async function allMonetaryEvents(travelPlanId: string) {
+export async function allIncome(travelPlanId: string) {
   const res = await fetch(
     `${
       import.meta.env.VITE_APP_API_URL
-    }/api/monetary/allMonetaryEvents?travelPlanId=${travelPlanId}&pageNumber=0&pageSize=1000`,
+    }/api/monetary/allIncome?travelPlanId=${travelPlanId}&pageNumber=0&pageSize=1000`,
     {
       method: "GET",
       headers: {
