@@ -292,7 +292,11 @@ function GoogleMapsNewUi() {
 
   return (
     <>
-      <Grid.Col p={0} span="auto">
+      <Grid.Col
+        p={0}
+        span="auto"
+        style={{ borderRight: "1px solid rgba(128, 128, 128, 0.5)" }}
+      >
         <Container fluid h={190}>
           <Stack justify="center" align="center" mt={35} gap="xs">
             <Timeline bulletSize={30}>
@@ -364,9 +368,8 @@ function GoogleMapsNewUi() {
           </Stack>
         </Container>
         <Divider size="xs"></Divider>
-        <Space h="md"></Space>
-
-        <Container fluid>
+        {/* <Space h="md"></Space> */}
+        <Card shadow="sm">
           <Stack justify="center" align="center" gap="0">
             <Text size="lg" fw="bold">
               {selectedPlace}
@@ -394,10 +397,9 @@ function GoogleMapsNewUi() {
               </Text>
             </Group>
           </Center>
-          <br></br>
-        </Container>
-        <Divider />
-        <ScrollArea h={570}>
+        </Card>
+
+        <ScrollArea mt={10} h={570}>
           <Container>
             {leg ? (
               <>
@@ -447,8 +449,9 @@ function GoogleMapsNewUi() {
                       </Text>
                     </Stack>
                   </UnstyledButton>
+                  <Divider />
                   <Collapse in={opened}>
-                    <ScrollArea>
+                    <ScrollArea h={450}>
                       <Stack>
                         <Divider />
                         {leg.steps.map((step) => (
@@ -480,14 +483,18 @@ function GoogleMapsNewUi() {
               </>
             ) : null}
           </Container>
-          <Divider></Divider>
+
           <Container>
             {routes.length > 1 ? (
               <>
                 <Center>
-                  <Title style={{ fontFamily: "roboto" }} p={15}>
+                  <Text
+                    fw={900}
+                    style={{ fontFamily: "roboto", fontSize: "30px" }}
+                    p={15}
+                  >
                     Other Routes
-                  </Title>
+                  </Text>
                 </Center>
                 <Center>
                   <Group>

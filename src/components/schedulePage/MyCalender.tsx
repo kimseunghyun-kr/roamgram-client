@@ -1,6 +1,11 @@
 import {
+  ActionIcon,
+  Avatar,
+  Box,
   Button,
+  Card,
   Center,
+  CloseButton,
   Container,
   Divider,
   Group,
@@ -9,23 +14,31 @@ import {
   Input,
   Modal,
   NativeSelect,
+  NumberInput,
   Rating,
   ScrollArea,
   Space,
   Stack,
   Tabs,
   Text,
+  TextInput,
   Textarea,
+  Title,
   UnstyledButton,
 } from "@mantine/core";
 import {
+  IconAlignBoxBottomCenter,
+  IconArrowLeft,
+  IconArrowRight,
+  IconCoin,
   IconDirections,
   IconFileDescription,
+  IconMoneybag,
   IconPencil,
 } from "@tabler/icons-react";
 import moment from "moment";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { Calendar, momentLocalizer } from "react-big-calendar";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Calendar, momentLocalizer, ToolbarProps } from "react-big-calendar";
 import withDragAndDrop from "react-big-calendar/lib/addons/dragAndDrop";
 import "react-big-calendar/lib/addons/dragAndDrop/styles.css";
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -36,6 +49,10 @@ import { Link } from "react-router-dom";
 import { useForm } from "@mantine/form";
 import { SimpleReview } from "../ReviewsPage/SimpleReview";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { scheduleMonetaryEvents } from "../hooks/scheduleMonetaryEvents";
+import { addIncome } from "../hooks/addIncome";
+import { addExpenditure } from "../hooks/addExpenditure";
+import { deleteMonetaryEvent } from "../hooks/deleteMonetaryEvent";
 
 //must set DND outside or it keeps re-rendering fyi!
 const DnDCalendar = withDragAndDrop(Calendar);
@@ -485,24 +502,203 @@ function MyCalender(props) {
     return htmlVersion;
   };
 
+  const CustomToolbar = ({ label, onNavigate, onView }) => {
+    return (
+      <div>
+        <span>
+          <Group justify="space-between" mb={10}>
+            <Group gap="6">
+              <Button
+                onClick={() => onNavigate("TODAY")}
+                type="button"
+                variant="outline"
+                size="sm"
+                radius="xl"
+                color="#A9ADB9"
+                fw="normal"
+                style={{ color: "#585E72", fontFamily: "roboto" }}
+              >
+                Today
+              </Button>
+              <ActionIcon
+                size="lg"
+                radius="xl"
+                variant="outline"
+                color="#A9ADB9"
+                onClick={() => onNavigate("PREV")}
+              >
+                <IconArrowLeft color="gray" size={20} />
+              </ActionIcon>
+              <ActionIcon
+                variant="outline"
+                color="#A9ADB9"
+                size="lg"
+                radius="xl"
+                onClick={() => onNavigate("NEXT")}
+              >
+                <IconArrowRight color="gray" size={20} />
+              </ActionIcon>
+              <Space w={26} />
+              <Text
+                className="rbc-toolbar-label"
+                fw="light"
+                style={{ fontFamily: "monsteratt", fontSize: "25px" }}
+              >
+                {label}
+              </Text>
+            </Group>
+            <Group>
+              {/* <button type="button" onClick={() => onView("month")}>
+                Month
+              </button>
+              <button type="button" onClick={() => onView("week")}>
+                Week
+              </button>
+              <button type="button" onClick={() => onView("day")}>
+                Day
+              </button> */}
+              <NativeSelect
+                variant="unstyled"
+                fw="light"
+                styles={{
+                  input: { fontSize: "25px", fontFamily: "monsteratt" },
+                }}
+                data={[
+                  { label: "Month", value: "month" },
+                  { label: "Week", value: "week" },
+                  { label: "Day", value: "day" },
+                ]}
+                onChange={(e) => onView(e.currentTarget.value)}
+              ></NativeSelect>
+            </Group>
+          </Group>
+        </span>
+      </div>
+    );
+  };
+
+  const pastelColors = [
+    "#09B8FF", // Pastel Red
+    "#ff70a6", // Pastel Orange
+    "#ff9770", // Pastel Yellow
+    "#FFB01B", // Pastel Green
+    "#7C56DE", // Pastel Blue
+  ];
+
+  const customEventStyle = (event, index) => {
+    const style = {
+      backgroundColor: pastelColors[index % 5],
+    };
+    return { style };
+  };
+
+  const customEventStyleWrapper = (event, start, end, isSelected) => {
+    const index = props.event.findIndex((e) => e.id === event.id);
+
+    return customEventStyle(event, index);
+  };
+
+  const supportedCurrencies = [
+    "USD", // US Dollar
+    "SGD", // Singapore Dollar
+    "EUR", // Euro
+    "GBP", // British Pound
+    "JPY", // Japanese Yen
+    "AUD", // Australian Dollar
+    "CAD", // Canadian Dollar
+    "CHF", // Swiss Franc
+    "CNY", // Chinese Yuan
+    "HKD", // Hong Kong Dollar
+  ];
+  const typeExpense = [
+    "Food and Dining",
+    "Activities and Entertainment",
+    "Transportation",
+    "Accommodation",
+    "Travel Insurance",
+    "Souvenirs",
+    "Miscellaneous",
+  ];
+
+  const amountRef = useRef(null);
+  const currencyRef = useRef(null);
+  const typeRef = useRef(null);
+
+  const {
+    data: getScheduleMonetaryEvents,
+    refetch: refetchScheduleMonetaryEvents,
+  } = useQuery({
+    queryKey: ["schedule-monetary"],
+    queryFn: async () => await scheduleMonetaryEvents(eventID),
+    enabled: !!eventID,
+  });
+  useEffect(() => {
+    if (eventID) {
+      refetchScheduleMonetaryEvents();
+    }
+  }, [eventID]);
+
+  const monetaryCards = () => {
+    const sortedScheduleMonetaryEvents = getScheduleMonetaryEvents.content.sort(
+      (a, b) => {
+        return a.timestamp < b.timestamp ? 1 : -1;
+      }
+    );
+    return sortedScheduleMonetaryEvents.map((ev) => (
+      <Card withBorder mt={5}>
+        <Group justify="space-between">
+          <Text c="gray" style={{ fontSize: "12px" }}>
+            {moment.unix(ev.timestamp).format("HH:mm")}
+          </Text>
+          <CloseButton
+            onClick={() => {
+              console.log(ev.id);
+              deleteMonetaryEvent(ev.id);
+              refetchScheduleMonetaryEvents();
+            }}
+          />
+        </Group>
+        <Text style={{ fontSize: "21px", fontWeight: "lighter" }}>
+          {ev.description}
+        </Text>
+        {ev.type === "income" ? (
+          <Text fw="bold" style={{ fontSize: "14px" }} c="darkgreen">
+            {`+ ${ev.amount} ${ev.currency}`}
+          </Text>
+        ) : (
+          <Text fw="bold" style={{ fontSize: "14px" }} c="red">
+            {`- ${ev.amount} ${ev.currency}`}
+          </Text>
+        )}
+      </Card>
+    ));
+  };
   return (
     <>
       <DnDCalendar
         selectable //
+        eventPropGetter={customEventStyleWrapper}
         onEventDrop={moveEvent}
         onEventResize={resizeEvent}
         localizer={localizer}
         events={props.event}
+        components={{
+          toolbar: CustomToolbar,
+        }}
         startAccessor="travelStartTimeEstimate"
         endAccessor="travelDepartTimeEstimate"
         titleAccessor="name"
         //resourceIdAccessor="place: id"
-        style={{ height: 500, width: "100%" }}
-        defaultView="week"
+        //original height is 500
+        style={{ height: 750, width: "100%" }}
+        defaultView="month"
         views={["month", "week", "day"]}
         formats={{
           dayFormat: (date) => {
-            return moment(date).format("Do dddd");
+            return moment(date).format("ddd D ");
+          },
+          timeGutterFormat: (data) => {
+            return moment(data).format("HH:mm");
           },
         }}
         onSelectEvent={(e) => {
@@ -510,9 +706,12 @@ function MyCalender(props) {
           setEventID(e.id);
         }}
       />
+
       <Modal
         size="auto"
         opened={opened}
+        size="40%"
+        radius="lg"
         onClose={() => {
           setOpened(false);
           setRating(null);
@@ -529,6 +728,8 @@ function MyCalender(props) {
                 Description
               </Tabs.Tab>
               <Tabs.Tab value="reviews">Reviews</Tabs.Tab>
+
+              <Tabs.Tab value="billing">Expenditure</Tabs.Tab>
               <Tabs.Tab
                 value="directions"
                 leftSection={<IconDirections size={15} color="gray" />}
@@ -543,26 +744,47 @@ function MyCalender(props) {
               </Tabs.Tab>
             </Tabs.List>
             <Tabs.Panel mt={10} value="description">
+              <Text style={{ fontSize: "23px" }} mb={5}>
+                {" "}
+                Your Description
+              </Text>
+              <Divider mb={15} />
               {modalActivityDescription.description ? (
                 <Text>{modalActivityDescription.description}</Text>
               ) : (
-                <Text>Empty Description</Text>
+                <Text>No Description inputted</Text>
               )}
             </Tabs.Panel>
             <Tabs.Panel mt={10} value="reviews">
               <Stack align="center">
                 {review ? (
                   <>
-                    <Image w={350} h="auto" src={review.photo} />
-                    <Divider w={350} />
-                    <Text>{review.isOpen}</Text>
-                    <Divider w={350} />
-                    <a href={review.website}>{review.website}</a>
-                    <Divider w={350} />
-                    <Text>{showOpeningHours()}</Text>
+                    {review.photo && (
+                      <>
+                        <Image w={350} h="auto" src={review.photo} />
+                        <Divider w={350} />
+                      </>
+                    )}
+                    {review.isOpen && (
+                      <>
+                        <Text>{review.isOpen}</Text>
+                        <Divider w={350} />
+                      </>
+                    )}
+                    {review.website && (
+                      <>
+                        <a href={review.website}>{review.website}</a>
+                        <Divider w={350} />
+                      </>
+                    )}
+                    {review.opening_period && (
+                      <>
+                        <Text>{showOpeningHours()}</Text>
+                        <Divider w={350} />
+                      </>
+                    )}
                   </>
                 ) : null}
-                <Divider w={350} />
                 <Text>Want to leave a short review?</Text>
                 <form
                   onSubmit={form.onSubmit((values) =>
@@ -627,12 +849,130 @@ function MyCalender(props) {
                 </Link>
               </Stack>
             </Tabs.Panel>
+            <Tabs.Panel mt={10} value="billing">
+              <Center mt={35}>
+                <Card withBorder w={400}>
+                  <Group justify="space-between">
+                    <Group>
+                      <Avatar size={24}>
+                        <IconMoneybag />
+                      </Avatar>
+                      <Text c="#4A5167" size="13px">
+                        Amount
+                      </Text>
+                    </Group>
+                    <NumberInput
+                      decimalScale={2}
+                      variant="unstyled"
+                      placeholder="Enter Amount Here"
+                      prefix="$ "
+                      ref={amountRef}
+                      styles={{ input: { textAlign: "right" } }}
+                    ></NumberInput>
+                  </Group>
+                  <Divider mt={5} />
 
+                  <Group justify="space-between">
+                    <Group>
+                      <Avatar size={24}>
+                        <IconCoin />
+                      </Avatar>
+                      <Text c="#4A5167" size="13px">
+                        Currency
+                      </Text>
+                    </Group>
+                    <NativeSelect
+                      ref={currencyRef}
+                      variant="unstyled"
+                      data={supportedCurrencies}
+                    />
+                  </Group>
+                  <Divider mt={5} />
+                  <Group justify="space-between">
+                    <Group>
+                      <Avatar size={24}>
+                        <IconAlignBoxBottomCenter />
+                      </Avatar>
+                      <Text c="#4A5167" size="13px">
+                        Type
+                      </Text>
+                    </Group>
+                    <NativeSelect
+                      ref={typeRef}
+                      styles={{ input: { textAlign: "right" } }}
+                      variant="unstyled"
+                      data={typeExpense}
+                    />
+                  </Group>
+                  <Group gap="xs" mt={20} justify="center">
+                    <Button
+                      w={150}
+                      radius="xl"
+                      variant="outline"
+                      onClick={async () => {
+                        const newAmount = parseFloat(
+                          amountRef.current.value.replace(`$ `, "")
+                        );
+                        const requestBody = {
+                          id: props.travelID,
+                          parentScheduleId: eventID,
+                          amount: newAmount,
+                          currency: currencyRef.current.value,
+                          source: "string",
+                          description: typeRef.current.value,
+                        };
+
+                        await addIncome(requestBody);
+                        refetchScheduleMonetaryEvents();
+                      }}
+                    >
+                      Add Income
+                    </Button>
+                    <Button
+                      w={150}
+                      radius="xl"
+                      variant="outline"
+                      color="red"
+                      onClick={async () => {
+                        const newAmount = parseFloat(
+                          amountRef.current.value.replace(`$ `, "")
+                        );
+                        const requestBody = {
+                          id: props.travelID,
+                          parentScheduleId: eventID,
+                          amount: newAmount,
+                          currency: currencyRef.current.value,
+
+                          description: typeRef.current.value,
+                        };
+
+                        await addExpenditure(requestBody);
+                        refetchScheduleMonetaryEvents();
+                      }}
+                    >
+                      Add Expenditure
+                    </Button>
+                  </Group>
+                  <Divider mt={20} />
+                  <Space h={10} />
+                  <Title order={3} style={{ fontWeight: "lighter" }}>
+                    Schedule History
+                  </Title>
+                  <Divider mt={6} />
+                  {getScheduleMonetaryEvents?.content[0] ? (
+                    <>
+                      <ScrollArea h={368}>{monetaryCards()}</ScrollArea>
+                    </>
+                  ) : null}
+                  <Space h={10} />
+                </Card>
+              </Center>
+            </Tabs.Panel>
             <Tabs.Panel mt={10} value="directions">
-              <Text>
+              <Text style={{ fontSize: "20px" }}>
                 <b>Fastest</b> Route to this location from Current Position
               </Text>
-
+              <Divider mb={15} mt={5} />
               <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="modalMode"
@@ -647,13 +987,14 @@ function MyCalender(props) {
               <Space h={20}></Space>
               <Container h={300} w={400} ref={modalMapRef}></Container>
               <Space h={20}></Space>
+              <Text fw="bold">Route</Text>
               {route ? (
                 <>
                   <Group>
                     <Text>Distance: {route[0]?.legs[0]?.distance?.text}</Text>
                     <Text>Duration: {route[0]?.legs[0]?.duration?.text}</Text>
                   </Group>
-                  <ScrollArea h={300}>
+                  <ScrollArea h={350}>
                     {directionSteps ? (
                       directionSteps.map((item, index) => (
                         <Stack key={index}>
@@ -707,6 +1048,7 @@ function MyCalender(props) {
                 <Button
                   className="update-content"
                   variant="outline"
+                  radius="xl"
                   color="green"
                   onClick={() => {
                     setOpened(false);
@@ -717,6 +1059,7 @@ function MyCalender(props) {
                 </Button>
                 <Divider label="Danger" labelPosition="center"></Divider>
                 <Button
+                  radius="xl"
                   className="delete-content"
                   color="red"
                   variant="outline"

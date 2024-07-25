@@ -44,6 +44,7 @@ import { v4 as uuid } from "uuid";
 import { DatePickerInput } from "@mantine/dates";
 import { Link } from "react-router-dom";
 import { motion as m } from "framer-motion";
+import "./TravelPlans.css";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -74,6 +75,13 @@ interface ModalItem {
   name: string;
   date: DatesRangeValue;
 }
+const pastelColors = [
+  "#FFB3BA", // Pastel Red
+  "#FFDFBA", // Pastel Orange
+  "#FFFFBA", // Pastel Yellow
+  "#BAFFC9", // Pastel Green
+  "#BAE1FF", // Pastel Blue
+];
 
 function TravelPlans() {
   const [event, setEvent] = useState([]);
@@ -340,53 +348,68 @@ function TravelPlans() {
           animate={{ translateY: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: index * 0.05 }}
         >
-          <Card withBorder shadow="xs" radius="md" h={150} key={items.id}>
+          <Card
+            withBorder
+            shadow="md"
+            radius="lg"
+            h={160}
+            key={items.id}
+            className="travel-card"
+            style={{
+              borderLeft: "1rem solid",
+              borderLeftColor: pastelColors[index % 5],
+            }}
+          >
             <Group justify="space-between">
-              <Stack ml={40} mt={23}>
-                <Title>{items.name}</Title>
-
-                <Text c="gray" style={{ fontSize: "15px" }}>
-                  From{" "}
-                  {moment(items.travelStartDate, "YYYY-MM-DD").format(
-                    "MMM Do YY"
-                  )}{" "}
-                  to {` `}
-                  {moment(items.travelEndDate, "YYYY-MM-DD").format(
-                    "MMM Do YY"
-                  )}
+              <Stack
+                // ml={40}
+                justify="center"
+                mt={20}
+                mr={300}
+                pl={20}
+              >
+                <Title style={{ fontFamily: "georgia" }}>{items.name}</Title>
+                <Text
+                  c="#4A5167"
+                  pt={7}
+                  style={{
+                    fontSize: "17px",
+                    fontFamily: "tahoma",
+                    borderTop: "1px solid",
+                  }}
+                >
+                  {moment(items.travelStartDate, "YYYY-MM-DD").format("MMM Do")}{" "}
+                  to{" "}
+                  {moment(items.travelEndDate, "YYYY-MM-DD").format("MMM Do")}
                 </Text>
               </Stack>
-              <Group>
-                <HoverCard>
-                  <HoverCard.Target>
-                    <ActionIcon
-                      variant="transparent"
+              <Group gap="lg" ml={120}>
+                <Stack>
+                  <Link to={`/schedulePage/travelID?id=${items.id}`}>
+                    <Button
                       className="to-schedule-button"
+                      variant="outline"
+                      color="grape"
+                      radius="xl"
                     >
-                      <Link to={`/schedulePage/travelID?id=${items.id}`}>
-                        <IconArrowRight size={28} color="black" />
-                      </Link>
-                    </ActionIcon>
-                  </HoverCard.Target>
-                  <HoverCard.Dropdown>
-                    <Text size="xs">Click here to check your schedules</Text>
-                  </HoverCard.Dropdown>
-                </HoverCard>
-                <HoverCard>
-                  <HoverCard.Target>
-                    <ActionIcon variant="white">
-                      <Link to={`/billing/travelID?id=${items.id}`}>
-                        <IconCoin size={26} color="black" />
-                      </Link>
-                    </ActionIcon>
-                  </HoverCard.Target>
-                  <HoverCard.Dropdown>
-                    <Text size="xs">Click here to track expenditure</Text>
-                  </HoverCard.Dropdown>
-                </HoverCard>
+                      Move to Calender
+                    </Button>
+                  </Link>
+                  <Link to={`/billing/travelID?id=${items.id}`}>
+                    <Button variant="outline" color="indigo" radius="xl">
+                      Track Expenditure
+                    </Button>
+                  </Link>
+                </Stack>
                 <Menu>
                   <Menu.Target>
-                    <ActionIcon variant="transparent" c="black">
+                    <ActionIcon
+                      size="lg"
+                      radius="xl"
+                      variant="gradient"
+                      gradient={{ from: "cyan", to: "teal", deg: 262 }}
+                      color="gray "
+                    >
                       <IconSettings />
                     </ActionIcon>
                   </Menu.Target>
@@ -414,6 +437,35 @@ function TravelPlans() {
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
+              </Group>
+              <Group>
+                {/* <HoverCard>
+                  <HoverCard.Target>
+                    <ActionIcon
+                      variant="transparent"
+                      className="to-schedule-button"
+                    >
+                      <Link to={`/schedulePage/travelID?id=${items.id}`}>
+                        <IconArrowRight size={28} color="black" />
+                      </Link>
+                    </ActionIcon>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown>
+                    <Text size="xs">Click here to check your schedules</Text>
+                  </HoverCard.Dropdown>
+                </HoverCard>
+                <HoverCard>
+                  <HoverCard.Target>
+                    <ActionIcon variant="transparent">
+                      <Link to={`/billing/travelID?id=${items.id}`}>
+                        <IconCoin size={26} color="black" />
+                      </Link>
+                    </ActionIcon>
+                  </HoverCard.Target>
+                  <HoverCard.Dropdown>
+                    <Text size="xs">Click here to track expenditure</Text>
+                  </HoverCard.Dropdown>
+                </HoverCard> */}
               </Group>
             </Group>
           </Card>
@@ -514,7 +566,7 @@ function TravelPlans() {
             <Tabs.Panel value="create-travel-plan">
               <Center>
                 <Center h={500}>
-                  <Stack w={300}>
+                  <Stack w={400}>
                     <Title
                       style={{
                         textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
@@ -522,11 +574,13 @@ function TravelPlans() {
                     >
                       Create Plan
                     </Title>
+                    <Text c="gray">Plan Your Next Adventure!</Text>
                     <Divider></Divider>
                     <TextInput
                       //right hand side
-
-                      description="Activity Name"
+                      size="md"
+                      radius="lg"
+                      description="Travel Plan Name"
                       rightSectionPointerEvents="all"
                       rightSection={
                         <CloseButton
@@ -552,6 +606,8 @@ function TravelPlans() {
                       }}
                     ></TextInput>
                     <DatePickerInput
+                      radius="lg"
+                      size="md"
                       description="Date Range"
                       clearable
                       required
@@ -569,6 +625,7 @@ function TravelPlans() {
                             color="red"
                             radius="lg"
                             type="submit"
+                            className="create-plan-btn"
                             onClick={(e) => {
                               if (authToken) {
                                 eventMutate(travelPlanDetails);
@@ -610,11 +667,14 @@ function TravelPlans() {
           overlayProps={{ backgroundOpacity: 0.3 }}
         >
           <Stack>
-            <Title style={{ fontFamily: "monospace" }}>Edit Details</Title>
+            <Title style={{ fontFamily: "Roboto" }}>Edit Details</Title>
+
             <Divider></Divider>
             <TextInput
               w={350}
               //right hand side
+
+              radius="lg"
               value={editTravelPlanModal.name}
               onChange={(e) => {
                 console.log("name changed", e.target.value);
@@ -635,13 +695,14 @@ function TravelPlans() {
               }
               required
               //other Input Properties
-              placeholder="Choose Name"
+              placeholder="Type new name"
             ></TextInput>
             <DatePickerInput
+              radius="lg"
               description="Date Range"
               clearable
               type="range"
-              placeholder="Choose Date"
+              placeholder="Choose new date"
               value={editTravelPlanModal.date}
               //onChange={settingTravelPlanDetailsDate}
               onChange={
@@ -655,6 +716,7 @@ function TravelPlans() {
             <Button
               color="green"
               variant="outline"
+              radius="xl"
               type="submit"
               onClick={() => updateMutate(editTravelPlan)}
             >

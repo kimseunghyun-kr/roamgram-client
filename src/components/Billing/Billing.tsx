@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Header from "../Header/Header";
 import { DonutChart } from "@mantine/charts";
 import {
@@ -13,6 +13,7 @@ import {
   NumberFormatter,
   NumberInput,
   SimpleGrid,
+  Space,
   Stack,
   Text,
 } from "@mantine/core";
@@ -24,12 +25,12 @@ function Billing() {
   const urlParams = new URLSearchParams(url);
   const travelID = urlParams.get("id");
 
-  const data = [
+  const [data, setData] = useState([
     { name: "Food and Dining", value: 400, color: "indigo.6" },
     { name: "Transportation", value: 300, color: "yellow.6" },
     { name: "Japan", value: 100, color: "teal.6" },
     { name: "Other", value: 200, color: "gray.6" },
-  ];
+  ]);
 
   const requestbody = {
     id: "26322794-3651-47c4-9b2c-889bd4095d7e",
@@ -69,60 +70,8 @@ function Billing() {
 
   const [opened, { open, close }] = useDisclosure(false);
 
-  //if numberformatter is positive
-  const addIncome = async (requestBody) => {
-    return await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/monetary/new-income`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(requestBody),
-      }
-    ).then((res) => res.json());
-  };
-
-  //if numberformatter is negative
-  const addExpenditure = async (requestBody) => {
-    return await fetch(
-      `${import.meta.env.VITE_APP_API_URL}/api/monetary/new-expenditure`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${authToken}`,
-        },
-        body: JSON.stringify(requestBody),
-      }
-    ).then((res) => res.json());
-  };
-
-  const getAllExpense = async () => {
-    return await fetch(
-      `${
-        import.meta.env.VITE_APP_API_URL
-      }/api/monetary/allIncome?travelPlanId=${travelID}&pageNumber=1&pageSize=1000'`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${authToken}`,
-        },
-      }
-    ).then((res) => res.json());
-  };
-
   const amountRef = useRef(null);
   const typeRef = useRef(null);
-  const addTransaction = () => {
-    console.log(amountRef.current.value);
-    console.log(typeRef.current.value);
-    const filtered = data.filter((ev) => ev.name !== typeRef.current.value);
-    var current = data.filter((ev) => ev.name === typeRef.current.value);
-    current["value"] = current["value"] + amountRef.current.value;
-    console.log("filtered", current);
-  };
 
   return (
     <>
@@ -132,40 +81,66 @@ function Billing() {
       <body>
         <SimpleGrid cols={2} mt={40}>
           <Stack align="center">
-            <DonutChart
-              data={data}
-              tooltipDataSource="segment"
-              size={350}
-              thickness={25}
-              chartLabel="Income Here"
-            />
-
-            <NativeSelect data={supportedCurrencies} />
-            <NativeSelect data={typeExpense} ref={typeRef} />
-            <NumberInput
-              ref={amountRef}
-              decimalScale={2}
-              placeholder="Add Amount"
-              leftSection={<IconCurrencyDollar size={17} />}
-            />
-            <Button
-              leftSection={<IconPlus />}
-              className="add-transaction"
-              onClick={addTransaction}
-            >
-              Add Transaction
-            </Button>
+            <Group gap="lg">
+              <DonutChart
+                data={data}
+                tooltipDataSource="segment"
+                size={350}
+                thickness={55}
+                chartLabel="Income Left Here"
+              />
+            </Group>
+            {/* <Divider w={300} /> */}
+            <Stack mt={15}>
+              <Text
+                pr={60}
+                c="blue"
+                size="sm"
+                fw="bold"
+                style={{ borderBottom: "1px solid gray" }}
+              >
+                Total Income
+              </Text>
+              <Text size="sm" c="gray">
+                $$
+              </Text>
+              <Text
+                size="sm"
+                c="blue"
+                fw="bold"
+                style={{ borderBottom: "1px solid gray" }}
+              >
+                Total Expenditure
+              </Text>
+              <Text size="sm" c="gray">
+                $$
+              </Text>
+            </Stack>
+            {/* <Divider w={300} /> */}
+            <Space h={10} />
           </Stack>
           <Stack w={600}>
-            <Text style={{ borderBottom: "solid 2px gray" }}>History</Text>
+            <Text
+              style={{
+                borderBottom: "solid 2px gray",
+                fontSize: "30px",
+                fontFamily: "Monsteratt",
+              }}
+            >
+              History
+            </Text>
             <Card shadow="xs" withBorder>
-              <Text>Activity</Text>
+              <Text fw="300" style={{ fontSize: "23px" }}>
+                Activity
+              </Text>
               <NumberFormatter
                 prefix="$ "
                 value={1000.231231}
                 thousandSeparator
               ></NumberFormatter>
-              <Text>Currency</Text>
+              <Text c="gray" size="xs" mt={10}>
+                JPY
+              </Text>
             </Card>
           </Stack>
         </SimpleGrid>

@@ -27,6 +27,7 @@ import YourReviews from "./components/ReviewsPage/YourReviews.tsx";
 import ReviewsPageDebug from "./debug/ReviewPageDebug.tsx";
 import SchedulePageMapDebug from "./debug/SchedulePageMapDebug.tsx";
 import Billing from "./components/Billing/Billing.tsx";
+import SchedulePageMapNewUi from "./components/schedulePage/SchedulePageMapNewUi.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -64,6 +65,7 @@ function App() {
             <AuthProvider>
               <RoutesComponent />
               {/* <Billing /> */}
+              {/* <SchedulePageMapNewUi /> */}
             </AuthProvider>
           </AnimatePresence>
         </div>
