@@ -1,6 +1,8 @@
 import { Carousel, CarouselSlide } from "@mantine/carousel";
 import "@mantine/carousel/styles.css";
 import {
+  ActionIcon,
+  Anchor,
   Box,
   Button,
   Card,
@@ -319,11 +321,14 @@ function HomePage() {
               <Text
                 c="white"
                 style={{
-                  fontFamily: "monospace",
-                  border: "2px white double",
+                  fontFamily: "verdana",
+                  // border: "2px white double",
+                  borderBottom: "1px solid white",
+                  borderTop: "1px solid white",
                   fontStyle: "bold",
-                  padding: "7px",
-                  fontSize: "17px",
+                  padding: "10px",
+                  fontSize: "25px",
+                  fontWeight: "100",
                 }}
               >
                 Your All-in-One Travel Website
@@ -552,6 +557,23 @@ function HomePage() {
             <Text size="xs" c="gray">
               Tolentino Alexandra Morales and Kim Seung Hyun
             </Text>
+            <Group>
+              <Anchor href="https://github.com/Shiraishie">
+                <Image
+                  radius="xl"
+                  src="https://github.com/Shiraishie.png"
+                  w={40}
+                />
+              </Anchor>
+              <Anchor href="https://github.com/kimseunghyun-kr">
+                <Image
+                  radius="xl"
+                  src="https://github.com/kimseunghyun-kr.png"
+                  w={40}
+                />
+              </Anchor>
+            </Group>
+
             <Text size="xs" c="gray">
               Orbital 2024 - National University of Singapore
             </Text>

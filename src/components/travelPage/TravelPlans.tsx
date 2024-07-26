@@ -594,13 +594,19 @@ function TravelPlans() {
                 <Center h={500}>
                   <Stack w={400}>
                     <Title
+                      size={50}
                       style={{
                         textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
                       }}
                     >
                       Create Plan
                     </Title>
-                    <Text c="gray">Plan Your Next Adventure!</Text>
+                    <Text
+                      c="gray"
+                      style={{ fontSize: "20px", fontFamily: "monsteratt" }}
+                    >
+                      Plan your next adventure with RoamGram
+                    </Text>
                     <Divider></Divider>
                     <TextInput
                       //right hand side
