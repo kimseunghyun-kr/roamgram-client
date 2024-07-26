@@ -30,8 +30,7 @@ function Billing() {
   const url = window.location.search;
   const urlParams = new URLSearchParams(url);
   const travelID = urlParams.get("id");
-
-  const [data, setData] = useState([
+  const initialData = [
     { name: "Food and Dining", value: 0, color: "indigo.6" },
     { name: "Transportation", value: 0, color: "yellow.6" },
     { name: "Activities and Entertainment", value: 0, color: "teal.6" },
@@ -40,41 +39,42 @@ function Billing() {
     { name: "Souvenirs", value: 0, color: "green.6" },
     { name: "Miscellaneous", value: 0, color: "red.6" },
     { name: "Income", value: 0, color: "gray.6" },
-  ]);
-
-  const requestbody = {
-    id: "26322794-3651-47c4-9b2c-889bd4095d7e",
-    parentActivityId: "26322794-3651-47c4-9b2c-889bd4095d7e",
-    amount: {
-      value: 10,
-    },
-    currency: "SGD",
-    source: "test",
-    description: "test",
-  };
-
-  const typeExpense = [
-    "Food and Dining",
-    "Activities and Entertainment",
-    "Transportation",
-    "Accommodation",
-    "Travel Insurance",
-    "Souvenirs",
-    "Miscellaneous",
   ];
+  const [data, setData] = useState(initialData);
 
-  const supportedCurrencies = [
-    "USD", // US Dollar
-    "SGD", // Singapore Dollar
-    "EUR", // Euro
-    "GBP", // British Pound
-    "JPY", // Japanese Yen
-    "AUD", // Australian Dollar
-    "CAD", // Canadian Dollar
-    "CHF", // Swiss Franc
-    "CNY", // Chinese Yuan
-    "HKD", // Hong Kong Dollar
-  ];
+  // const requestbody = {
+  //   id: "26322794-3651-47c4-9b2c-889bd4095d7e",
+  //   parentActivityId: "26322794-3651-47c4-9b2c-889bd4095d7e",
+  //   amount: {
+  //     value: 10,
+  //   },
+  //   currency: "SGD",
+  //   source: "test",
+  //   description: "test",
+  // };
+
+  // const typeExpense = [
+  //   "Food and Dining",
+  //   "Activities and Entertainment",
+  //   "Transportation",
+  //   "Accommodation",
+  //   "Travel Insurance",
+  //   "Souvenirs",
+  //   "Miscellaneous",
+  // ];
+
+  // const supportedCurrencies = [
+  //   "USD", // US Dollar
+  //   "SGD", // Singapore Dollar
+  //   "EUR", // Euro
+  //   "GBP", // British Pound
+  //   "JPY", // Japanese Yen
+  //   "AUD", // Australian Dollar
+  //   "CAD", // Canadian Dollar
+  //   "CHF", // Swiss Franc
+  //   "CNY", // Chinese Yuan
+  //   "HKD", // Hong Kong Dollar
+  // ];
 
   // console.log("url", travelID);
 
@@ -90,8 +90,8 @@ function Billing() {
 
   const setDonutData = async () => {
     const content = allMonetaryEvent?.content;
-    var eventData = [...data];
-    console.log("varData", eventData);
+    const eventData = data;
+    // console.log("varData", eventData);
 
     if (content) {
       content.map((ev) => {
@@ -116,8 +116,20 @@ function Billing() {
         // });
       });
       console.log("newData", eventData);
-      await setData(eventData);
+      setData(eventData);
     }
+  };
+
+  const setDonutGroups = async () => {
+    const content = allMonetaryEvent?.content;
+    console.log(content);
+    await content.map((ev) =>
+      initialData.find((i) => i.name == ev.description)
+        ? (initialData.find((i) => i.name == ev.description).value += ev.amount)
+        : null
+    );
+    console.log("newData", initialData);
+    return setData([...initialData]);
   };
 
   console.log("ups,", data);
@@ -162,10 +174,28 @@ function Billing() {
   };
 
   useEffect(() => {
+    // const fetchDonutData = async () => {
+    //   await setDonutGroups();
+    // };
+    // const fetchAllData = async () => {
+    //   await getAllIncome();
+    //   await getAllExpenditures();
+    //   await fetchDonutData();
+    // };
     getAllIncome();
     getAllExpenditures();
-    setDonutData();
+    // fetchDonutData();
+    // fetchDonutData();
+    // console.log("data", data);
+    // fetchAllData();
   }, []);
+
+  useEffect(() => {
+    setDonutGroups();
+    return () => {
+      setData([...initialData]);
+    };
+  }, [allMonetaryEvent]);
 
   const allMonetaryCard = () => {
     // const allMonetaryEventContent = allMonetaryEvent?.content.sort((a, b) => {
@@ -215,7 +245,6 @@ function Billing() {
         <Header />
       </header>
       <body>
-        {/* <Button onClick={setDonutData}>Test</Button> */}
         <SimpleGrid cols={2}>
           <Stack align="center" justify="center" mt={140}>
             <Group gap="lg">

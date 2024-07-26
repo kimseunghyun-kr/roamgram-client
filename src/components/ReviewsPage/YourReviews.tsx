@@ -178,13 +178,14 @@ function YourReviews() {
               >
                 <Card
                   withBorder
-                  radius="xl"
+                  shadow="xs"
                   w={285}
                   h={325}
                   style={{ backgroundColor: "white" }}
                   id="test"
                 >
                   <Space h={10} />
+
                   <Group justify="flex-end">
                     <Menu>
                       <Menu.Target>
@@ -206,6 +207,7 @@ function YourReviews() {
                       </Menu.Dropdown>
                     </Menu>
                   </Group>
+                  <Divider mt={5} mb={10} />
                   <Rating value={items.rating} readOnly />
                   <Spoiler
                     maxHeight={110}
@@ -248,8 +250,14 @@ function YourReviews() {
               paddingTop: "30px",
             }}
           >
-            <Title>Your Reviews</Title>
+            <Title fw="900">Your Reviews</Title>
+            <Text c="gray" size="sm" mt={5}>
+              Keep track of your reviews here
+            </Text>
           </div>
+          <Container>
+            <Divider mt={20} size="sm" style={{ alignItems: "center" }} />
+          </Container>
           <Space h={30} />
           {allRevData ? card(allRevData) : null}
 

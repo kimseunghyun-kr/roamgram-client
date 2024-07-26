@@ -23,6 +23,8 @@ import {
   Flex,
   Spoiler,
   ScrollArea,
+  TypographyStylesProvider,
+  Box,
 } from "@mantine/core";
 import { IconPencil, IconSearch } from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -83,6 +85,12 @@ function ReviewsPage() {
   // console.log("allContent", allContent);
   const allReviewsContentChunked = chunk(allContent, 8);
   const allReviewsContentData = allReviewsContentChunked[activePage - 1];
+
+  const [expanded, setExpanded] = useState(false);
+  const spoilerControlRef = useRef<HTMLButtonElement>(null);
+
+  console.log("allReviews", allReviewsContentData);
+
   function cardSection(allReviewsContentData) {
     return (
       <>
@@ -108,19 +116,42 @@ function ReviewsPage() {
                   <Divider mt={10} />
                   <Space h={10} />
                   <Rating value={item.rating} readOnly />
-                  <UnstyledButton></UnstyledButton>
+
                   <Spoiler
-                    maxHeight={90}
-                    showLabel="Show more"
+                    controlRef={spoilerControlRef}
+                    maxHeight={160}
+                    showLabel="Read More"
                     hideLabel="Hide"
+                    expanded={expanded}
+                    onExpandedChange={(expanded) => {
+                      navigate(`/reviews/reviewID?id=${item.id}`, {
+                        state: { pageHTML: item.userDescription },
+                      });
+                    }}
                   >
-                    <ScrollArea h={130}>
+                    {/* <ScrollArea h={130}> */}
+                    <div className="review-box">
                       <Text
+                        lineClamp={3}
                         dangerouslySetInnerHTML={{
                           __html: item.userDescription,
                         }}
                       />
-                    </ScrollArea>
+                    </div>
+
+                    {/* </ScrollArea> */}
+                    {/* {parseInt(
+                    window.getComputedStyle(textRef.current).lineHeight
+                  ) > 120 ? (
+                    <UnstyledButton
+                      c="blue"
+                      onClick={() => {
+                        console.log(document.getElementById("text"));
+                      }}
+                    >
+                      Read More
+                    </UnstyledButton>
+                  ) : null} */}
                   </Spoiler>
                 </Card>
               ))}
@@ -128,7 +159,7 @@ function ReviewsPage() {
           </Center>
         </m.div>
 
-        <Center mt={20} mb={10}>
+        <Center mb={10}>
           <Pagination
             total={allReviewsContentChunked.length}
             value={activePage}
@@ -152,7 +183,13 @@ function ReviewsPage() {
             animate={{ translateY: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Group mt={50} gap="lg" w={1400} justify="center">
+            <Group
+              mt={50}
+              gap="lg"
+              key={allReviewsContentData.length}
+              w={1400}
+              justify="center"
+            >
               {googleReviewData.map((item) => (
                 <Card radius="xl" w={285} h={470} key={item.id}>
                   <Image
@@ -189,8 +226,6 @@ function ReviewsPage() {
             total={googleReviewsChunked.length}
             value={googleActivePage}
             onChange={setGooglePage}
-            pb={15}
-            mr={200}
           ></Pagination>
         </Center>
       </>

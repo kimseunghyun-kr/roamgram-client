@@ -519,8 +519,9 @@ export function DetailedReview() {
                 className="submit-button-review-detailed"
                 variant="outline"
                 onClick={async () => {
-                  await submitReview();
-                  navigate(-1);
+                  // await submitReview();
+                  // navigate(-1);
+                  console.log("innerHTML", quilRef.current.getEditor());
                 }}
               >
                 Confirm
@@ -532,7 +533,13 @@ export function DetailedReview() {
           <Group w={1600}>
             <Image src="/assets/Create Review.png" w="auto" mt={35} ml={340} />
             <Space w={640} />
-            <Button onClick={open} mt={60} w={155}>
+            <Button
+              onClick={open}
+              mt={60}
+              w={155}
+              radius="xl"
+              variant="outline"
+            >
               Submit
             </Button>
           </Group>

@@ -652,8 +652,8 @@ function MyCalender(props) {
           </Text>
           <CloseButton
             onClick={() => {
-              console.log(ev.id);
-              deleteMonetaryEvent(ev.id);
+              console.log("transacID", ev.transactionId);
+              deleteMonetaryEvent(ev.transactionId);
               refetchScheduleMonetaryEvents();
             }}
           />
