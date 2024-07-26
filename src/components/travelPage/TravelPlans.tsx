@@ -346,7 +346,7 @@ function TravelPlans() {
         <m.div
           initial={{ translateY: 50, opacity: 0 }}
           animate={{ translateY: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: index * 0.05 }}
+          transition={{ duration: 0.5, delay: index * 0.06 }}
         >
           <Card
             withBorder
@@ -477,53 +477,58 @@ function TravelPlans() {
     return homePageItem && !authToken ? (
       <>
         <Space h={15} />
-
-        <Card
-          withBorder
-          shadow="md"
-          radius="lg"
-          h={160}
-          aria-label="unauth-card"
-          style={{
-            borderLeft: "1rem solid",
-            borderLeftColor:
-              pastelColors[Math.floor(Math.random() * pastelColors.length)],
-          }}
+        <m.div
+          initial={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.06 }}
         >
-          <Group justify="space-between">
-            <Stack justify="center" mt={20} mr={300} pl={20}>
-              <Title style={{ fontFamily: "georgia" }}>
-                {homePageItem?.name ?? null}
-              </Title>
-              <Text
-                c="#4A5167"
-                pt={7}
-                style={{
-                  fontSize: "17px",
-                  fontFamily: "tahoma",
-                  borderTop: "1px solid",
-                }}
-              >
-                {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
-                  "MMM Do"
-                )}{" "}
-                to{" "}
-                {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
-                  "MMM Do"
-                )}
-              </Text>
-            </Stack>
-            <Link to="/login">
-              <UnstyledButton
-                c="red"
-                ff="monsteratt"
-                style={{ fontSize: "19px" }}
-              >
-                Sign In to Access
-              </UnstyledButton>
-            </Link>
-          </Group>
-        </Card>
+          <Card
+            withBorder
+            shadow="md"
+            radius="lg"
+            h={160}
+            aria-label="unauth-card"
+            style={{
+              borderLeft: "1rem solid",
+              borderLeftColor:
+                pastelColors[Math.floor(Math.random() * pastelColors.length)],
+            }}
+          >
+            <Group justify="space-between">
+              <Stack justify="center" mt={20} mr={300} pl={20}>
+                <Title style={{ fontFamily: "georgia" }}>
+                  {homePageItem?.name ?? null}
+                </Title>
+                <Text
+                  c="#4A5167"
+                  pt={7}
+                  style={{
+                    fontSize: "17px",
+                    fontFamily: "tahoma",
+                    borderTop: "1px solid",
+                  }}
+                >
+                  {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
+                    "MMM Do"
+                  )}{" "}
+                  to{" "}
+                  {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
+                    "MMM Do"
+                  )}
+                </Text>
+              </Stack>
+              <Link to="/login">
+                <UnstyledButton
+                  c="red"
+                  ff="monsteratt"
+                  style={{ fontSize: "19px" }}
+                >
+                  Sign In to Access
+                </UnstyledButton>
+              </Link>
+            </Group>
+          </Card>
+        </m.div>
       </>
     ) : null;
   };
