@@ -250,14 +250,18 @@ function YourReviews() {
               paddingTop: "30px",
             }}
           >
-            <Title fw="900">Your Reviews</Title>
-            <Text c="gray" size="sm" mt={5}>
-              Keep track of your reviews here
-            </Text>
+            <Card withBorder w={900} ml={305}>
+              <Title fw="900" size={60}>
+                Your Reviews
+              </Title>
+              <Text c="gray" size="md" mt={5}>
+                Keep track of your reviews here
+              </Text>
+            </Card>
           </div>
-          <Container>
+          {/* <Container>
             <Divider mt={20} size="sm" style={{ alignItems: "center" }} />
-          </Container>
+          </Container> */}
           <Space h={30} />
           {allRevData ? card(allRevData) : null}
 
