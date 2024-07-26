@@ -536,14 +536,13 @@ function SchedulePageMap(
         <Header></Header>
       </header>
       <body>
-        <m.div
-          initial={{ opacity: 0.1 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-          exit={{ opacity: 1 }}
-        >
-          <Grid mt={20} w={1950}>
-            <Grid.Col span={5}>
+        <Grid mt={20} w={1950}>
+          <Grid.Col span={5}>
+            <m.div
+              initial={{ translateY: 40, opacity: 0 }}
+              animate={{ translateY: 0, opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
               <Stack justify="center">
                 <Container w={400}>
                   <Image
@@ -762,8 +761,15 @@ function SchedulePageMap(
                   </Collapse>
                 </Container>
               </Stack>
-            </Grid.Col>
-            <Grid.Col span={7}>
+            </m.div>
+          </Grid.Col>
+          <Grid.Col span={7}>
+            <m.div
+              initial={{ opacity: 0.1 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+              exit={{ opacity: 1 }}
+            >
               <Center w={1000} mt={45}>
                 <MyCalender
                   event={event}
@@ -773,9 +779,9 @@ function SchedulePageMap(
                   //currentLocation={currentLocation}
                 ></MyCalender>
               </Center>
-            </Grid.Col>
-          </Grid>
-        </m.div>
+            </m.div>
+          </Grid.Col>
+        </Grid>
       </body>
     </>
   );

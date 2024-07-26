@@ -135,8 +135,10 @@ function SignUpPage() {
                         src="assets/roamgram words only.png"
                       ></Image>
                     </Center>
-                    <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
-                      Create Your Account Here
+                    <Text
+                      style={{ fontFamily: "Monsteratt", fontSize: "27px" }}
+                    >
+                      Create Your Account with RoamGram
                     </Text>
                     <Stack align="center" mt={40}>
                       <TextInput

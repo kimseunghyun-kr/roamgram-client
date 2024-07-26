@@ -477,29 +477,50 @@ function TravelPlans() {
     return homePageItem && !authToken ? (
       <>
         <Space h={15} />
+
         <Card
           withBorder
-          shadow="xs"
-          radius="md"
-          h={150}
+          shadow="md"
+          radius="lg"
+          h={160}
           aria-label="unauth-card"
+          style={{
+            borderLeft: "1rem solid",
+            borderLeftColor:
+              pastelColors[Math.floor(Math.random() * pastelColors.length)],
+          }}
         >
           <Group justify="space-between">
-            <Stack ml={40} mt={23}>
-              <Title>{homePageItem?.name ?? null}</Title>
-              <Text c="gray" style={{ fontSize: "15px" }}>
-                From{" "}
+            <Stack justify="center" mt={20} mr={300} pl={20}>
+              <Title style={{ fontFamily: "georgia" }}>
+                {homePageItem?.name ?? null}
+              </Title>
+              <Text
+                c="#4A5167"
+                pt={7}
+                style={{
+                  fontSize: "17px",
+                  fontFamily: "tahoma",
+                  borderTop: "1px solid",
+                }}
+              >
                 {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
-                  "MMM Do YY"
+                  "MMM Do"
                 )}{" "}
                 to{" "}
                 {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
-                  "MMM Do YY"
+                  "MMM Do"
                 )}
               </Text>
             </Stack>
             <Link to="/login">
-              <UnstyledButton c="red">Sign In to Access</UnstyledButton>
+              <UnstyledButton
+                c="red"
+                ff="monsteratt"
+                style={{ fontSize: "19px" }}
+              >
+                Sign In to Access
+              </UnstyledButton>
             </Link>
           </Group>
         </Card>

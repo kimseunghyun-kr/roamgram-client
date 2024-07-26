@@ -38,6 +38,7 @@ import {
 import moment from "moment";
 import { useCallback, useEffect, useRef, useState } from "react";
 import parse from "parse-duration";
+import { motion as m } from "framer-motion";
 
 function GoogleMapsNewUi() {
   //for origin textbox
@@ -293,55 +294,61 @@ function GoogleMapsNewUi() {
   return (
     <>
       <Grid.Col
-        p={0}
         span="auto"
-        style={{ borderRight: "1px solid rgba(128, 128, 128, 0.5)" }}
+        style={{
+          borderRight: "1px solid rgba(128, 128, 128, 0.5)",
+        }}
       >
-        <Container fluid h={190}>
-          <Stack justify="center" align="center" mt={35} gap="xs">
-            <Timeline bulletSize={30}>
-              <TimelineItem
-                lineVariant="dashed"
-                bullet={
-                  <ThemeIcon
-                    variant="gradient"
-                    radius="xl"
-                    gradient={{ from: "teal", to: "lime", deg: 90 }}
-                  >
-                    <IconMapPin />
-                  </ThemeIcon>
-                }
-              >
-                <TextInput
-                  w={310}
-                  radius="lg"
-                  ref={placeAutoCompleteRef}
-                  placeholder="Enter Starting Location "
-                ></TextInput>
-              </TimelineItem>
-              <TimelineItem
-                lineVariant="dashed"
-                bullet={
-                  <ThemeIcon
-                    variant="gradient"
-                    radius="xl"
-                    gradient={{ from: "pink", to: "red", deg: 90 }}
-                  >
-                    <IconMapPin />
-                  </ThemeIcon>
-                }
-              >
-                <TextInput
-                  radius="lg"
-                  w={310}
-                  ref={placeAutoCompleteRefDest}
-                  placeholder="Enter Ending Location"
-                ></TextInput>
-              </TimelineItem>
-            </Timeline>
+        <m.div
+          initial={{ translateY: 40, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.6 }}
+        >
+          <Container fluid h={190}>
+            <Stack justify="center" align="center" mt={35} gap="xs">
+              <Timeline bulletSize={30}>
+                <TimelineItem
+                  lineVariant="dashed"
+                  bullet={
+                    <ThemeIcon
+                      variant="gradient"
+                      radius="xl"
+                      gradient={{ from: "teal", to: "lime", deg: 90 }}
+                    >
+                      <IconMapPin />
+                    </ThemeIcon>
+                  }
+                >
+                  <TextInput
+                    w={310}
+                    radius="lg"
+                    ref={placeAutoCompleteRef}
+                    placeholder="Enter Starting Location "
+                  ></TextInput>
+                </TimelineItem>
+                <TimelineItem
+                  lineVariant="dashed"
+                  bullet={
+                    <ThemeIcon
+                      variant="gradient"
+                      radius="xl"
+                      gradient={{ from: "pink", to: "red", deg: 90 }}
+                    >
+                      <IconMapPin />
+                    </ThemeIcon>
+                  }
+                >
+                  <TextInput
+                    radius="lg"
+                    w={310}
+                    ref={placeAutoCompleteRefDest}
+                    placeholder="Enter Ending Location"
+                  ></TextInput>
+                </TimelineItem>
+              </Timeline>
 
-            {/* <SimpleGrid cols={2}> */}
-            {/* <NativeSelect
+              {/* <SimpleGrid cols={2}> */}
+              {/* <NativeSelect
                 onChange={(e) => setTravelMethod(e.target.value)}
                 id="mode"
                 w={150}
@@ -354,165 +361,168 @@ function GoogleMapsNewUi() {
                 ]}
               ></NativeSelect> */}
 
-            <TimeInput
-              variant="unstyled"
-              leftSection={<IconClock size={17} />}
-              style={{ borderBottom: "1px solid" }}
-              mr="155"
-              radius="xl"
-              label="Depart At"
-              value={moment(time, "HH:mm").format("HH:mm")}
-              onChange={(e) => setTime(e.currentTarget.value)}
-            ></TimeInput>
-            {/* </SimpleGrid> */}
-          </Stack>
-        </Container>
-        <Divider size="xs"></Divider>
-        {/* <Space h="md"></Space> */}
-        <Card shadow="sm">
-          <Stack justify="center" align="center" gap="0">
-            <Text size="lg" fw="bold">
-              {selectedPlace}
-            </Text>
-            {placeAutoCompleteRef?.current?.value !== "" &&
-            placeAutoCompleteRefDest?.current?.value !== "" ? (
-              <IconArrowRight />
-            ) : null}
-            <Text size="lg" fw="bold">
-              {selectedPlaceDest}{" "}
-            </Text>
-          </Stack>
-          <Center>
-            <Group>
-              {/* <Text c="gray">
+              <TimeInput
+                variant="unstyled"
+                leftSection={<IconClock size={17} />}
+                style={{ borderBottom: "1px solid" }}
+                mr="155"
+                radius="xl"
+                label="Depart At"
+                value={moment(time, "HH:mm").format("HH:mm")}
+                onChange={(e) => setTime(e.currentTarget.value)}
+              ></TimeInput>
+              {/* </SimpleGrid> */}
+            </Stack>
+          </Container>
+          <Divider size="xs"></Divider>
+          {/* <Space h="md"></Space> */}
+          <Card>
+            <Stack justify="center" align="center" gap="0">
+              <Text size="lg" fw="bold">
+                {selectedPlace}
+              </Text>
+              {placeAutoCompleteRef?.current?.value !== "" &&
+              placeAutoCompleteRefDest?.current?.value !== "" ? (
+                <IconArrowRight />
+              ) : null}
+              <Text size="lg" fw="bold">
+                {selectedPlaceDest}{" "}
+              </Text>
+            </Stack>
+            <Center>
+              <Group>
+                {/* <Text c="gray">
                 Departing at: <b>{time}</b>
               </Text> */}
-              <Text c="gray">
-                Arrival at:{" "}
-                {arrivalTime ? (
-                  <b>{moment(arrivalTime).format("HH:mm")}</b>
-                ) : (
-                  "null"
-                )}
-              </Text>
-            </Group>
-          </Center>
-        </Card>
+                <Text c="gray">
+                  Arrival at:{" "}
+                  {arrivalTime ? (
+                    <b>{moment(arrivalTime).format("HH:mm")}</b>
+                  ) : (
+                    "null"
+                  )}
+                </Text>
+              </Group>
+            </Center>
+          </Card>
+          <Divider size="xs"></Divider>
+          <ScrollArea mt={10} h={570}>
+            <Container>
+              {leg ? (
+                <>
+                  <Center mt={7}>
+                    <Tabs
+                      variant="pills"
+                      color="indigo"
+                      radius="lg"
+                      defaultValue="DRIVING"
+                      onChange={(e) => {
+                        setTravelMethod(e);
+                      }}
+                    >
+                      <Tabs.List>
+                        <Tabs.Tab
+                          value="DRIVING"
+                          leftSection={<IconCar />}
+                        ></Tabs.Tab>
 
-        <ScrollArea mt={10} h={570}>
-          <Container>
-            {leg ? (
-              <>
-                <Center mt={7}>
-                  <Tabs
-                    variant="pills"
-                    color="indigo"
-                    radius="lg"
-                    defaultValue="DRIVING"
-                    onChange={(e) => {
-                      setTravelMethod(e);
-                    }}
-                  >
-                    <Tabs.List>
-                      <Tabs.Tab
-                        value="DRIVING"
-                        leftSection={<IconCar />}
-                      ></Tabs.Tab>
-
-                      <Tabs.Tab
-                        value="WALKING"
-                        leftSection={<IconWalk />}
-                      ></Tabs.Tab>
-                      <Tabs.Tab
-                        value="BICYCLING"
-                        leftSection={<IconBike />}
-                      ></Tabs.Tab>
-                      <Tabs.Tab
-                        value="TRANSIT"
-                        leftSection={<IconTrain />}
-                      ></Tabs.Tab>
-                    </Tabs.List>
-                  </Tabs>
-                </Center>
-                <Stack>
-                  <UnstyledButton onClick={toggle}>
-                    <Stack align="center" mt={30}>
-                      <Title style={{ fontFamily: "roboto" }}>
-                        {" "}
-                        {leg.duration?.text}
-                      </Title>
-                      <Text style={{ fontSize: "20px", fontFamily: "roboto" }}>
-                        {leg.distance?.text}
-                      </Text>
-                      <Text c="blue" style={{ fontSize: "14px" }}>
-                        Click for details
-                      </Text>
-                    </Stack>
-                  </UnstyledButton>
-                  <Divider />
-                  <Collapse in={opened}>
-                    <ScrollArea h={450}>
-                      <Stack>
-                        <Divider />
-                        {leg.steps.map((step) => (
-                          <>
-                            <Text
-                              pt={10}
-                              pl={"60"}
-                              size="md"
-                              dangerouslySetInnerHTML={{
-                                __html: `${step.instructions} in ${step.distance.text}`,
-                              }}
-                            ></Text>
-                            <Divider
-                              pl={"40"}
-                              w={"95%"}
-                              label={
-                                <Text size="sm" fw="bold">
-                                  {step.duration.text}
-                                </Text>
-                              }
-                              labelPosition="right"
-                            />
-                          </>
-                        ))}
+                        <Tabs.Tab
+                          value="WALKING"
+                          leftSection={<IconWalk />}
+                        ></Tabs.Tab>
+                        <Tabs.Tab
+                          value="BICYCLING"
+                          leftSection={<IconBike />}
+                        ></Tabs.Tab>
+                        <Tabs.Tab
+                          value="TRANSIT"
+                          leftSection={<IconTrain />}
+                        ></Tabs.Tab>
+                      </Tabs.List>
+                    </Tabs>
+                  </Center>
+                  <Stack>
+                    <UnstyledButton onClick={toggle}>
+                      <Stack align="center" mt={30}>
+                        <Title style={{ fontFamily: "roboto" }}>
+                          {" "}
+                          {leg.duration?.text}
+                        </Title>
+                        <Text
+                          style={{ fontSize: "20px", fontFamily: "roboto" }}
+                        >
+                          {leg.distance?.text}
+                        </Text>
+                        <Text c="blue" style={{ fontSize: "14px" }}>
+                          Click for details
+                        </Text>
                       </Stack>
-                    </ScrollArea>
-                  </Collapse>
-                </Stack>
-              </>
-            ) : null}
-          </Container>
+                    </UnstyledButton>
+                    <Divider />
+                    <Collapse in={opened}>
+                      <ScrollArea h={450}>
+                        <Stack>
+                          <Divider />
+                          {leg.steps.map((step) => (
+                            <>
+                              <Text
+                                pt={10}
+                                pl={"60"}
+                                size="md"
+                                dangerouslySetInnerHTML={{
+                                  __html: `${step.instructions} in ${step.distance.text}`,
+                                }}
+                              ></Text>
+                              <Divider
+                                pl={"40"}
+                                w={"95%"}
+                                label={
+                                  <Text size="sm" fw="bold">
+                                    {step.duration.text}
+                                  </Text>
+                                }
+                                labelPosition="right"
+                              />
+                            </>
+                          ))}
+                        </Stack>
+                      </ScrollArea>
+                    </Collapse>
+                  </Stack>
+                </>
+              ) : null}
+            </Container>
 
-          <Container>
-            {routes.length > 1 ? (
-              <>
-                <Center>
-                  <Text
-                    fw={900}
-                    style={{ fontFamily: "roboto", fontSize: "30px" }}
-                    p={15}
-                  >
-                    Other Routes
-                  </Text>
-                </Center>
-                <Center>
-                  <Group>
-                    {routes.map((route, index) => (
-                      <Button
-                        variant="outline"
-                        key={route.summary}
-                        onClick={() => setRouteIndex(index)}
-                      >
-                        {route.summary}
-                      </Button>
-                    ))}
-                  </Group>
-                </Center>
-              </>
-            ) : null}
-          </Container>
-        </ScrollArea>
+            <Container>
+              {routes.length > 1 ? (
+                <>
+                  <Center>
+                    <Text
+                      fw={900}
+                      style={{ fontFamily: "roboto", fontSize: "30px" }}
+                      p={15}
+                    >
+                      Other Routes
+                    </Text>
+                  </Center>
+                  <Center>
+                    <Group>
+                      {routes.map((route, index) => (
+                        <Button
+                          variant="outline"
+                          key={route.summary}
+                          onClick={() => setRouteIndex(index)}
+                        >
+                          {route.summary}
+                        </Button>
+                      ))}
+                    </Group>
+                  </Center>
+                </>
+              ) : null}
+            </Container>
+          </ScrollArea>
+        </m.div>
       </Grid.Col>
       <Grid.Col span={8.5} pt={0} pl={3}>
         <Container

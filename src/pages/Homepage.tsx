@@ -253,9 +253,9 @@ function HomePage() {
       <body>
         <Container fluid h={700} p="0">
           <m.div
-            initial={{ opacity: 0.3 }}
+            initial={{ opacity: 0.1 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.75 }}
+            transition={{ duration: 1 }}
             exit={{ opacity: 1 }}
           >
             <Carousel plugins={[autoplay.current]}>
@@ -422,58 +422,70 @@ function HomePage() {
             </Flex>
           </Overlay>
         </Container>
-        <Container fluid h={700} mt="50">
-          <SimpleGrid cols={2}>
-            <Image
-              h={79}
-              w="auto"
-              src="assets/Explore Nearby.png"
-              ml={250}
-              mb={20}
-            ></Image>
-            <Chip.Group
-              onChange={(e) => {
-                setType(e as string);
-                //deleteMarker();
-                //apiRequest(e as string);
-              }}
-            >
-              <Group mt={35}>
-                <Chip value="food" variant="outline">
-                  {" "}
-                  Food{" "}
-                </Chip>
-                <Chip value="shopping_mall" variant="outline">
-                  Mall
-                </Chip>
-                <Chip value="tourist_attraction" variant="outline">
-                  Tourist attractions
-                </Chip>
-                <Chip value="restaurant" variant="outline">
-                  Restaurants
-                </Chip>
+        <Container fluid h={570} mt="50">
+          <m.div
+            initial={{ translateY: 40, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+          >
+            <SimpleGrid cols={2}>
+              <Image
+                h={79}
+                w="auto"
+                src="assets/Explore Nearby.png"
+                ml={250}
+                mb={20}
+              ></Image>
+              <Chip.Group
+                onChange={(e) => {
+                  setType(e as string);
+                  //deleteMarker();
+                  //apiRequest(e as string);
+                }}
+              >
+                <Group mt={35}>
+                  <Chip value="food" variant="outline">
+                    {" "}
+                    Food{" "}
+                  </Chip>
+                  <Chip value="shopping_mall" variant="outline">
+                    Mall
+                  </Chip>
+                  <Chip value="tourist_attraction" variant="outline">
+                    Tourist attractions
+                  </Chip>
+                  <Chip value="restaurant" variant="outline">
+                    Restaurants
+                  </Chip>
 
-                <Chip value="supermarket" variant="outline">
-                  Supermarket
-                </Chip>
-                <Chip value="parking" variant="outline">
-                  Parking
-                </Chip>
-                <Chip value="atm" variant="outline">
-                  ATM
-                </Chip>
-              </Group>
-            </Chip.Group>
-          </SimpleGrid>
+                  <Chip value="supermarket" variant="outline">
+                    Supermarket
+                  </Chip>
+                  <Chip value="parking" variant="outline">
+                    Parking
+                  </Chip>
+                  <Chip value="atm" variant="outline">
+                    ATM
+                  </Chip>
+                </Group>
+              </Chip.Group>
+            </SimpleGrid>
+          </m.div>
           {/* Put Map Here*/}
-          <Container
-            className="map-container-home"
-            ref={mapRef}
-            fluid
-            h={500}
-            w={1390}
-            style={{ borderRadius: "20px" }}
-          ></Container>
+          <m.div
+            initial={{ translateY: 40, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.65 }}
+          >
+            <Container
+              className="map-container-home"
+              ref={mapRef}
+              fluid
+              h={500}
+              w={1390}
+              style={{ borderRadius: "20px" }}
+            ></Container>
+          </m.div>
         </Container>
         {/* <Container fluid h={350}>
           <Grid>
@@ -518,28 +530,34 @@ function HomePage() {
         </Container> */}
       </body>
       <footer className="footer">
-        <Divider
-          labelPosition="center"
-          label={
-            <>
-              <UnstyledButton
-                component="a"
-                href="https://github.com/kimseunghyun-kr/roamgram"
-              >
-                <img height="50" src="/assets/github-mark.png"></img>
-              </UnstyledButton>
-            </>
-          }
-        ></Divider>
-        <Stack align="center" mt={14}>
-          <Text size="xs" c="gray">
-            Tolentino Alexandra Morales and Kim Seung Hyun
-          </Text>
-          <Text size="xs" c="gray">
-            Orbital 2024 - National University of Singapore
-          </Text>
-          <Space h={0}></Space>
-        </Stack>
+        <m.div
+          initial={{ translateY: 40, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.8 }}
+        >
+          <Divider
+            labelPosition="center"
+            label={
+              <>
+                <UnstyledButton
+                  component="a"
+                  href="https://github.com/kimseunghyun-kr/roamgram"
+                >
+                  <img height="50" src="/assets/github-mark.png"></img>
+                </UnstyledButton>
+              </>
+            }
+          ></Divider>
+          <Stack align="center" mt={14}>
+            <Text size="xs" c="gray">
+              Tolentino Alexandra Morales and Kim Seung Hyun
+            </Text>
+            <Text size="xs" c="gray">
+              Orbital 2024 - National University of Singapore
+            </Text>
+            <Space h={0}></Space>
+          </Stack>
+        </m.div>
       </footer>
     </>
   );

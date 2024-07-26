@@ -199,7 +199,9 @@ function LoginPage() {
                         src="assets/roamgram words only.png"
                       ></Image>
                     </Center>
-                    <Text style={{ fontFamily: "roboto", fontSize: "25px" }}>
+                    <Text
+                      style={{ fontFamily: "monsteratt", fontSize: "27px" }}
+                    >
                       Keep your plans in check.
                     </Text>
 
