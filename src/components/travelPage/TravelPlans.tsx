@@ -349,6 +349,7 @@ function TravelPlans() {
           transition={{ duration: 0.5, delay: index * 0.06 }}
         >
           <Card
+            w={900}
             withBorder
             shadow="md"
             radius="lg"
@@ -365,17 +366,19 @@ function TravelPlans() {
                 // ml={40}
                 justify="center"
                 mt={20}
-                mr={300}
+                // mr={300}
                 pl={20}
+                w={480}
               >
                 <Title style={{ fontFamily: "georgia" }}>{items.name}</Title>
+
                 <Text
                   c="#4A5167"
                   pt={7}
                   style={{
                     fontSize: "17px",
                     fontFamily: "tahoma",
-                    borderTop: "1px solid",
+                    borderTop: "1px solid gray",
                   }}
                 >
                   {moment(items.travelStartDate, "YYYY-MM-DD").format("MMM Do")}{" "}

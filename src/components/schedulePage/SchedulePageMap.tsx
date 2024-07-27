@@ -696,7 +696,7 @@ function SchedulePageMap(
                   </Button>
                 </Container>
                 <Container fluid>
-                  <Collapse h={420} in={collapsed}>
+                  <Collapse h={450} in={collapsed}>
                     <Stack justify="center">
                       <Container h={350} w={600} ref={mapRef}></Container>
                       <Container>

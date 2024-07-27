@@ -21,6 +21,7 @@ import {
   Overlay,
   Paper,
   SimpleGrid,
+  Slider,
   Space,
   Stack,
   Switch,
@@ -81,6 +82,7 @@ function HomePage() {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [currentLocation, setCurrentLocation] = useState({});
   const mapRef = useRef<HTMLDivElement>(null);
+  const [mapRadius, setMapRadius] = useState(1000);
 
   const googleMarker = new google.maps.Marker({
     map: map,
@@ -174,7 +176,7 @@ function HomePage() {
     console.log("current location api", currentLocation);
     const request = {
       location: currentLocation as google.maps.LatLng,
-      radius: 1000,
+      radius: mapRadius,
       type: type_to_find,
     };
     return serviceOn?.nearbySearch(request, (results, status) => {
@@ -200,10 +202,14 @@ function HomePage() {
 
   useEffect(() => {
     if (type) {
-      apiRequest(type);
       console.log("type is", type);
+      if (mapRadius) {
+        apiRequest(type);
+      } else {
+        apiRequest(type);
+      }
     }
-  }, [setType, type]);
+  }, [setType, type, mapRadius, setMapRadius]);
 
   useEffect(() => {
     if (map) {
@@ -439,7 +445,7 @@ function HomePage() {
                 w="auto"
                 src="assets/Explore Nearby.png"
                 ml={250}
-                mb={20}
+                mt={32}
               ></Image>
               <Chip.Group
                 onChange={(e) => {
@@ -448,10 +454,13 @@ function HomePage() {
                   //apiRequest(e as string);
                 }}
               >
-                <Group mt={35}>
-                  <Chip value="food" variant="outline">
+                <Group mt={35} w={700}>
+                  <Chip value="restaurant" variant="outline">
                     {" "}
                     Food{" "}
+                  </Chip>
+                  <Chip value="cafe" variant="outline">
+                    Cafes
                   </Chip>
                   <Chip value="shopping_mall" variant="outline">
                     Mall
@@ -459,8 +468,8 @@ function HomePage() {
                   <Chip value="tourist_attraction" variant="outline">
                     Tourist attractions
                   </Chip>
-                  <Chip value="restaurant" variant="outline">
-                    Restaurants
+                  <Chip value="night_club" variant="outline">
+                    Clubs
                   </Chip>
 
                   <Chip value="supermarket" variant="outline">
@@ -472,6 +481,25 @@ function HomePage() {
                   <Chip value="atm" variant="outline">
                     ATM
                   </Chip>
+                  <Text size="sm" c="gray" ff="monsteratt">
+                    Explore Radius:{" "}
+                  </Text>
+                  <Slider
+                    min={0}
+                    max={5000}
+                    color="red"
+                    w={350}
+                    size="xl"
+                    step={100}
+                    defaultValue={1000}
+                    onChange={setMapRadius}
+                    marks={[
+                      { value: 0, label: "0" },
+                      { value: 1000, label: "1000" },
+                      { value: 3000, label: "3000" },
+                      { value: 5000, label: "5000" },
+                    ]}
+                  ></Slider>
                 </Group>
               </Chip.Group>
             </SimpleGrid>
@@ -488,6 +516,7 @@ function HomePage() {
               fluid
               h={500}
               w={1390}
+              mt={18}
               style={{ borderRadius: "20px" }}
             ></Container>
           </m.div>

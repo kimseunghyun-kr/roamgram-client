@@ -78,7 +78,7 @@ function HeaderHome() {
         <Group gap="xl" ml={500} className="header-group-home">
           <Link to="/reviews">
             <UnstyledButton className="header-button-home">
-              Guide
+              Reviews
             </UnstyledButton>
           </Link>
           <Link to="/planner">

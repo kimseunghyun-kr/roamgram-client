@@ -73,7 +73,7 @@ function Header() {
         <Space w={400}></Space>
         <Group gap="xl" ml={500} className="header-group">
           <Link to="/reviews">
-            <UnstyledButton className="header-button">Guide </UnstyledButton>
+            <UnstyledButton className="header-button">Reviews </UnstyledButton>
           </Link>
           <Link to="/planner">
             <UnstyledButton className="header-button">Routes</UnstyledButton>
