@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Blockquote,
   Burger,
   Button,
   Card,
@@ -24,13 +25,17 @@ import {
   TextInput,
   Title,
   UnstyledButton,
+  Notification,
 } from "@mantine/core";
 import Header from "../Header/Header";
 import {
   IconArrowDown,
   IconArrowRight,
+  IconCheck,
+  IconCircleCheckFilled,
   IconCoin,
   IconEdit,
+  IconMinus,
   IconPhoto,
   IconPlus,
   IconSettings,
@@ -38,15 +43,17 @@ import {
   IconSortAscendingLetters,
   IconSquareRoundedArrowRight,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { v4 as uuid } from "uuid";
 import { DatePickerInput } from "@mantine/dates";
 import { Link } from "react-router-dom";
-import { motion as m } from "framer-motion";
+import { AnimatePresence, motion as m } from "framer-motion";
 import "./TravelPlans.css";
+import { findUser } from "../hooks/findUser";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -549,7 +556,10 @@ function TravelPlans() {
   };
 
   const [shareOpen, setShareOpen] = useState(false);
-
+  const addRef = useRef(null);
+  const [addUser, setAddUser] = useState(null);
+  console.log("addUSer", addUser);
+  console.log("adduser lenght", addUser?.length ?? null);
   return (
     <>
       <header>
@@ -778,22 +788,99 @@ function TravelPlans() {
           radius="md"
           centered
           opened={shareOpen}
-          onClose={() => setShareOpen(false)}
+          onClose={() => (setShareOpen(false), setAddUser(null))}
         >
           <Title order={2} fw="900">
             Share Plan with
           </Title>
-          <Divider mt={5} />
-          <TextInput mt={10} placeholder="Add People Here" size="md" />
-          <Space h={50} />
-          <Text>People with access</Text>
+          <Divider mt={10} />
+          <form>
+            <TextInput
+              mt={10}
+              placeholder="Add People's Username Here"
+              size="md"
+              ref={addRef}
+              required
+            />
+            <Flex justify="flex-end">
+              <Button
+                c="blue"
+                mt={15}
+                mr={5}
+                type="submit"
+                variant="outline"
+                radius="xl"
+                onClick={async (e) => {
+                  console.log(addRef.current.value);
+                  e.preventDefault();
+                  const user = await findUser(addRef.current.value);
+                  setAddUser(user.content);
+                }}
+              >
+                Search User
+              </Button>
+            </Flex>
+          </form>
+          {!addUser ? null : addUser?.length > 0 && addUser ? (
+            <>
+              <AnimatePresence></AnimatePresence>
+              <m.div
+                initial={{ translateX: -50, opacity: 0 }}
+                animate={{ translateX: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0 }}
+              >
+                <Notification
+                  icon={<IconCheck />}
+                  color="teal"
+                  title="Success"
+                  withCloseButton={false}
+                  w={150}
+                  mt={-40}
+                  h={50}
+                  withBorder
+                >
+                  User Found
+                </Notification>
+              </m.div>
+            </>
+          ) : (
+            <m.div
+              initial={{ translateX: -50, opacity: 0 }}
+              animate={{ translateX: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0 }}
+            >
+              <Notification
+                icon={<IconX />}
+                color="red"
+                title="Error"
+                withCloseButton={false}
+                w={190}
+                mt={-40}
+                h={60}
+                withBorder
+              >
+                User Not Found
+              </Notification>
+            </m.div>
+          )}
+
+          <Space h={20} />
+          {/* <Text>People with access</Text> */}
           <Divider />
           {/* Add Cards here on people who have access*/}
-
           <Space h={30} />
           <Flex justify="flex-end">
-            <Button w={100} radius="lg" variant="outline">
-              Add
+            <Button
+              w={100}
+              radius="lg"
+              variant="outline"
+              onClick={() => {
+                addUser ? alert("Yes") : alert("No");
+              }}
+            >
+              Add User
             </Button>
           </Flex>
         </Modal>

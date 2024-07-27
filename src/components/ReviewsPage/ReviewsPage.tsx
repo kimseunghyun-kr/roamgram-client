@@ -360,40 +360,48 @@ function ReviewsPage() {
               </Group>
             </Group>
           </Center>
-          <Flex ml={360} justify="flex-start" align="center">
-            <Title mr={10} size="md" fw={900} c="#575757">
-              SORT BY:{" "}
-            </Title>
-            {/* {allReviewsContentData? haveId? () : null} */}
-            <Button
-              radius="xl"
-              color="black"
-              variant="outline"
-              size="md"
-              rightSection={
-                sortRating == 0 ? null : sortRating == 1 ? (
-                  <IconArrowDown color="gray" />
-                ) : (
-                  <IconArrowUp color="gray" />
-                )
-              }
-              onClick={() => {
-                haveId
-                  ? sortRating == 0
-                    ? (sortByRatingDescending(googleReviews), setSortRating(1))
+          <m.div
+            initial={{ translateY: 50, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Flex ml={360} justify="flex-start" align="center">
+              <Title mr={10} size="md" fw={900} c="#575757">
+                SORT BY:{" "}
+              </Title>
+              {/* {allReviewsContentData? haveId? () : null} */}
+              <Button
+                radius="xl"
+                color="black"
+                variant="outline"
+                size="md"
+                rightSection={
+                  sortRating == 0 ? null : sortRating == 1 ? (
+                    <IconArrowDown color="gray" />
+                  ) : (
+                    <IconArrowUp color="gray" />
+                  )
+                }
+                onClick={() => {
+                  haveId
+                    ? sortRating == 0
+                      ? (sortByRatingDescending(googleReviews),
+                        setSortRating(1))
+                      : sortRating == 1
+                      ? (sortByRatingAscending(googleReviews), setSortRating(2))
+                      : (setAllContent(googleReviews), setSortRating(0))
+                    : sortRating == 0
+                    ? (sortByRatingDescending(allContentState),
+                      setSortRating(1))
                     : sortRating == 1
-                    ? (sortByRatingAscending(googleReviews), setSortRating(2))
-                    : (setAllContent(googleReviews), setSortRating(0))
-                  : sortRating == 0
-                  ? (sortByRatingDescending(allContentState), setSortRating(1))
-                  : sortRating == 1
-                  ? (sortByRatingAscending(allContentState), setSortRating(2))
-                  : (setAllContent(getAllReviews?.content), setSortRating(0));
-              }}
-            >
-              Rating
-            </Button>
-          </Flex>
+                    ? (sortByRatingAscending(allContentState), setSortRating(2))
+                    : (setAllContent(getAllReviews?.content), setSortRating(0));
+                }}
+              >
+                Rating
+              </Button>
+            </Flex>
+          </m.div>
           {allReviewsContentData
             ? haveId
               ? googleCardSection(googleReviews)
