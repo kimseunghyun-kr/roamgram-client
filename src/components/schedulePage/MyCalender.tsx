@@ -33,6 +33,7 @@ import {
   IconCoin,
   IconDirections,
   IconFileDescription,
+  IconMapPin,
   IconMoneybag,
   IconPencil,
 } from "@tabler/icons-react";
@@ -623,6 +624,7 @@ function MyCalender(props) {
   const amountRef = useRef(null);
   const currencyRef = useRef(null);
   const typeRef = useRef(null);
+  const whereRef = useRef(null);
 
   const {
     data: getScheduleMonetaryEvents,
@@ -673,6 +675,7 @@ function MyCalender(props) {
       </Card>
     ));
   };
+
   return (
     <>
       <DnDCalendar
@@ -904,6 +907,25 @@ function MyCalender(props) {
                       data={typeExpense}
                     />
                   </Group>
+                  <Divider mt={5} />
+                  <Group justify="space-between">
+                    <Group>
+                      <Avatar size={24}>
+                        <IconMapPin />
+                      </Avatar>
+                      <Text c="#4A5167" size="13px">
+                        Where
+                      </Text>
+                    </Group>
+                    <TextInput
+                      ref={whereRef}
+                      styles={{
+                        input: { textAlign: "right", paddingRight: "26px" },
+                      }}
+                      variant="unstyled"
+                      placeholder="Enter Location Here"
+                    />
+                  </Group>
                   <Group gap="xs" mt={20} justify="center">
                     <Button
                       w={150}
@@ -943,9 +965,13 @@ function MyCalender(props) {
                           amount: newAmount,
                           currency: currencyRef.current.value,
 
-                          description: typeRef.current.value,
+                          description: whereRef.current.value
+                            ? typeRef.current.value +
+                              " @ " +
+                              whereRef.current.value
+                            : typeRef.current.value,
                         };
-
+                        console.log(requestBody.description);
                         await addExpenditure(requestBody);
                         refetchScheduleMonetaryEvents();
                       }}

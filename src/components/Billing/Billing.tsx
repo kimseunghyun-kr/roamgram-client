@@ -125,10 +125,14 @@ function Billing() {
     const content = allMonetaryEvent?.content;
     console.log(content);
     await content.map((ev) =>
-      initialData.find((i) => i.name == ev.description)
-        ? (initialData.find((i) => i.name == ev.description).value += ev.amount)
+      initialData.find((i) => i.name == ev.description.split(" @ ")[0])
+        ? ((initialData.find(
+            (i) => i.name == ev.description.split(" @ ")[0]
+          ).value += ev.amount),
+          console.log("ev des", ev.description.split(" @ ")[0]))
         : null
     );
+    console.log;
     console.log("newData", initialData);
     return setData([...initialData]);
   };
