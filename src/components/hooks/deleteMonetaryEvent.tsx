@@ -9,9 +9,7 @@ export async function deleteMonetaryEvent(transactionId: string) {
         Authorization: `Bearer ${sessionStorage.getItem(`authToken`)}`,
       },
     }
-  )
-    .then((res) => res.json())
-    .catch((error) => console.log("Error Deleting"));
+  ).catch((error) => console.log(error, "Error Deleting"));
 
   return res;
 }

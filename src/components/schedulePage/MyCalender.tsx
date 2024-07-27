@@ -653,9 +653,9 @@ function MyCalender(props) {
             {moment.unix(ev.timestamp).format("HH:mm")}
           </Text>
           <CloseButton
-            onClick={() => {
+            onClick={async () => {
               console.log("transacID", ev.transactionId);
-              deleteMonetaryEvent(ev.transactionId);
+              await deleteMonetaryEvent(ev.transactionId);
               refetchScheduleMonetaryEvents();
             }}
           />
