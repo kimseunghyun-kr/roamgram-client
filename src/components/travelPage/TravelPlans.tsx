@@ -7,6 +7,7 @@ import {
   CloseButton,
   Container,
   Divider,
+  Flex,
   GridCol,
   Group,
   HoverCard,
@@ -33,6 +34,7 @@ import {
   IconPhoto,
   IconPlus,
   IconSettings,
+  IconShare3,
   IconSortAscendingLetters,
   IconSquareRoundedArrowRight,
   IconTrash,
@@ -370,7 +372,9 @@ function TravelPlans() {
                 pl={20}
                 w={480}
               >
-                <Title style={{ fontFamily: "georgia" }}>{items.name}</Title>
+                <Group>
+                  <Title style={{ fontFamily: "georgia" }}>{items.name}</Title>
+                </Group>
 
                 <Text
                   c="#4A5167"
@@ -386,7 +390,7 @@ function TravelPlans() {
                   {moment(items.travelEndDate, "YYYY-MM-DD").format("MMM Do")}
                 </Text>
               </Stack>
-              <Group gap="lg" ml={120}>
+              <Group gap="sm" ml={110}>
                 <Stack>
                   <Link to={`/schedulePage/travelID?id=${items.id}`}>
                     <Button
@@ -440,6 +444,14 @@ function TravelPlans() {
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
+                <ActionIcon
+                  size="md"
+                  c="rgba(128, 128, 128, 0.5)"
+                  variant="transparent"
+                  onClick={() => setShareOpen(true)}
+                >
+                  <IconShare3 />
+                </ActionIcon>
               </Group>
               <Group>
                 {/* <HoverCard>
@@ -535,6 +547,8 @@ function TravelPlans() {
       </>
     ) : null;
   };
+
+  const [shareOpen, setShareOpen] = useState(false);
 
   return (
     <>
@@ -695,6 +709,7 @@ function TravelPlans() {
           </Tabs>
         </Container>
         <Modal
+          radius="xl"
           centered
           size="auto"
           opened={opened}
@@ -758,6 +773,29 @@ function TravelPlans() {
               Update
             </Button>
           </Stack>
+        </Modal>
+        <Modal
+          radius="md"
+          centered
+          opened={shareOpen}
+          onClose={() => setShareOpen(false)}
+        >
+          <Title order={2} fw="900">
+            Share Plan with
+          </Title>
+          <Divider mt={5} />
+          <TextInput mt={10} placeholder="Add People Here" size="md" />
+          <Space h={50} />
+          <Text>People with access</Text>
+          <Divider />
+          {/* Add Cards here on people who have access*/}
+
+          <Space h={30} />
+          <Flex justify="flex-end">
+            <Button w={100} radius="lg" variant="outline">
+              Add
+            </Button>
+          </Flex>
         </Modal>
       </body>
     </>

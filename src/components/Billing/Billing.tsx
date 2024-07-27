@@ -25,6 +25,7 @@ import { allMonetaryEvents } from "../hooks/allIMoneteryEvents";
 import moment from "moment";
 import { allIncome } from "../hooks/allIncome";
 import { allExpenditure } from "../hooks/allExpenditure";
+import { motion as m, useSpring } from "framer-motion";
 
 function Billing() {
   const url = window.location.search;
@@ -203,42 +204,52 @@ function Billing() {
     // });
     const sortedWithKey = groupByDate();
 
-    return Object.keys(sortedWithKey).map((ev) => (
+    return Object.keys(sortedWithKey).map((ev, index) => (
       <>
-        <Text
-          style={{
-            fontSize: "18px",
-            fontFamily: "Roboto",
-            fontStyle: "lighter",
-            paddingTop: "7px",
-          }}
-          mt={5}
+        <m.div
+          initial={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.09 * index }}
         >
-          {ev}
-        </Text>
-        {sortedWithKey[ev].map((schedules) => (
-          <Card shadow="xs" withBorder mb={8} key={schedules.timestamp}>
-            <Text c="gray" style={{ fontSize: "14px" }}>
-              {moment.unix(schedules.timestamp).format("HH:mm")}
-            </Text>
-            <Text fw="300" style={{ fontSize: "23px" }}>
-              {schedules.description}
-            </Text>
-            {schedules.type === "income" ? (
-              <Text fw="bold" style={{ fontSize: "14px" }} c="darkgreen">
-                {`+ ${schedules.amount} ${schedules.currency}`}
+          <Text
+            style={{
+              fontSize: "18px",
+              fontFamily: "Roboto",
+              fontStyle: "lighter",
+              paddingTop: "7px",
+            }}
+            mt={5}
+          >
+            {ev}
+          </Text>
+          {sortedWithKey[ev].map((schedules) => (
+            <Card shadow="xs" withBorder mb={8} key={schedules.timestamp}>
+              <Text c="gray" style={{ fontSize: "14px" }}>
+                {moment.unix(schedules.timestamp).format("HH:mm")}
               </Text>
-            ) : (
-              <Text fw="bold" style={{ fontSize: "14px" }} c="red">
-                {`- ${schedules.amount} ${schedules.currency}`}
+              <Text fw="300" style={{ fontSize: "23px" }}>
+                {schedules.description}
               </Text>
-            )}
-          </Card>
-        ))}
+              {schedules.type === "income" ? (
+                <Text fw="bold" style={{ fontSize: "14px" }} c="darkgreen">
+                  {`+ ${schedules.amount} ${schedules.currency}`}
+                </Text>
+              ) : (
+                <Text style={{ fontSize: "14px", fontWeight: "bold" }} c="red">
+                  {`- ${schedules.amount} ${schedules.currency}`}
+                </Text>
+              )}
+            </Card>
+          ))}
+        </m.div>
       </>
     ));
   };
 
+  const chartVariants = {
+    hidden: { opacity: 0, scale: 0.3 },
+    visible: { opacity: 1, scale: 1 },
+  };
   return (
     <>
       <header>
@@ -246,57 +257,76 @@ function Billing() {
       </header>
       <body>
         <SimpleGrid cols={2}>
-          <Stack align="center" justify="center" mt={140}>
+          <Stack align="center" justify="center" mt={140} ml={150}>
             <Group gap="lg">
-              <DonutChart
-                data={data}
-                tooltipDataSource="segment"
-                size={350}
-                thickness={35}
-                chartLabel={`$ ${income - expenditure}`}
-                styles={{
-                  label: { fontSize: "35px", overflow: "hidden" },
-                }}
-              />
+              <m.div
+                initial="hidden"
+                animate="visible"
+                variants={chartVariants}
+                transition={{ duration: 1 }}
+              >
+                <DonutChart
+                  data={data}
+                  tooltipDataSource="segment"
+                  size={350}
+                  thickness={35}
+                  chartLabel={`$ ${income - expenditure}`}
+                  styles={{
+                    label: { fontSize: "35px", overflow: "hidden" },
+                  }}
+                />
+              </m.div>
             </Group>
-            <Stack mt={15}>
-              <Text
-                pr={60}
-                c="blue"
-                size="md"
-                fw="bold"
-                style={{ borderBottom: "1px solid gray" }}
-              >
-                Total Income
-              </Text>
-              <Text size="md" c="darkgreen">
-                {`$ ${income}`}
-              </Text>
-              <Text
-                size="md"
-                c="blue"
-                fw="bold"
-                style={{ borderBottom: "1px solid gray" }}
-              >
-                Total Expenditure
-              </Text>
-              <Text size="md" c="red">
-                {`-$ ${expenditure}`}
-              </Text>
-            </Stack>
-            {/* <Divider w={300} /> */}
-            <Space h={10} />
+            <m.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1 }}
+            >
+              <Stack mt={15}>
+                <Text
+                  pr={60}
+                  c="blue"
+                  size="md"
+                  fw="bold"
+                  style={{ borderBottom: "1px solid gray" }}
+                >
+                  Total Income
+                </Text>
+                <Text size="md" c="darkgreen">
+                  {`$ ${income}`}
+                </Text>
+                <Text
+                  size="md"
+                  c="blue"
+                  fw="bold"
+                  style={{ borderBottom: "1px solid gray" }}
+                >
+                  Total Expenditure
+                </Text>
+                <Text size="md" c="red">
+                  {`-$ ${expenditure}`}
+                </Text>
+              </Stack>
+              {/* <Divider w={300} /> */}
+              <Space h={10} />
+            </m.div>
           </Stack>
           <Stack w={600} mt={20}>
-            <Text
-              style={{
-                borderBottom: "solid 2px gray",
-                fontSize: "30px",
-                fontFamily: "Monsteratt",
-              }}
+            <m.div
+              initial={{ translateY: 50, opacity: 0 }}
+              animate={{ translateY: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.06 }}
             >
-              History
-            </Text>
+              <Text
+                style={{
+                  borderBottom: "solid 2px gray",
+                  fontSize: "30px",
+                  fontFamily: "Monsteratt",
+                }}
+              >
+                History
+              </Text>
+            </m.div>
             <ScrollArea h="70vh">
               {allMonetaryEvent ? allMonetaryCard() : null}
             </ScrollArea>
