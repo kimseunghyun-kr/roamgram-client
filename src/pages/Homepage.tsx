@@ -433,7 +433,7 @@ function HomePage() {
             </Flex>
           </Overlay>
         </Container>
-        <Container fluid h={570} mt="50" style={{ backgroundColor: "#F2F0EF" }}>
+        <Container fluid h={570} mt="50">
           <m.div
             initial={{ translateY: 40, opacity: 0 }}
             animate={{ translateY: 0, opacity: 1 }}
