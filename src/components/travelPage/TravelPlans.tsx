@@ -54,6 +54,7 @@ import { Link } from "react-router-dom";
 import { AnimatePresence, motion as m } from "framer-motion";
 import "./TravelPlans.css";
 import { findUser } from "../hooks/findUser";
+import { addUserHook } from "../hooks/addUserHook";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -455,7 +456,9 @@ function TravelPlans() {
                   size="md"
                   c="rgba(128, 128, 128, 0.5)"
                   variant="transparent"
-                  onClick={() => setShareOpen(true)}
+                  onClick={async () => (
+                    setShareOpen(true), await setShareTravelId(items.id)
+                  )}
                 >
                   <IconShare3 />
                 </ActionIcon>
@@ -558,8 +561,10 @@ function TravelPlans() {
   const [shareOpen, setShareOpen] = useState(false);
   const addRef = useRef(null);
   const [addUser, setAddUser] = useState(null);
-  console.log("addUSer", addUser);
-  console.log("adduser lenght", addUser?.length ?? null);
+  const [shareTravelId, setShareTravelId] = useState(null);
+  // console.log("addUSer", addUser);
+  // console.log("adduser lenght", addUser?.length ?? null);
+  console.log("share travel id", shareTravelId);
   return (
     <>
       <header>
@@ -876,8 +881,11 @@ function TravelPlans() {
               w={100}
               radius="lg"
               variant="outline"
-              onClick={() => {
-                addUser ? alert("Yes") : alert("No");
+              onClick={async () => {
+                addUser
+                  ? await addUserHook(shareTravelId, addUser[0].id, "OWNER")
+                  : alert("Error");
+                // console.log(travelPla);
               }}
             >
               Add User
