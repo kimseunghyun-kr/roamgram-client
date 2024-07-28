@@ -34,7 +34,9 @@ function YourReviews() {
     queryKey: ["all-travel-plans"],
     queryFn: async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
+        `${
+          import.meta.env.VITE_APP_API_URL
+        }/travelPlan/get_all?pageNo=0&pageSize=100`,
         {
           method: "GET",
           headers: {
@@ -42,7 +44,7 @@ function YourReviews() {
           },
         }
       ).then((res) => res.json());
-      return res;
+      return res.content;
     },
     enabled: true,
   });

@@ -694,7 +694,7 @@ function MyCalender(props) {
         //resourceIdAccessor="place: id"
         //original height is 500
         style={{ height: 750, width: "100%" }}
-        defaultView="month"
+        defaultView="week"
         views={["month", "week", "day"]}
         formats={{
           dayFormat: (date) => {

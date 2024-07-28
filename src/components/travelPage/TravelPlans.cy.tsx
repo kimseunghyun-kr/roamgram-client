@@ -59,7 +59,9 @@ describe("<TravelPlans />", () => {
   });
 
   it("create travel plan authorized", () => {
-    cy.intercept("GET", "**/travelPlan/get_all").as("getAllTravelPlans");
+    cy.intercept("GET", "**/travelPlan/get_all?pageNo=0&pageSize=100").as(
+      "getAllTravelPlans"
+    );
 
     cy.get('[aria-label = "create-reviews-tab-btn"]')
       .click()
@@ -126,7 +128,7 @@ describe("<TravelPlans />", () => {
     // cy.wait("@getAllTravelPlans").its("response.statusCode").should("eq", 200);
 
     //check if activityName is changed
-    cy.get(".travel-plan-container").should("contain", "testNameChange");
+    cy.get(".mantine-ScrollArea-root").should("contain", "testNameChange");
   });
 
   // it.only("check working schedules button", () => {

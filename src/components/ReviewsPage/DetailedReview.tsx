@@ -519,7 +519,7 @@ export function DetailedReview() {
                 variant="outline"
                 onClick={async () => {
                   await submitReview();
-                  //navigate(-1);
+                  navigate(-1);
                   console.log("innerHTML", quilRef.current.getEditor());
                 }}
               >

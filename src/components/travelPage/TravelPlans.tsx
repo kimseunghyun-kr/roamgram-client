@@ -159,8 +159,8 @@ function TravelPlans() {
               Authorization: `Bearer ${authToken}`,
             },
           }
-        );
-        return res.json();
+        ).then((res) => res.json());
+        return res.content;
       } else {
         throw new Error("No token");
       }
@@ -351,10 +351,10 @@ function TravelPlans() {
 
   const cardSection = () => {
     console.log("eventData", eventData);
-    if (!eventData.content) {
+    if (!eventData) {
       return null;
     }
-    return eventData.content.map((items, index) => (
+    return eventData.map((items, index) => (
       <>
         <Space h={15} />
         <m.div
@@ -570,6 +570,7 @@ function TravelPlans() {
   const [alertState, setAlertState] = useState(false);
   // console.log("addUSer", addUser);
   // console.log("adduser lenght", addUser?.length ?? null);
+  console.log("addUser", addUser);
   console.log("share travel id", shareTravelId);
   return (
     <>
@@ -805,7 +806,11 @@ function TravelPlans() {
             Share Plan with
           </Title>
           <Divider mt={10} />
-          <form>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
             <TextInput
               mt={10}
               placeholder="Add People's Username Here"
@@ -824,7 +829,7 @@ function TravelPlans() {
                 radius="xl"
                 onClick={async (e) => {
                   console.log(addRef.current.value);
-                  e.preventDefault();
+
                   const user = await findUser(addRef.current.value);
                   setAddUser(user.content);
                 }}
