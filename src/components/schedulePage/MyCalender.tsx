@@ -503,6 +503,8 @@ function MyCalender(props) {
     return htmlVersion;
   };
 
+  const [calenderView, setCalenderView] = useState("week");
+
   const CustomToolbar = ({ label, onNavigate, onView }) => {
     return (
       <div>
@@ -561,6 +563,7 @@ function MyCalender(props) {
               <NativeSelect
                 variant="unstyled"
                 fw="light"
+                value={calenderView}
                 styles={{
                   input: { fontSize: "25px", fontFamily: "monsteratt" },
                 }}
@@ -569,7 +572,10 @@ function MyCalender(props) {
                   { label: "Week", value: "week" },
                   { label: "Day", value: "day" },
                 ]}
-                onChange={(e) => onView(e.currentTarget.value)}
+                onChange={(e) => {
+                  onView(e.currentTarget.value);
+                  setCalenderView(e.currentTarget.value);
+                }}
               ></NativeSelect>
             </Group>
           </Group>
@@ -675,6 +681,10 @@ function MyCalender(props) {
       </Card>
     ));
   };
+  // const [view, setView] = useState(Views.MONTH);
+  // const handleViewChange = (newView) => {
+  //   setView(newView);
+  // };
 
   return (
     <>
