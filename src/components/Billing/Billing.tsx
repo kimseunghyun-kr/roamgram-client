@@ -124,17 +124,19 @@ function Billing() {
   const setDonutGroups = async () => {
     const content = allMonetaryEvent?.content;
     console.log(content);
-    await content.map((ev) =>
-      initialData.find((i) => i.name == ev.description.split(" @ ")[0])
-        ? ((initialData.find(
-            (i) => i.name == ev.description.split(" @ ")[0]
-          ).value += ev.amount),
-          console.log("ev des", ev.description.split(" @ ")[0]))
-        : null
-    );
+    if (content) {
+      await content.map((ev) =>
+        initialData.find((i) => i.name == ev.description.split(" @ ")[0])
+          ? ((initialData.find(
+              (i) => i.name == ev.description.split(" @ ")[0]
+            ).value += ev.amount),
+            console.log("ev des", ev.description.split(" @ ")[0]))
+          : null
+      );
+      return setData([...initialData]);
+    }
     console.log;
     console.log("newData", initialData);
-    return setData([...initialData]);
   };
 
   console.log("ups,", data);

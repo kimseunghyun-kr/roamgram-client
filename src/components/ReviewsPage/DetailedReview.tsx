@@ -422,8 +422,7 @@ export function DetailedReview() {
         body: JSON.stringify(requestBody),
       }
     )
-      .then((res) => res.json())
-      .then((data) => console.log("success adding detailed reviews!@"))
+      .then((res) => console.log(res, "success adding detailed reviews!@"))
       .catch((error) => console.log("error adding detailed review"));
   };
 
@@ -519,8 +518,8 @@ export function DetailedReview() {
                 className="submit-button-review-detailed"
                 variant="outline"
                 onClick={async () => {
-                  // await submitReview();
-                  // navigate(-1);
+                  await submitReview();
+                  //navigate(-1);
                   console.log("innerHTML", quilRef.current.getEditor());
                 }}
               >
@@ -539,6 +538,7 @@ export function DetailedReview() {
               w={155}
               radius="xl"
               variant="outline"
+              className="submit-false-btn"
             >
               Submit
             </Button>

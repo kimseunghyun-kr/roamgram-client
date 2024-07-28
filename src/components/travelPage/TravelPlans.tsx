@@ -150,9 +150,10 @@ function TravelPlans() {
     queryFn: async () => {
       if (authToken) {
         const res = await fetch(
-          `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
+          `${
+            import.meta.env.VITE_APP_API_URL
+          }/travelPlan/get_all?pageNo=0&pageSize=100`,
           {
-            credentials: "include",
             method: "GET",
             headers: {
               Authorization: `Bearer ${authToken}`,
@@ -349,10 +350,11 @@ function TravelPlans() {
   const [createUnauth, setCreateUnauth] = useState(false);
 
   const cardSection = () => {
-    if (!eventData) {
+    console.log("eventData", eventData);
+    if (!eventData.content) {
       return null;
     }
-    return eventData.map((items, index) => (
+    return eventData.content.map((items, index) => (
       <>
         <Space h={15} />
         <m.div
@@ -455,6 +457,7 @@ function TravelPlans() {
                   </Menu.Dropdown>
                 </Menu>
                 <ActionIcon
+                  aria-label="share-button"
                   size="md"
                   c="rgba(128, 128, 128, 0.5)"
                   variant="transparent"
@@ -817,6 +820,7 @@ function TravelPlans() {
                 mr={5}
                 type="submit"
                 variant="outline"
+                className="search-user"
                 radius="xl"
                 onClick={async (e) => {
                   console.log(addRef.current.value);
@@ -892,6 +896,7 @@ function TravelPlans() {
                   w={100}
                   radius="lg"
                   variant="outline"
+                  className="add-user"
                   onClick={async () => {
                     try {
                       await addUserHook(shareTravelId, addUser[0].id, "OWNER");

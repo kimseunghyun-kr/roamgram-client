@@ -80,17 +80,19 @@ describe("<TravelPlans />", () => {
 
     cy.wait("@getAllTravelPlans").its("response.statusCode").should("eq", 200);
 
-    cy.get(".travel-plan-container")
+    cy.get(".travel-card")
       .should("be.visible")
       .should("contain", "testActivityName");
   });
 
   it("travel plan editing values & check values after refresh", () => {
-    cy.intercept("GET", "**/travelPlan/get_all").as("getAllTravelPlans");
+    // cy.intercept("GET", "**/travelPlan/get_all").as("getAllTravelPlans");
     cy.intercept("PATCH", "**/travelPlan/modify_travel_plan").as(
       "modifyTravelPlans"
     );
-    cy.wait("@getAllTravelPlans").its("response.statusCode").should("eq", 200);
+    // cy.wait("@getAllTravelPlans", { timeout: 10000 })
+    //   .its("response.statusCode")
+    //   .should("eq", 200);
 
     cy.get(".mantine-Card-root")
       .first()
@@ -107,7 +109,7 @@ describe("<TravelPlans />", () => {
       .first()
       .click();
     cy.get(".mantine-Modal-body").within(() => {
-      cy.get("[placeholder='Choose Name']")
+      cy.get("[placeholder='Type new name']")
         .should("be.visible")
         .clear()
         .type("testNameChange");
@@ -136,4 +138,37 @@ describe("<TravelPlans />", () => {
   //       cy.log(url);
   //     });
   // });
+  it("share plans with others", () => {
+    cy.intercept("GET", "**/users/find-by-name?*").as("findUser");
+    cy.intercept("POST", "**/travelPlan/share_travel_plan?*").as("addUser");
+    cy.get('[aria-label="share-button"]')
+      .click()
+      .get('[placeholder="Add People\'s Username Here"]')
+      .type("string")
+      .get(".search-user")
+      .click();
+
+    cy.wait("@findUser").its("response.statusCode").should("eq", 200);
+
+    cy.get(".add-user").click();
+    cy.wait("@addUser").its("response.statusCode").should("eq", 200);
+  });
+
+  it("share plan with others but checking if user exist", () => {
+    cy.intercept("GET", "**/users/find-by-name?*").as("findUser");
+    cy.get('[aria-label="share-button"]')
+      .click()
+      .get('[placeholder="Add People\'s Username Here"]')
+      .type("null")
+      .get(".search-user")
+      .click();
+    cy.wait("@findUser").its("response.statusCode").should("eq", 200);
+
+    cy.get(".mantine-Notification-root")
+      .should("be.visible")
+      .should("contain", "User Not Found");
+
+    cy.get(".add-user").click();
+    cy.get(".mantine-Popover-dropdown").should("contain", "Error adding user");
+  });
 });

@@ -255,6 +255,7 @@ function LoginPage() {
                 </form>
 
                 <ActionIcon
+                  aria-label="google-button"
                   component="a"
                   id="myLink"
                   href={import.meta.env.VITE_APP_GOOGLE_LOGIN_URL}
