@@ -26,6 +26,8 @@ import {
   Title,
   UnstyledButton,
   Notification,
+  Alert,
+  Avatar,
 } from "@mantine/core";
 import Header from "../Header/Header";
 import {
@@ -562,6 +564,7 @@ function TravelPlans() {
   const addRef = useRef(null);
   const [addUser, setAddUser] = useState(null);
   const [shareTravelId, setShareTravelId] = useState(null);
+  const [alertState, setAlertState] = useState(false);
   // console.log("addUSer", addUser);
   // console.log("adduser lenght", addUser?.length ?? null);
   console.log("share travel id", shareTravelId);
@@ -875,22 +878,66 @@ function TravelPlans() {
           {/* <Text>People with access</Text> */}
           <Divider />
           {/* Add Cards here on people who have access*/}
-          <Space h={30} />
+          <Space h={10} />
           <Flex justify="flex-end">
-            <Button
+            <Popover
+              position="left"
+              opened={alertState}
+              onChange={setAlertState}
+              radius="xl"
               w={100}
-              radius="lg"
-              variant="outline"
-              onClick={async () => {
-                addUser
-                  ? await addUserHook(shareTravelId, addUser[0].id, "OWNER")
-                  : alert("Error");
-                // console.log(travelPla);
-              }}
             >
-              Add User
-            </Button>
+              <Popover.Target>
+                <Button
+                  w={100}
+                  radius="lg"
+                  variant="outline"
+                  onClick={async () => {
+                    try {
+                      await addUserHook(shareTravelId, addUser[0].id, "OWNER");
+                      setShareOpen(false);
+                      setAddUser(null);
+                    } catch (e) {
+                      console.log("skibidi");
+                      await setAlertState(true);
+                    }
+                  }}
+                >
+                  Add User
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Group>
+                  <Avatar radius="xl" color="red" size="sm">
+                    <IconX />
+                  </Avatar>
+                  <Text c="red" w={100} style={{ fontSize: "13px" }}>
+                    Error adding user
+                  </Text>
+                </Group>
+              </Popover.Dropdown>
+            </Popover>
           </Flex>
+          {/* {alertState ? (
+            <m.div
+              initial={{ translateX: 90, opacity: 0 }}
+              animate={{ translateX: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0 }}
+            >
+              <Popover
+                mt={10}
+                icon={<IconX />}
+                radius="xl"
+                withBorder
+                color="red"
+                withCloseButton
+                onClose={() => setAlertState(false)}
+              >
+                Error Adding User
+              </Popover>
+            </m.div>
+          ) : null} */}
         </Modal>
       </body>
     </>
