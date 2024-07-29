@@ -1,5 +1,8 @@
 export async function findUser(name: string) {
   console.log("name", name);
+  if (!name) {
+    return null;
+  }
   const res = await fetch(
     `${
       import.meta.env.VITE_APP_API_URL

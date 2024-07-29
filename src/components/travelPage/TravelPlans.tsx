@@ -840,7 +840,6 @@ function TravelPlans() {
           </form>
           {!addUser ? null : addUser?.length > 0 && addUser ? (
             <>
-              <AnimatePresence></AnimatePresence>
               <m.div
                 initial={{ translateX: -50, opacity: 0 }}
                 animate={{ translateX: 0, opacity: 1 }}

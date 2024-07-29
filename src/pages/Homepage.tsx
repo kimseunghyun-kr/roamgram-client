@@ -42,6 +42,7 @@ import { useForm } from "@mantine/form";
 import Header from "../components/Header/Header";
 import HeaderHome from "../components/Header/HeaderHome";
 import { motion as m } from "framer-motion";
+import { whoAmI } from "../components/hooks/whoAmI";
 
 const images = [
   "https://raw.githubusercontent.com/mantinedev/mantine/master/.demo/images/bg-2.png",
@@ -245,6 +246,16 @@ function HomePage() {
   });
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [username, setUsername] = useState(null);
+
+  useEffect(() => {
+    const fetchUsername = async () => {
+      const name = await whoAmI();
+      setUsername(name);
+    };
+
+    fetchUsername();
+  }, []);
 
   useEffect(() => {
     const authToken = sessionStorage.getItem(`authToken`);
@@ -324,21 +335,39 @@ function HomePage() {
                   with RoamGram.
                 </Text>
               </Center>
-              <Text
-                c="white"
-                style={{
-                  fontFamily: "verdana",
-                  // border: "2px white double",
-                  borderBottom: "1px solid white",
-                  borderTop: "1px solid white",
-                  fontStyle: "bold",
-                  padding: "10px",
-                  fontSize: "25px",
-                  fontWeight: "100",
-                }}
-              >
-                Your All-in-One Travel Website
-              </Text>
+              {!sessionStorage.getItem(`authToken`) ? (
+                <Text
+                  c="white"
+                  style={{
+                    fontFamily: "verdana",
+                    // border: "2px white double",
+                    borderBottom: "1px solid white",
+                    borderTop: "1px solid white",
+                    fontStyle: "bold",
+                    padding: "10px",
+                    fontSize: "25px",
+                    fontWeight: "100",
+                  }}
+                >
+                  Your All-in-One Travel Website
+                </Text>
+              ) : (
+                <Text
+                  c="white"
+                  style={{
+                    fontFamily: "verdana",
+                    // border: "2px white double",
+                    borderBottom: "1px solid white",
+                    borderTop: "1px solid white",
+                    fontStyle: "bold",
+                    padding: "10px",
+                    fontSize: "25px",
+                    fontWeight: "100",
+                  }}
+                >
+                  {`Welcome Back, ${username}!`}
+                </Text>
+              )}
               <Space h="60"></Space>
               <Container>
                 <Stack align="center">
