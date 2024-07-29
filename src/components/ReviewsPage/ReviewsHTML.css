@@ -1,3 +1,9 @@
 .quill-content{
     white-space: break-spaces;
 }
+
+.ql-editor {
+    white-space: break-spaces !important
+
+  }
+
