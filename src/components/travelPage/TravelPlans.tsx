@@ -1,5 +1,6 @@
 import {
   ActionIcon,
+  Blockquote,
   Burger,
   Button,
   Card,
@@ -7,6 +8,7 @@ import {
   CloseButton,
   Container,
   Divider,
+  Flex,
   GridCol,
   Group,
   HoverCard,
@@ -23,28 +25,38 @@ import {
   TextInput,
   Title,
   UnstyledButton,
+  Notification,
+  Alert,
+  Avatar,
 } from "@mantine/core";
 import Header from "../Header/Header";
 import {
   IconArrowDown,
   IconArrowRight,
+  IconCheck,
+  IconCircleCheckFilled,
   IconCoin,
   IconEdit,
+  IconMinus,
   IconPhoto,
   IconPlus,
   IconSettings,
+  IconShare3,
   IconSortAscendingLetters,
   IconSquareRoundedArrowRight,
   IconTrash,
+  IconX,
 } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import moment from "moment";
 import { v4 as uuid } from "uuid";
 import { DatePickerInput } from "@mantine/dates";
 import { Link } from "react-router-dom";
-import { motion as m } from "framer-motion";
+import { AnimatePresence, motion as m } from "framer-motion";
 import "./TravelPlans.css";
+import { findUser } from "../hooks/findUser";
+import { addUserHook } from "../hooks/addUserHook";
 
 type DatesRangeValue = [Date | null, Date | null];
 
@@ -138,16 +150,17 @@ function TravelPlans() {
     queryFn: async () => {
       if (authToken) {
         const res = await fetch(
-          `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
+          `${
+            import.meta.env.VITE_APP_API_URL
+          }/travelPlan/get_all?pageNo=0&pageSize=100`,
           {
-            credentials: "include",
             method: "GET",
             headers: {
               Authorization: `Bearer ${authToken}`,
             },
           }
-        );
-        return res.json();
+        ).then((res) => res.json());
+        return res.content;
       } else {
         throw new Error("No token");
       }
@@ -337,6 +350,7 @@ function TravelPlans() {
   const [createUnauth, setCreateUnauth] = useState(false);
 
   const cardSection = () => {
+    console.log("eventData", eventData);
     if (!eventData) {
       return null;
     }
@@ -346,9 +360,10 @@ function TravelPlans() {
         <m.div
           initial={{ translateY: 50, opacity: 0 }}
           animate={{ translateY: 0, opacity: 1 }}
-          transition={{ duration: 0.5, delay: index * 0.05 }}
+          transition={{ duration: 0.5, delay: index * 0.06 }}
         >
           <Card
+            w={900}
             withBorder
             shadow="md"
             radius="lg"
@@ -365,17 +380,21 @@ function TravelPlans() {
                 // ml={40}
                 justify="center"
                 mt={20}
-                mr={300}
+                // mr={300}
                 pl={20}
+                w={480}
               >
-                <Title style={{ fontFamily: "georgia" }}>{items.name}</Title>
+                <Group>
+                  <Title style={{ fontFamily: "georgia" }}>{items.name}</Title>
+                </Group>
+
                 <Text
                   c="#4A5167"
                   pt={7}
                   style={{
                     fontSize: "17px",
                     fontFamily: "tahoma",
-                    borderTop: "1px solid",
+                    borderTop: "1px solid gray",
                   }}
                 >
                   {moment(items.travelStartDate, "YYYY-MM-DD").format("MMM Do")}{" "}
@@ -383,7 +402,7 @@ function TravelPlans() {
                   {moment(items.travelEndDate, "YYYY-MM-DD").format("MMM Do")}
                 </Text>
               </Stack>
-              <Group gap="lg" ml={120}>
+              <Group gap="sm" ml={110}>
                 <Stack>
                   <Link to={`/schedulePage/travelID?id=${items.id}`}>
                     <Button
@@ -437,6 +456,17 @@ function TravelPlans() {
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
+                <ActionIcon
+                  aria-label="share-button"
+                  size="md"
+                  c="rgba(128, 128, 128, 0.5)"
+                  variant="transparent"
+                  onClick={async () => (
+                    setShareOpen(true), await setShareTravelId(items.id)
+                  )}
+                >
+                  <IconShare3 />
+                </ActionIcon>
               </Group>
               <Group>
                 {/* <HoverCard>
@@ -477,36 +507,71 @@ function TravelPlans() {
     return homePageItem && !authToken ? (
       <>
         <Space h={15} />
-        <Card
-          withBorder
-          shadow="xs"
-          radius="md"
-          h={150}
-          aria-label="unauth-card"
+        <m.div
+          initial={{ translateY: 50, opacity: 0 }}
+          animate={{ translateY: 0, opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.06 }}
         >
-          <Group justify="space-between">
-            <Stack ml={40} mt={23}>
-              <Title>{homePageItem?.name ?? null}</Title>
-              <Text c="gray" style={{ fontSize: "15px" }}>
-                From{" "}
-                {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
-                  "MMM Do YY"
-                )}{" "}
-                to{" "}
-                {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
-                  "MMM Do YY"
-                )}
-              </Text>
-            </Stack>
-            <Link to="/login">
-              <UnstyledButton c="red">Sign In to Access</UnstyledButton>
-            </Link>
-          </Group>
-        </Card>
+          <Card
+            withBorder
+            shadow="md"
+            radius="lg"
+            h={160}
+            aria-label="unauth-card"
+            style={{
+              borderLeft: "1rem solid",
+              borderLeftColor:
+                pastelColors[Math.floor(Math.random() * pastelColors.length)],
+            }}
+          >
+            <Group justify="space-between">
+              <Stack justify="center" mt={20} mr={300} pl={20}>
+                <Title style={{ fontFamily: "georgia" }}>
+                  {homePageItem?.name ?? null}
+                </Title>
+                <Text
+                  c="#4A5167"
+                  pt={7}
+                  style={{
+                    fontSize: "17px",
+                    fontFamily: "tahoma",
+                    borderTop: "1px solid",
+                  }}
+                >
+                  {moment(homePageItem?.dateRange[0], "YYYY-MM-DD").format(
+                    "MMM Do"
+                  )}{" "}
+                  to{" "}
+                  {moment(homePageItem?.dateRange[1], "YYYY-MM-DD").format(
+                    "MMM Do"
+                  )}
+                </Text>
+              </Stack>
+              <Link to="/login">
+                <UnstyledButton
+                  c="red"
+                  ff="monsteratt"
+                  style={{ fontSize: "19px" }}
+                >
+                  Sign In to Access
+                </UnstyledButton>
+              </Link>
+            </Group>
+          </Card>
+        </m.div>
       </>
     ) : null;
   };
 
+  const [shareOpen, setShareOpen] = useState(false);
+  const addRef = useRef(null);
+  const [addUser, setAddUser] = useState(null);
+  const [shareTravelId, setShareTravelId] = useState(null);
+  const [alertState, setAlertState] = useState(false);
+  // console.log("addUSer", addUser);
+  // console.log("adduser lenght", addUser?.length ?? null);
+  console.log("addUser", addUser);
+  console.log("share travel id", shareTravelId);
   return (
     <>
       <header>
@@ -568,13 +633,19 @@ function TravelPlans() {
                 <Center h={500}>
                   <Stack w={400}>
                     <Title
+                      size={50}
                       style={{
                         textShadow: "1px 1px 1px rgba(0, 0, 0, 0.5)",
                       }}
                     >
                       Create Plan
                     </Title>
-                    <Text c="gray">Plan Your Next Adventure!</Text>
+                    <Text
+                      c="gray"
+                      style={{ fontSize: "20px", fontFamily: "monsteratt" }}
+                    >
+                      Plan your next adventure with RoamGram
+                    </Text>
                     <Divider></Divider>
                     <TextInput
                       //right hand side
@@ -660,6 +731,7 @@ function TravelPlans() {
           </Tabs>
         </Container>
         <Modal
+          radius="xl"
           centered
           size="auto"
           opened={opened}
@@ -723,6 +795,158 @@ function TravelPlans() {
               Update
             </Button>
           </Stack>
+        </Modal>
+        <Modal
+          radius="md"
+          centered
+          opened={shareOpen}
+          onClose={() => (setShareOpen(false), setAddUser(null))}
+        >
+          <Title order={2} fw="900">
+            Share Plan with
+          </Title>
+          <Divider mt={10} />
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+            }}
+          >
+            <TextInput
+              mt={10}
+              placeholder="Add People's Username Here"
+              size="md"
+              ref={addRef}
+              required
+            />
+            <Flex justify="flex-end">
+              <Button
+                c="blue"
+                mt={15}
+                mr={5}
+                type="submit"
+                variant="outline"
+                className="search-user"
+                radius="xl"
+                onClick={async (e) => {
+                  console.log(addRef.current.value);
+
+                  const user = await findUser(addRef.current.value);
+                  setAddUser(user.content);
+                }}
+              >
+                Search User
+              </Button>
+            </Flex>
+          </form>
+          {!addUser ? null : addUser?.length > 0 && addUser ? (
+            <>
+              <m.div
+                initial={{ translateX: -50, opacity: 0 }}
+                animate={{ translateX: 0, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+                exit={{ opacity: 0 }}
+              >
+                <Notification
+                  icon={<IconCheck />}
+                  color="teal"
+                  title="Success"
+                  withCloseButton={false}
+                  w={150}
+                  mt={-40}
+                  h={50}
+                  withBorder
+                >
+                  User Found
+                </Notification>
+              </m.div>
+            </>
+          ) : (
+            <m.div
+              initial={{ translateX: -50, opacity: 0 }}
+              animate={{ translateX: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0 }}
+            >
+              <Notification
+                icon={<IconX />}
+                color="red"
+                title="Error"
+                withCloseButton={false}
+                w={190}
+                mt={-40}
+                h={60}
+                withBorder
+              >
+                User Not Found
+              </Notification>
+            </m.div>
+          )}
+
+          <Space h={20} />
+          {/* <Text>People with access</Text> */}
+          <Divider />
+          {/* Add Cards here on people who have access*/}
+          <Space h={10} />
+          <Flex justify="flex-end">
+            <Popover
+              position="left"
+              opened={alertState}
+              onChange={setAlertState}
+              radius="xl"
+              w={100}
+            >
+              <Popover.Target>
+                <Button
+                  w={100}
+                  radius="lg"
+                  variant="outline"
+                  className="add-user"
+                  onClick={async () => {
+                    try {
+                      await addUserHook(shareTravelId, addUser[0].id, "OWNER");
+                      setShareOpen(false);
+                      setAddUser(null);
+                    } catch (e) {
+                      console.log("skibidi");
+                      await setAlertState(true);
+                    }
+                  }}
+                >
+                  Add User
+                </Button>
+              </Popover.Target>
+              <Popover.Dropdown>
+                <Group>
+                  <Avatar radius="xl" color="red" size="sm">
+                    <IconX />
+                  </Avatar>
+                  <Text c="red" w={100} style={{ fontSize: "13px" }}>
+                    Error adding user
+                  </Text>
+                </Group>
+              </Popover.Dropdown>
+            </Popover>
+          </Flex>
+          {/* {alertState ? (
+            <m.div
+              initial={{ translateX: 90, opacity: 0 }}
+              animate={{ translateX: 0, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              exit={{ opacity: 0 }}
+            >
+              <Popover
+                mt={10}
+                icon={<IconX />}
+                radius="xl"
+                withBorder
+                color="red"
+                withCloseButton
+                onClose={() => setAlertState(false)}
+              >
+                Error Adding User
+              </Popover>
+            </m.div>
+          ) : null} */}
         </Modal>
       </body>
     </>

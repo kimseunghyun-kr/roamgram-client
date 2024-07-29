@@ -42,13 +42,15 @@ describe("<SchedulePageMapDebug />", () => {
       "createSchedule"
     );
 
-    cy.get('[placeholder="Name of Activity"]').type("CypressActivity2");
-
-    cy.get('[placeholder="Destination [Place Added to Schedules]"]').type(
-      "Elias Mall"
+    cy.get('[placeholder="Input name of schedule here"]').type(
+      "CypressActivity2"
     );
+    cy.get('[placeholder="Optional activity description"]').type(
+      "Optional Cypress Description"
+    );
+    cy.get('[placeholder="Input destination location"]').type("Elias Mall");
 
-    cy.get(".pac-container").eq(1).click();
+    cy.get(".pac-container").contains("West Grill Station Elias Mall").click();
 
     cy.get('[id="startTime"]').type("01:52");
 
@@ -61,15 +63,24 @@ describe("<SchedulePageMapDebug />", () => {
     cy.get(".schedule-button").should("not.be.disabled");
 
     // cy.get(".schedule-button").click();
+    cy.log("Manually click create");
     cy.pause();
     // cy.wait("@createSchedule").its("response.statusCode").should("eq", 200);
   });
 
+  it("check description tabs", () => {
+    cy.get(".rbc-event-content").click();
+    cy.get(".mantine-Modal-content").should(
+      "contain",
+      "Optional Cypress Description"
+    );
+  });
   it("update for schedules", () => {
     cy.intercept(
       "PATCH",
-      "**/travelPlan/*/schedule/update_schedule_metadata"
+      "**/travelPlan/**/schedule/update_schedule_metadata"
     ).as("updateSchedule");
+
     cy.get(".rbc-event-content").eq(0).click();
 
     cy.get(".mantine-Modal-content")
@@ -80,45 +91,30 @@ describe("<SchedulePageMapDebug />", () => {
       .get('[placeholder="Activity Name"]')
       .should("be.visible")
       .get('[placeholder="Description"]')
+      .type(" ")
       .type("CypressUpdate Description");
 
-    cy.get(".mantine-UnstyledButton-root").contains("Update Content").click();
+    cy.get(".update-content ").click();
 
     cy.wait("@updateSchedule").its("response.statusCode").should("eq", 200);
   });
 
-  it("delete for schedules", () => {
-    cy.intercept(
-      "DELETE",
-      "**/travelPlan/*/schedule/delete_schedule?scheduleId=*"
-    ).as("deleteSchedule");
-    cy.get(".rbc-event-content").click();
+  // it("move and resize schedules", () => {
+  //   cy.intercept(
+  //     "PATCH",
+  //     "**/travelPlan/*/schedule/update_schedule_metadata"
+  //   ).as("move&resizeSchedule");
+  //   cy.pause();
+  //   cy.wait("@move&resizeSchedule")
+  //     .its("response.statusCode")
+  //     .should("eq", 200);
+  //   cy.pause();
+  //   cy.wait("@move&resizeSchedule")
+  //     .its("response.statusCode")
+  //     .should("eq", 200);
+  // });
 
-    cy.get(".mantine-Modal-content")
-      .get(".mantine-Tabs-tab")
-      .contains("Edit")
-      .click({ force: true })
-      .get(".delete-content")
-      .click();
-    cy.wait("@deleteSchedule").its("response.statusCode").should("eq", 200);
-  });
-
-  it("move and resize schedules", () => {
-    cy.intercept(
-      "PATCH",
-      "**/travelPlan/*/schedule/update_schedule_metadata"
-    ).as("move&resizeSchedule");
-    cy.pause();
-    cy.wait("@move&resizeSchedule")
-      .its("response.statusCode")
-      .should("eq", 200);
-    cy.pause();
-    cy.wait("@move&resizeSchedule")
-      .its("response.statusCode")
-      .should("eq", 200);
-  });
-
-  it.only("add short reviews", () => {
+  it("add short reviews", () => {
     cy.intercept("PUT", "**/travelPlan/*/schedule/*/review/upload").as(
       "uploadReview"
     );
@@ -141,5 +137,58 @@ describe("<SchedulePageMapDebug />", () => {
     });
 
     cy.wait("@uploadReview").its("response.statusCode").should("eq", 206);
+  });
+
+  it("track expenditure, add income and  expenditure with checking scheduleHistory and delete function", () => {
+    cy.intercept("PUT", "**/api/monetary/new-income").as("addIncome");
+    cy.intercept("PUT", "**/api/monetary/new-expenditure").as("addExpenditure");
+
+    cy.get(".rbc-event-content").click();
+
+    cy.get(".mantine-Modal-content")
+      .get(".mantine-Tabs-tab")
+      .contains("Expenditure")
+      .click({ force: true });
+
+    cy.get('[placeholder="Enter Amount Here"]')
+      .type("100")
+      .get(".mantine-Button-root")
+      .contains("Add Income")
+      .click();
+
+    cy.wait("@addIncome").its("response.statusCode").should("eq", 200);
+    cy.get(".mantine-Card-root")
+      .eq(0)
+      .should("contain", "Income")
+      .and("contain", "+ 100 USD");
+    cy.get('[placeholder="Enter Amount Here"]')
+      .clear()
+      .type("20")
+      .get('[placeholder="Enter Location Here"]')
+      .type("testLocation")
+      .get(".mantine-Button-root")
+      .contains("Add Expenditure")
+      .click();
+    cy.wait("@addExpenditure").its("response.statusCode").should("eq", 200);
+
+    cy.get(".mantine-Card-root")
+      .eq(0)
+      .should("contain", "Food and Dining @ testLocation")
+      .and("contain", "- 20 USD");
+  });
+  it("delete for schedules", () => {
+    cy.intercept(
+      "DELETE",
+      "**/travelPlan/*/schedule/delete_schedule?scheduleId=*"
+    ).as("deleteSchedule");
+    cy.get(".rbc-event-content").click();
+
+    cy.get(".mantine-Modal-content")
+      .get(".mantine-Tabs-tab")
+      .contains("Edit")
+      .click({ force: true })
+      .get(".delete-content")
+      .click();
+    cy.wait("@deleteSchedule").its("response.statusCode").should("eq", 200);
   });
 });

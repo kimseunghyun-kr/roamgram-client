@@ -23,8 +23,15 @@ import {
   Flex,
   Spoiler,
   ScrollArea,
+  TypographyStylesProvider,
+  Box,
 } from "@mantine/core";
-import { IconPencil, IconSearch } from "@tabler/icons-react";
+import {
+  IconArrowDown,
+  IconArrowUp,
+  IconPencil,
+  IconSearch,
+} from "@tabler/icons-react";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate } from "react-router-dom";
 import "./ReviewsPage.css";
@@ -78,11 +85,49 @@ function ReviewsPage() {
   }
   // console.log("getall", getAllReviews);
   const [activePage, setPage] = useState(1);
-
-  const allContent = getAllReviews?.content ?? []; //if no content set to [];
+  const [allContentState, setAllContent] = useState(
+    getAllReviews?.content ?? []
+  );
+  const [allGoogleContentState, setAllGoogleContent] = useState([]);
+  useEffect(() => {
+    const setter = async (allContent) => {
+      await setAllContent(allContent);
+    };
+    const allContent = getAllReviews?.content; //if no content set to [];
+    if (allContent) {
+      setter(allContent);
+    }
+    // console.log("allContent", allContent);
+    // const allReviewsContentChunked = chunk(allContent, 8);
+    // const allReviewsContentData = allReviewsContentChunked[activePage - 1];
+  }, [getAllReviews]);
+  // const allContent = getAllReviews?.content ?? []; //if no content set to [];
   // console.log("allContent", allContent);
-  const allReviewsContentChunked = chunk(allContent, 8);
+  const allReviewsContentChunked = chunk(allContentState, 8);
   const allReviewsContentData = allReviewsContentChunked[activePage - 1];
+
+  const [expanded, setExpanded] = useState(false);
+  const spoilerControlRef = useRef<HTMLButtonElement>(null);
+
+  console.log("allReviews", allReviewsContentData);
+
+  const sortByRatingDescending = async (allContentState) => {
+    const copy = [...allContentState].sort((a, b) =>
+      a.rating < b.rating ? 1 : -1
+    );
+    console.log(copy);
+
+    return (await haveId) ? setGoogleReviews(copy) : setAllContent(copy);
+  };
+  const sortByRatingAscending = async (allContentState) => {
+    const copy = [...allContentState].sort((a, b) =>
+      a.rating < b.rating ? -1 : 1
+    );
+    return (await haveId) ? setGoogleReviews(copy) : setAllContent(copy);
+  };
+
+  const [sortRating, setSortRating] = useState(0);
+
   function cardSection(allReviewsContentData) {
     return (
       <>
@@ -99,30 +144,42 @@ function ReviewsPage() {
               w={1400}
               justify="center"
             >
-              {allReviewsContentData.map((item) => (
-                <Card radius="xl" w={285} h={440} key={item.id}>
-                  <Image
-                    h={200}
-                    src="https://placehold.co/600x400?text=Placeholder"
-                  />
-                  <Divider mt={10} />
-                  <Space h={10} />
-                  <Rating value={item.rating} readOnly />
-                  <UnstyledButton></UnstyledButton>
-                  <Spoiler
-                    maxHeight={90}
-                    showLabel="Show more"
-                    hideLabel="Hide"
-                  >
-                    <ScrollArea h={130}>
-                      <Text
-                        dangerouslySetInnerHTML={{
-                          __html: item.userDescription,
-                        }}
-                      />
-                    </ScrollArea>
-                  </Spoiler>
-                </Card>
+              {allReviewsContentData.map((item, index) => (
+                <m.div
+                  key={item.id}
+                  initial={{ translateY: 50, opacity: 0 }}
+                  animate={{ translateY: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                >
+                  <Card w={285} h={280} withBorder>
+                    <Divider mt={5} />
+                    <Space h={10} />
+                    <Rating value={item.rating} fractions={2} readOnly />
+
+                    <Spoiler
+                      controlRef={spoilerControlRef}
+                      maxHeight={160}
+                      showLabel="Read More"
+                      hideLabel="Hide"
+                      expanded={expanded}
+                      onExpandedChange={(expanded) => {
+                        navigate(`/reviews/reviewID?id=${item.id}`, {
+                          state: { pageHTML: item.userDescription },
+                        });
+                      }}
+                    >
+                      {/* <ScrollArea h={130}> */}
+                      <div className="review-box">
+                        <Text
+                          lineClamp={6}
+                          dangerouslySetInnerHTML={{
+                            __html: item.userDescription,
+                          }}
+                        />
+                      </div>
+                    </Spoiler>
+                  </Card>
+                </m.div>
               ))}
             </Group>
           </Center>
@@ -139,7 +196,8 @@ function ReviewsPage() {
     );
   }
 
-  const [googleActivePage, setGooglePage] = useState(1);
+  const [googleActivePage, setGooglePage] = useState(0);
+
   function googleCardSection(googleReviews) {
     const googleReviewsChunked = chunk(googleReviews, 8);
     console.log("google chunk", googleReviewsChunked);
@@ -152,33 +210,48 @@ function ReviewsPage() {
             animate={{ translateY: 0, opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Group mt={50} gap="lg" w={1400} justify="center">
-              {googleReviewData.map((item) => (
-                <Card radius="xl" w={285} h={470} key={item.id}>
-                  <Image
-                    h={200}
-                    src="https://placehold.co/600x400?text=Placeholder"
-                  />
-                  <Divider mt={10} />
-                  <Space h={10} />
-                  <Rating value={item.rating} readOnly />
-                  <UnstyledButton>
-                    <h2>Review Title</h2>
-                  </UnstyledButton>
-                  <Spoiler
-                    maxHeight={90}
-                    showLabel="Show more"
-                    hideLabel="Hide"
-                  >
-                    <ScrollArea h={130}>
-                      <Text
-                        dangerouslySetInnerHTML={{
-                          __html: item.userDescription,
-                        }}
-                      />
-                    </ScrollArea>
-                  </Spoiler>
-                </Card>
+            <Group
+              mt={50}
+              gap="lg"
+              key={googleReviewData.length}
+              w={1400}
+              justify="center"
+            >
+              {googleReviewData.map((item, index) => (
+                <m.div
+                  key={item.id}
+                  initial={{ translateY: 50, opacity: 0 }}
+                  animate={{ translateY: 0, opacity: 1 }}
+                  transition={{ duration: 0.5, delay: index * 0.08 }}
+                >
+                  <Card w={285} h={280} withBorder>
+                    <Divider mt={5} />
+                    <Space h={10} />
+                    <Rating value={item.rating} fractions={2} readOnly />
+
+                    <Spoiler
+                      controlRef={spoilerControlRef}
+                      maxHeight={160}
+                      showLabel="Read More"
+                      hideLabel="Hide"
+                      expanded={expanded}
+                      onExpandedChange={(expanded) => {
+                        navigate(`/reviews/reviewID?id=${item.id}`, {
+                          state: { pageHTML: item.userDescription },
+                        });
+                      }}
+                    >
+                      <div className="review-box">
+                        <Text
+                          lineClamp={6}
+                          dangerouslySetInnerHTML={{
+                            __html: item.userDescription,
+                          }}
+                        />
+                      </div>
+                    </Spoiler>
+                  </Card>
+                </m.div>
               ))}
             </Group>
           </m.div>
@@ -189,8 +262,6 @@ function ReviewsPage() {
             total={googleReviewsChunked.length}
             value={googleActivePage}
             onChange={setGooglePage}
-            pb={15}
-            mr={200}
           ></Pagination>
         </Center>
       </>
@@ -229,6 +300,8 @@ function ReviewsPage() {
       setPage(1);
     }
   }, [searchRefInput]);
+
+  console.log("setSort", sortRating);
   return (
     <>
       <header>
@@ -240,22 +313,22 @@ function ReviewsPage() {
           animate={{ translateY: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <Image src="/assets/Reviews.png" w="auto" ml={350} mt={40}></Image>
-          <Center mt={30} w={1300} ml={300}>
+          <Center mt={45} w={1300} ml={300}>
             <Group justify="space-between" align="center" w={1200}>
-              <TextInput
-                ref={searchRef}
-                placeholder="Search Reviews By Location"
-                size="md"
-                rightSection={<IconSearch />}
-                radius="lg"
-                w={350}
-                onChange={(e) => {
-                  setSearchRefInput(e.currentTarget.value);
-                }}
-              ></TextInput>
+              <Image src="/assets/Reviews.png" w="auto" pb={40}></Image>
 
-              <Group gap="1px">
+              <Group gap="11px">
+                <TextInput
+                  ref={searchRef}
+                  placeholder="Search Reviews By Location"
+                  size="md"
+                  rightSection={<IconSearch />}
+                  radius="xl"
+                  w={350}
+                  onChange={(e) => {
+                    setSearchRefInput(e.currentTarget.value);
+                  }}
+                ></TextInput>
                 <Button
                   style={{ backgroundColor: "#D6530C" }}
                   className="submit-review-page"
@@ -269,8 +342,6 @@ function ReviewsPage() {
                 >
                   Your Reviews
                 </Button>
-
-                <Space w={7} />
                 <Button
                   color="blue"
                   className="submit-review-page"
@@ -289,7 +360,48 @@ function ReviewsPage() {
               </Group>
             </Group>
           </Center>
-
+          <m.div
+            initial={{ translateY: 50, opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.1 }}
+          >
+            <Flex ml={360} justify="flex-start" align="center">
+              <Title mr={10} size="md" fw={900} c="#575757">
+                SORT BY:{" "}
+              </Title>
+              {/* {allReviewsContentData? haveId? () : null} */}
+              <Button
+                radius="xl"
+                color="black"
+                variant="outline"
+                size="md"
+                rightSection={
+                  sortRating == 0 ? null : sortRating == 1 ? (
+                    <IconArrowDown color="gray" />
+                  ) : (
+                    <IconArrowUp color="gray" />
+                  )
+                }
+                onClick={() => {
+                  haveId
+                    ? sortRating == 0
+                      ? (sortByRatingDescending(googleReviews),
+                        setSortRating(1))
+                      : sortRating == 1
+                      ? (sortByRatingAscending(googleReviews), setSortRating(2))
+                      : (setAllContent(googleReviews), setSortRating(0))
+                    : sortRating == 0
+                    ? (sortByRatingDescending(allContentState),
+                      setSortRating(1))
+                    : sortRating == 1
+                    ? (sortByRatingAscending(allContentState), setSortRating(2))
+                    : (setAllContent(getAllReviews?.content), setSortRating(0));
+                }}
+              >
+                Rating
+              </Button>
+            </Flex>
+          </m.div>
           {allReviewsContentData
             ? haveId
               ? googleCardSection(googleReviews)

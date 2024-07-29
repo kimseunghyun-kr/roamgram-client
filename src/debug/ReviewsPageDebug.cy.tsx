@@ -8,13 +8,20 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 describe("<ReviewsPageDebug />", () => {
   const queryClient = new QueryClient();
 
+  // before(() => {
+  //   cy.intercept("GET", "**/maps/api/mapsjs/gen_204?csp_test=true").as(
+  //     "mapLoad"
+  //   );
+  //   cy.fetchAuthToken();
+
+  //   cy.wait("@mapLoad").its("response.statusCode").should("eq", 200);
+  // });
+
   beforeEach(() => {
     cy.viewport(1920, 1080);
+    cy.fetchAuthToken();
     // cy.intercept("GET", "**/travelPlan/get_all").as("getAllTravelPlans");
 
-    cy.intercept("GET", "**/maps/api/mapsjs/gen_204?csp_test=true").as(
-      "mapLoad"
-    );
     cy.intercept(
       "GET",
       "**/travelPlan/7106554b-7ec6-4019-ac70-8b46210aebd9/schedule/4b56c788-4fb9-4c53-984c-3819b4f8dc09/review/public-all?page=0&size=1000"
@@ -38,7 +45,6 @@ describe("<ReviewsPageDebug />", () => {
       </MantineProvider>
     );
 
-    cy.wait("@mapLoad").its("response.statusCode").should("eq", 200);
     cy.wait("@getAllReviews").its("response.statusCode").should("eq", 200);
   });
   it("renders", () => {
@@ -50,6 +56,11 @@ describe("<ReviewsPageDebug />", () => {
   });
 
   it("Search By Places ID", () => {
+    // cy.intercept("GET", "**/maps/api/mapsjs/gen_204?csp_test=true").as(
+    //   "mapLoad"
+    // );
+
+    // cy.wait("@mapLoad").its("response.statusCode").should("eq", 200);
     //get by id fetch
     cy.intercept(
       "GET",
@@ -58,15 +69,17 @@ describe("<ReviewsPageDebug />", () => {
     cy.get('[placeholder="Search Reviews By Location"]')
       .type("Elias Mall")
       .get(".pac-container")
-      .first()
+      .contains("West Grill Station Elias Mall")
       .click();
     cy.wait("@getGoogleIDReviews").its("response.statusCode").should("eq", 200);
   });
 
-  it.only("Click Write Reviews", () => {
+  it("Click Write Reviews", () => {
     cy.get(".submit-review-page").contains("Write a Review").click();
     cy.on("window:alert", (text) => {
-      expect(text).to.contains("choose travel plan");
+      expect(text).to.contains(
+        "Please choose travel plan and respective schedule"
+      );
     });
   });
 });

@@ -1,0 +1,70 @@
+"filename", "language", "TypeScript", "TypeScript JSX", "CSS", "comment", "blank", "total"
+"d:\deployment-roamgram\roamgram-client\src\App.css", "CSS", 0, 0, 3, 0, 3, 6
+"d:\deployment-roamgram\roamgram-client\src\App.cy.tsx", "TypeScript JSX", 0, 16, 0, 0, 2, 18
+"d:\deployment-roamgram\roamgram-client\src\App.tsx", "TypeScript JSX", 0, 87, 0, 4, 5, 96
+"d:\deployment-roamgram\roamgram-client\src\components\Billing\Billing.tsx", "TypeScript JSX", 0, 263, 0, 73, 22, 358
+"d:\deployment-roamgram\roamgram-client\src\components\GoogleMaps\GoogleMaps.tsx", "TypeScript JSX", 0, 363, 0, 39, 37, 439
+"d:\deployment-roamgram\roamgram-client\src\components\GoogleMaps\GoogleMapsNewUi.tsx", "TypeScript JSX", 0, 438, 0, 63, 39, 540
+"d:\deployment-roamgram\roamgram-client\src\components\Header\Header.css", "CSS", 0, 0, 29, 0, 5, 34
+"d:\deployment-roamgram\roamgram-client\src\components\Header\Header.tsx", "TypeScript JSX", 0, 106, 0, 8, 10, 124
+"d:\deployment-roamgram\roamgram-client\src\components\Header\HeaderHome.css", "CSS", 0, 0, 31, 0, 5, 36
+"d:\deployment-roamgram\roamgram-client\src\components\Header\HeaderHome.tsx", "TypeScript JSX", 0, 118, 0, 8, 10, 136
+"d:\deployment-roamgram\roamgram-client\src\components\Header\LogOut.tsx", "TypeScript JSX", 0, 11, 0, 1, 2, 14
+"d:\deployment-roamgram\roamgram-client\src\components\Login\AuthContext.tsx", "TypeScript JSX", 0, 45, 0, 22, 9, 76
+"d:\deployment-roamgram\roamgram-client\src\components\Login\ConfirmEmail.tsx", "TypeScript JSX", 0, 30, 0, 1, 8, 39
+"d:\deployment-roamgram\roamgram-client\src\components\Login\GoogleLogin.tsx", "TypeScript JSX", 0, 25, 0, 1, 6, 32
+"d:\deployment-roamgram\roamgram-client\src\components\Login\LoginPage.cy.tsx", "TypeScript JSX", 0, 46, 0, 18, 11, 75
+"d:\deployment-roamgram\roamgram-client\src\components\Login\LoginPage.tsx", "TypeScript JSX", 0, 272, 0, 4, 20, 296
+"d:\deployment-roamgram\roamgram-client\src\components\Login\SignUpPage.tsx", "TypeScript JSX", 0, 197, 0, 0, 9, 206
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\DetailedReview.css", "CSS", 0, 0, 16, 0, 4, 20
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\DetailedReview.tsx", "TypeScript JSX", 0, 490, 0, 54, 53, 597
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\ReviewsHTML.css", "CSS", 0, 0, 3, 0, 0, 3
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\ReviewsHTML.tsx", "TypeScript JSX", 0, 31, 0, 0, 2, 33
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\ReviewsPage.css", "CSS", 0, 0, 5, 0, 3, 8
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\ReviewsPage.tsx", "TypeScript JSX", 0, 381, 0, 13, 23, 417
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\SimpleReview.tsx", "TypeScript JSX", 0, 53, 0, 0, 3, 56
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\YourReviews.css", "CSS", 0, 0, 0, 0, 1, 1
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\YourReviews.cy.tsx", "TypeScript JSX", 0, 59, 0, 2, 11, 72
+"d:\deployment-roamgram\roamgram-client\src\components\ReviewsPage\YourReviews.tsx", "TypeScript JSX", 0, 245, 0, 19, 20, 284
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\addExpenditure.tsx", "TypeScript JSX", 0, 15, 0, 0, 3, 18
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\addIncome.tsx", "TypeScript JSX", 0, 17, 0, 0, 3, 20
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\allExpenditure.tsx", "TypeScript JSX", 0, 15, 0, 0, 1, 16
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\allIMoneteryEvents.tsx", "TypeScript JSX", 0, 15, 0, 0, 1, 16
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\allIncome.tsx", "TypeScript JSX", 0, 15, 0, 0, 1, 16
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\deleteMonetaryEvent.tsx", "TypeScript JSX", 0, 14, 0, 0, 2, 16
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\findUser.tsx", "TypeScript JSX", 0, 18, 0, 1, 2, 21
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\scheduleMonetaryEvents.tsx", "TypeScript JSX", 0, 15, 0, 0, 2, 17
+"d:\deployment-roamgram\roamgram-client\src\components\hooks\updateTransaction.tsx", "TypeScript JSX", 0, 2, 0, 0, 2, 4
+"d:\deployment-roamgram\roamgram-client\src\components\schedulePage\MyCalender.css", "CSS", 0, 0, 111, 0, 45, 156
+"d:\deployment-roamgram\roamgram-client\src\components\schedulePage\MyCalender.tsx", "TypeScript JSX", 0, 992, 0, 50, 64, 1106
+"d:\deployment-roamgram\roamgram-client\src\components\schedulePage\SchedulePageMap.css", "CSS", 0, 0, 4, 0, 0, 4
+"d:\deployment-roamgram\roamgram-client\src\components\schedulePage\SchedulePageMap.tsx", "TypeScript JSX", 0, 682, 0, 58, 51, 791
+"d:\deployment-roamgram\roamgram-client\src\components\schedulePage\SchedulePageMapNewUi.tsx", "TypeScript JSX", 0, 674, 0, 58, 51, 783
+"d:\deployment-roamgram\roamgram-client\src\components\travelPage\TravelPlans.css", "CSS", 0, 0, 9, 0, 1, 10
+"d:\deployment-roamgram\roamgram-client\src\components\travelPage\TravelPlans.cy.tsx", "TypeScript JSX", 0, 107, 0, 14, 19, 140
+"d:\deployment-roamgram\roamgram-client\src\components\travelPage\TravelPlans.tsx", "TypeScript JSX", 0, 792, 0, 59, 42, 893
+"d:\deployment-roamgram\roamgram-client\src\debug\MapPageDebug.cy.tsx", "TypeScript JSX", 0, 51, 0, 0, 11, 62
+"d:\deployment-roamgram\roamgram-client\src\debug\MapPageDebug.tsx", "TypeScript JSX", 0, 20, 0, 1, 4, 25
+"d:\deployment-roamgram\roamgram-client\src\debug\ReviewPageDebug.tsx", "TypeScript JSX", 0, 41, 0, 0, 5, 46
+"d:\deployment-roamgram\roamgram-client\src\debug\ReviewsPageDebug.cy.tsx", "TypeScript JSX", 0, 60, 0, 3, 10, 73
+"d:\deployment-roamgram\roamgram-client\src\debug\SchedulePageMapDebug.cy.tsx", "TypeScript JSX", 0, 118, 0, 2, 26, 146
+"d:\deployment-roamgram\roamgram-client\src\debug\SchedulePageMapDebug.tsx", "TypeScript JSX", 0, 11, 0, 0, 3, 14
+"d:\deployment-roamgram\roamgram-client\src\index.css", "CSS", 0, 0, 1, 0, 1, 2
+"d:\deployment-roamgram\roamgram-client\src\main.tsx", "TypeScript JSX", 0, 15, 0, 0, 2, 17
+"d:\deployment-roamgram\roamgram-client\src\pages\HomePage.css", "CSS", 0, 0, 37, 0, 17, 54
+"d:\deployment-roamgram\roamgram-client\src\pages\HomePage.cy.tsx", "TypeScript JSX", 0, 36, 0, 2, 7, 45
+"d:\deployment-roamgram\roamgram-client\src\pages\HomePage.tsx", "TypeScript JSX", 0, 527, 0, 64, 27, 618
+"d:\deployment-roamgram\roamgram-client\src\pages\LoadGoogleMapsDebug.tsx", "TypeScript JSX", 0, 11, 0, 0, 4, 15
+"d:\deployment-roamgram\roamgram-client\src\pages\MapPage.tsx", "TypeScript JSX", 0, 22, 0, 1, 3, 26
+"d:\deployment-roamgram\roamgram-client\src\styles.css", "CSS", 0, 0, 0, 0, 1, 1
+"d:\deployment-roamgram\roamgram-client\src\types\Event.ts", "TypeScript", 7, 0, 0, 0, 1, 8
+"d:\deployment-roamgram\roamgram-client\src\types\MediaFile.ts", "TypeScript", 7, 0, 0, 0, 1, 8
+"d:\deployment-roamgram\roamgram-client\src\types\Place.ts", "TypeScript", 10, 0, 0, 0, 1, 11
+"d:\deployment-roamgram\roamgram-client\src\types\Review.ts", "TypeScript", 9, 0, 0, 0, 2, 11
+"d:\deployment-roamgram\roamgram-client\src\types\Route.ts", "TypeScript", 10, 0, 0, 0, 1, 11
+"d:\deployment-roamgram\roamgram-client\src\types\Schedule.ts", "TypeScript", 19, 0, 0, 1, 3, 23
+"d:\deployment-roamgram\roamgram-client\src\types\TravelPlan.ts", "TypeScript", 10, 0, 0, 0, 2, 12
+"d:\deployment-roamgram\roamgram-client\src\types\request\ScheduleInsertRequest.ts", "TypeScript", 9, 0, 0, 0, 2, 11
+"d:\deployment-roamgram\roamgram-client\src\types\request\TravelPlanUpsertRequest.ts", "TypeScript", 23, 0, 0, 0, 4, 27
+"d:\deployment-roamgram\roamgram-client\src\vite-env.d.ts", "TypeScript", 0, 0, 0, 1, 1, 2
+"Total", "-", 104, 7561, 249, 645, 752, 9311

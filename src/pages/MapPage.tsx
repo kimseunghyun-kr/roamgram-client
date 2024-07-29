@@ -3,6 +3,7 @@ import GoogleMaps from "../components/GoogleMaps/GoogleMaps.tsx";
 import { Container, Grid } from "@mantine/core";
 import Header from "../components/Header/Header.tsx";
 import GoogleMapsNewUi from "../components/GoogleMaps/GoogleMapsNewUi.tsx";
+import { motion as m } from "framer-motion";
 
 const MapPage = () => {
   return (

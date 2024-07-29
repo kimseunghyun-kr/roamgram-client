@@ -6,7 +6,7 @@ import { AuthProvider } from "../components/Login/AuthContext";
 
 describe("<MapPageDebug />", () => {
   beforeEach(() => {
-    cy.viewport(1920, 1080);
+    cy.viewport(1280, 800);
 
     cy.mount(
       <MantineProvider>
@@ -31,7 +31,8 @@ describe("<MapPageDebug />", () => {
       .then(() => {
         cy.log("container present");
       });
-
+    // cy.get(".scrollable-element").scrollTo("bottom");
+    cy.scrollTo("bottom");
     cy.get('[aria-label="Map"]', { timeout: 10000 }).should("be.visible");
   });
 

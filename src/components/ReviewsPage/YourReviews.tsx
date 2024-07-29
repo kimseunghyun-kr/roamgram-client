@@ -34,7 +34,9 @@ function YourReviews() {
     queryKey: ["all-travel-plans"],
     queryFn: async () => {
       const res = await fetch(
-        `${import.meta.env.VITE_APP_API_URL}/travelPlan/get_all`,
+        `${
+          import.meta.env.VITE_APP_API_URL
+        }/travelPlan/get_all?pageNo=0&pageSize=100`,
         {
           method: "GET",
           headers: {
@@ -42,7 +44,7 @@ function YourReviews() {
           },
         }
       ).then((res) => res.json());
-      return res;
+      return res.content;
     },
     enabled: true,
   });
@@ -178,13 +180,14 @@ function YourReviews() {
               >
                 <Card
                   withBorder
-                  radius="xl"
+                  shadow="xs"
                   w={285}
                   h={325}
                   style={{ backgroundColor: "white" }}
                   id="test"
                 >
                   <Space h={10} />
+
                   <Group justify="flex-end">
                     <Menu>
                       <Menu.Target>
@@ -206,6 +209,7 @@ function YourReviews() {
                       </Menu.Dropdown>
                     </Menu>
                   </Group>
+                  <Divider mt={5} mb={10} />
                   <Rating value={items.rating} readOnly />
                   <Spoiler
                     maxHeight={110}
@@ -248,8 +252,18 @@ function YourReviews() {
               paddingTop: "30px",
             }}
           >
-            <Title>Your Reviews</Title>
+            <Card withBorder w={900} ml={305}>
+              <Title fw="900" size={60}>
+                Your Reviews
+              </Title>
+              <Text c="gray" size="md" mt={5}>
+                Keep track of your reviews here
+              </Text>
+            </Card>
           </div>
+          {/* <Container>
+            <Divider mt={20} size="sm" style={{ alignItems: "center" }} />
+          </Container> */}
           <Space h={30} />
           {allRevData ? card(allRevData) : null}
 

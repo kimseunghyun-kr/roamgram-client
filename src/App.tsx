@@ -28,6 +28,7 @@ import ReviewsPageDebug from "./debug/ReviewPageDebug.tsx";
 import SchedulePageMapDebug from "./debug/SchedulePageMapDebug.tsx";
 import Billing from "./components/Billing/Billing.tsx";
 import SchedulePageMapNewUi from "./components/schedulePage/SchedulePageMapNewUi.tsx";
+import ReviewsHTML from "./components/ReviewsPage/ReviewsHTML.tsx";
 
 //reactQuery
 const queryClient = new QueryClient();
@@ -45,6 +46,7 @@ const RoutesComponent = () => (
     <Route path="/signup" element={<SignUpPage />}></Route>
     <Route path="/your-reviews" element={<YourReviews />}></Route>
     <Route path="/billing/travelID" element={<Billing />} />
+    <Route path="/reviews/reviewID" element={<ReviewsHTML />} />
   </Routes>
 );
 

@@ -422,8 +422,7 @@ export function DetailedReview() {
         body: JSON.stringify(requestBody),
       }
     )
-      .then((res) => res.json())
-      .then((data) => console.log("success adding detailed reviews!@"))
+      .then((res) => console.log(res, "success adding detailed reviews!@"))
       .catch((error) => console.log("error adding detailed review"));
   };
 
@@ -521,6 +520,7 @@ export function DetailedReview() {
                 onClick={async () => {
                   await submitReview();
                   navigate(-1);
+                  console.log("innerHTML", quilRef.current.getEditor());
                 }}
               >
                 Confirm
@@ -532,7 +532,14 @@ export function DetailedReview() {
           <Group w={1600}>
             <Image src="/assets/Create Review.png" w="auto" mt={35} ml={340} />
             <Space w={640} />
-            <Button onClick={open} mt={60} w={155}>
+            <Button
+              onClick={open}
+              mt={60}
+              w={155}
+              radius="xl"
+              variant="outline"
+              className="submit-false-btn"
+            >
               Submit
             </Button>
           </Group>

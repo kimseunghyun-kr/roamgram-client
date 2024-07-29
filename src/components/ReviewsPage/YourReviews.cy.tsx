@@ -49,15 +49,20 @@ describe("<YourReviews />", () => {
     cy.wait("@getTravelPlans").its("response.statusCode").should("eq", 200);
   });
 
-  it("Review Delete", () => {
+  it.only("Review Delete", () => {
     cy.intercept(
       "DELETE",
       "**/travelPlan/*/schedule/*/review/delete?reviewID=*"
     ).as("deleteReview");
+
     cy.get(".mantine-Card-root")
-      .first()
+      .eq(1)
+      .find(".mantine-ActionIcon-root")
+      .should("be.visible");
+    cy.get(".mantine-Card-root")
+      .eq(1)
       .within(() => {
-        cy.get(".mantine-ActionIcon-root").click();
+        cy.get(".mantine-UnstyledButton-root").click();
       });
 
     cy.get(".mantine-Menu-dropdown ")

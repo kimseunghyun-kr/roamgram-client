@@ -71,4 +71,7 @@ describe("<LoginPage />", () => {
     cy.get('input[placeholder="Enter Password"]').type("string");
     cy.get("button").contains("Continue").click();
   });
+  it("click google login", () => {
+    cy.get('[aria-label="google-button"]').click();
+  });
 });

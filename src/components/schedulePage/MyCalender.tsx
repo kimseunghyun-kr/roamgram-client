@@ -33,6 +33,7 @@ import {
   IconCoin,
   IconDirections,
   IconFileDescription,
+  IconMapPin,
   IconMoneybag,
   IconPencil,
 } from "@tabler/icons-react";
@@ -502,6 +503,8 @@ function MyCalender(props) {
     return htmlVersion;
   };
 
+  const [calenderView, setCalenderView] = useState("week");
+
   const CustomToolbar = ({ label, onNavigate, onView }) => {
     return (
       <div>
@@ -560,6 +563,7 @@ function MyCalender(props) {
               <NativeSelect
                 variant="unstyled"
                 fw="light"
+                value={calenderView}
                 styles={{
                   input: { fontSize: "25px", fontFamily: "monsteratt" },
                 }}
@@ -568,7 +572,10 @@ function MyCalender(props) {
                   { label: "Week", value: "week" },
                   { label: "Day", value: "day" },
                 ]}
-                onChange={(e) => onView(e.currentTarget.value)}
+                onChange={(e) => {
+                  onView(e.currentTarget.value);
+                  setCalenderView(e.currentTarget.value);
+                }}
               ></NativeSelect>
             </Group>
           </Group>
@@ -623,6 +630,7 @@ function MyCalender(props) {
   const amountRef = useRef(null);
   const currencyRef = useRef(null);
   const typeRef = useRef(null);
+  const whereRef = useRef(null);
 
   const {
     data: getScheduleMonetaryEvents,
@@ -651,9 +659,9 @@ function MyCalender(props) {
             {moment.unix(ev.timestamp).format("HH:mm")}
           </Text>
           <CloseButton
-            onClick={() => {
-              console.log(ev.id);
-              deleteMonetaryEvent(ev.id);
+            onClick={async () => {
+              console.log("transacID", ev.transactionId);
+              await deleteMonetaryEvent(ev.transactionId);
               refetchScheduleMonetaryEvents();
             }}
           />
@@ -673,6 +681,11 @@ function MyCalender(props) {
       </Card>
     ));
   };
+  // const [view, setView] = useState(Views.MONTH);
+  // const handleViewChange = (newView) => {
+  //   setView(newView);
+  // };
+
   return (
     <>
       <DnDCalendar
@@ -691,7 +704,7 @@ function MyCalender(props) {
         //resourceIdAccessor="place: id"
         //original height is 500
         style={{ height: 750, width: "100%" }}
-        defaultView="month"
+        defaultView="week"
         views={["month", "week", "day"]}
         formats={{
           dayFormat: (date) => {
@@ -904,6 +917,25 @@ function MyCalender(props) {
                       data={typeExpense}
                     />
                   </Group>
+                  <Divider mt={5} />
+                  <Group justify="space-between">
+                    <Group>
+                      <Avatar size={24}>
+                        <IconMapPin />
+                      </Avatar>
+                      <Text c="#4A5167" size="13px">
+                        Where
+                      </Text>
+                    </Group>
+                    <TextInput
+                      ref={whereRef}
+                      styles={{
+                        input: { textAlign: "right", paddingRight: "26px" },
+                      }}
+                      variant="unstyled"
+                      placeholder="Enter Location Here"
+                    />
+                  </Group>
                   <Group gap="xs" mt={20} justify="center">
                     <Button
                       w={150}
@@ -919,7 +951,7 @@ function MyCalender(props) {
                           amount: newAmount,
                           currency: currencyRef.current.value,
                           source: "string",
-                          description: typeRef.current.value,
+                          description: "Income",
                         };
 
                         await addIncome(requestBody);
@@ -943,9 +975,13 @@ function MyCalender(props) {
                           amount: newAmount,
                           currency: currencyRef.current.value,
 
-                          description: typeRef.current.value,
+                          description: whereRef.current.value
+                            ? typeRef.current.value +
+                              " @ " +
+                              whereRef.current.value
+                            : typeRef.current.value,
                         };
-
+                        console.log(requestBody.description);
                         await addExpenditure(requestBody);
                         refetchScheduleMonetaryEvents();
                       }}
